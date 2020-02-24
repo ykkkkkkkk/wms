@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="32dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="行号"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="98dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="单据编号\n单据类型"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="128dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="客户"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="98dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="销售组织\n库存组织"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv5"
+        android:layout_width="68dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="销售日期"
+        android:maxLength="10"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv6"
+        android:layout_width="86dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="销售数量\n累计入库数\n可用数量"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv7"
+        android:layout_width="168dp"
+        android:layout_height="@dimen/_42dp"
+        android:gravity="center"
+        android:text="物料编码/名称"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+</LinearLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+
+    <TextView
+        android:id="@+id/tv_row"
+        android:layout_width="32dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center"
+        android:text="行号"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="68dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center"
+        android:maxLength="10"
+        android:text="日期"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_fbillNo"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center"
+        android:text="订单号"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_mtlNumber"
+        android:layout_width="76dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center|left"
+        android:text="物料代码"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_mtlName"
+        android:layout_width="120dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center|left"
+        android:text="物料名称"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_numUnit"
+        android:layout_width="88dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center"
+        android:text="数量/单位"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+
+</LinearLayout>

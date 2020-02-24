@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_row"
+        android:layout_width="32dp"
+        android:layout_height="@dimen/_46dp"
+        android:gravity="center"
+        android:text="行号"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_mtlNumber"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_46dp"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:paddingLeft="@dimen/_3dp"
+        android:text="物料编码"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_mtlName"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_46dp"
+        android:layout_weight="2"
+        android:gravity="center|left"
+        android:paddingLeft="@dimen/_3dp"
+        android:text="物料名称"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_need_applyNum"
+        android:layout_width="72dp"
+        android:layout_height="@dimen/_46dp"
+        android:background="@drawable/back_style_blue2"
+        android:gravity="center"
+        android:text="需求/申请数"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_delRow"
+        android:layout_width="@dimen/_38dp"
+        android:layout_height="@dimen/_38dp"
+        android:layout_marginLeft="@dimen/_2dp"
+        android:layout_marginRight="@dimen/_2dp"
+        android:background="@drawable/ico_del2"
+        android:gravity="center" />
+
+</LinearLayout>

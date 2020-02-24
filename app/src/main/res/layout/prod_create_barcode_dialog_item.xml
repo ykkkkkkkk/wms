@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_barcodeQty"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_42dp"
+        android:layout_weight="1"
+        android:background="@drawable/back_style_blue2"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_receivableQty"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_42dp"
+        android:layout_weight="1"
+        android:background="@drawable/back_style_blue5"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_rejectsQty"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_42dp"
+        android:layout_weight="1"
+        android:background="@drawable/back_style_blue2"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_mtlQty"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_42dp"
+        android:layout_weight="1"
+        android:background="@drawable/back_style_gray2a"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_delRow"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        android:layout_marginLeft="@dimen/_3dp"
+        android:layout_marginRight="@dimen/_3dp"
+        android:background="@drawable/del_ico"
+        android:gravity="center"
+        android:textColor="#000000" />
+
+
+</LinearLayout>

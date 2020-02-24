@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lin_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_row"
+        android:layout_width="@dimen/_32dp"
+        android:layout_height="@dimen/_38dp"
+        android:gravity="center"
+        android:text="行号"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/tv_barcode"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_38dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="条码"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/tv_batchCode"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_38dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="批次号"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/tv_snCode"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_38dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="序列号"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+</LinearLayout>

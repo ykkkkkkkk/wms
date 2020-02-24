@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_10dp"
+    android:background="@drawable/back_style_gray"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_6dp"
+        android:gravity="center"
+        android:text="批次号"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+
+    <EditText
+        android:id="@+id/et_batch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:layout_margin="@dimen/_10dp"
+        android:layout_weight="1"
+        android:background="@drawable/back_style_blue"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:hint="请输入批次好"
+        android:inputType="none"
+        android:paddingLeft="2dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:layout_margin="@dimen/_10dp"
+        android:background="@drawable/back_style_gray"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/_6dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_gray1_selector"
+            android:gravity="center"
+            android:text="关闭"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_6dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_blue_selector"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
