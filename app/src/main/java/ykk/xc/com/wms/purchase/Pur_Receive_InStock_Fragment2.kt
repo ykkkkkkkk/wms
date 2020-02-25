@@ -115,6 +115,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
                     SUCC1 -> { // 扫码成功 进入
                         when(m.smqFlag) {
                             '1'-> { // 仓库位置
+                                m.resetStockGroup()
                                 m.getStockGroup(msgObj)
                             }
                             '2'-> { // 物料
@@ -871,6 +872,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         when (requestCode) {
             SEL_POSITION -> {// 仓库	返回
                 if (resultCode == Activity.RESULT_OK) {
+                    resetStockGroup()
                     stock = data!!.getSerializableExtra("stock") as Stock
                     if(data!!.getSerializableExtra("stockArea") != null) {
                         stockArea = data!!.getSerializableExtra("stockArea") as StockArea
@@ -1059,6 +1061,13 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         }
     }
 
+    fun resetStockGroup() {
+        stock = null
+        stockArea = null
+        storageRack = null
+        stockPos = null
+    }
+
     /**
      * 得到仓库组
      */
@@ -1070,6 +1079,15 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         tv_stockAreaName.visibility = View.INVISIBLE
         tv_storageRackName.visibility = View.INVISIBLE
         tv_stockPosName.visibility = View.INVISIBLE
+        // 重置数据
+        icStockBillEntry.fdcStockId = 0
+        icStockBillEntry.stockId_wms = 0
+        icStockBillEntry.inStockName = ""
+        icStockBillEntry.stockAreaId_wms = 0
+        icStockBillEntry.storageRackId_wms = 0
+        icStockBillEntry.fdcSPId = 0
+        icStockBillEntry.stockPosId_wms = 0
+        icStockBillEntry.inStockPosName = ""
 
         if(msgObj != null) {
             stock = null
