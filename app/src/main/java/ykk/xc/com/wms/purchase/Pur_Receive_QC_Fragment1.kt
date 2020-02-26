@@ -601,7 +601,6 @@ class Pur_Receive_QC_Fragment1 : BaseFragment() {
         showLoadDialog("保存中...", false)
         val mUrl = getURL("poInStock/findListByParam")
 
-        val mJson = JsonUtil.objectToString(icStockBill)
         val formBody = FormBody.Builder()
                 .add("finterid", finterid.toString())
                 .build()

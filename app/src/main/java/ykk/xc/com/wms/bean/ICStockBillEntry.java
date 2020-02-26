@@ -22,23 +22,30 @@ public class ICStockBillEntry implements Serializable {
 	private int fdcSPId;				// 调入库位id
 	private int fscStockId;				// 调出仓库id
 	private int fscSPId;				// 调出库位id
-	private String fbatchNo;				// 批次
-	private double fqty;					// 数量
-	private double fprice;					// 单价
+	private String fbatchNo;			// 批次
+	private double fqty;				// 数量
+	private double fprice;				// 单价
 	private double ftaxRate;			// 税率
 	private double ftaxPrice;			// 含税单价
 	private int funitId;				// 单位id
 	private int fsourceInterId;			// 来源内码id
 	private int fsourceEntryId;			// 来源分录id
 	private int fsourceTranType;		// 来源类型
-	private String fsourceBillNo;			// 来源单号
+	private String fsourceBillNo;		// 来源单号
 	private double fsourceQty;			// 来源单数量
 	private int fdetailId; 				// 来源分类唯一行标识
-	private int stockId_wms; 			// WMS 仓库id
-	private int stockAreaId_wms; 		// WMS 库区id
-	private int storageRackId_wms; 		// WMS 货架id
-	private int stockPosId_wms; 		// WMS 库位id
-	private int containerId; 			// WMS 容器id
+	// 调入仓库组
+	private int stockId_wms; 			// WMS 调入--仓库id
+	private int stockAreaId_wms; 		// WMS 调入--库区id
+	private int storageRackId_wms; 		// WMS 调入--货架id
+	private int stockPosId_wms; 		// WMS 调入--库位id
+	private int containerId; 			// WMS 调入--容器id
+	// 调出仓库组
+	private int stockId2_wms; 			// WMS 调出--仓库id
+	private int stockAreaId2_wms; 		// WMS 调出--库区id
+	private int storageRackId2_wms; 	// WMS 调出--货架id
+	private int stockPosId2_wms; 		// WMS 调出--库位id
+	private int containerId2; 			// WMS 调出--容器id
 
 	private String mtlNumber;			// 物料代码
 	private String mtlName;				// 物料名称
@@ -50,26 +57,37 @@ public class ICStockBillEntry implements Serializable {
 	private String unitName;			// 单位名称
 	private String remark;				// 备注
 	private double weight;				// 称重重量
-	private int weightUnitType;		// 重量单位类型(1：千克，2：克，3：磅)
+	private int weightUnitType;			// 重量单位类型(1：千克，2：克，3：磅)
 	private double referenceNum;		// 称重后计算得出的参考数量
 	private double qcPassQty;			// 质检合格数
 	private String fkfDate; 			// 生产/采购日期
 	private int fkfPeriod;				// 保质期
+	private int sourceThisId;			// 来源本身id
 
 	private Stock stock;
 	private StockArea stockArea;
 	private StorageRack storageRack;
 	private StockPosition stockPos;
 	private Container container;
+	private Stock stock2;
+	private StockArea stockArea2;
+	private StorageRack storageRack2;
+	private StockPosition stockPos2;
+	private Container container2;
 	private ICItem icItem;
+	private ICStockBill icstockBill;
 
 	// 临时字段，不存表
 	private boolean showButton; 		// 是否显示操作按钮
 	private double allotQty; // 调拨数
-	private List<ICStockBillEntry_Barcode> icstockBillEntry_Barcodes; // 条码记录
 	private String smBatchCode; // 扫码的批次号
 	private String smSnCode; // 扫码的序列号
 	private String strBatchCode; // 拼接的批次号
+	private String k3Number; // 主表的k3Number
+	private double inventoryNowQty; // 当前扫码的可用库存数
+
+	private ICStockBillEntry sourceThis; // 来源本身对象
+	private List<ICStockBillEntry_Barcode> icstockBillEntry_Barcodes; // 条码记录
 
 	public ICStockBillEntry() {
 		super();
@@ -451,6 +469,14 @@ public class ICStockBillEntry implements Serializable {
 		this.fkfDate = fkfDate;
 	}
 
+	public ICStockBill getIcstockBill() {
+		return icstockBill;
+	}
+
+	public void setIcstockBill(ICStockBill icstockBill) {
+		this.icstockBill = icstockBill;
+	}
+
 	public double getAllotQty() {
 		return allotQty;
 	}
@@ -495,11 +521,127 @@ public class ICStockBillEntry implements Serializable {
 	}
 
 	public String getStrBatchCode() {
+		// 存在大写的逗号（，）,且大于1
+		if(Comm.isNULLS(strBatchCode).indexOf("，") > -1 && Comm.isNULLS(strBatchCode).length() > 0) {
+			return strBatchCode.substring(0, strBatchCode.length()-1);
+		}
 		return strBatchCode;
 	}
 
 	public void setStrBatchCode(String strBatchCode) {
 		this.strBatchCode = strBatchCode;
+	}
+
+	public int getStockId2_wms() {
+		return stockId2_wms;
+	}
+
+	public void setStockId2_wms(int stockId2_wms) {
+		this.stockId2_wms = stockId2_wms;
+	}
+
+	public int getStockAreaId2_wms() {
+		return stockAreaId2_wms;
+	}
+
+	public void setStockAreaId2_wms(int stockAreaId2_wms) {
+		this.stockAreaId2_wms = stockAreaId2_wms;
+	}
+
+	public int getStorageRackId2_wms() {
+		return storageRackId2_wms;
+	}
+
+	public void setStorageRackId2_wms(int storageRackId2_wms) {
+		this.storageRackId2_wms = storageRackId2_wms;
+	}
+
+	public int getStockPosId2_wms() {
+		return stockPosId2_wms;
+	}
+
+	public void setStockPosId2_wms(int stockPosId2_wms) {
+		this.stockPosId2_wms = stockPosId2_wms;
+	}
+
+	public int getContainerId2() {
+		return containerId2;
+	}
+
+	public void setContainerId2(int containerId2) {
+		this.containerId2 = containerId2;
+	}
+
+	public Stock getStock2() {
+		return stock2;
+	}
+
+	public void setStock2(Stock stock2) {
+		this.stock2 = stock2;
+	}
+
+	public StockArea getStockArea2() {
+		return stockArea2;
+	}
+
+	public void setStockArea2(StockArea stockArea2) {
+		this.stockArea2 = stockArea2;
+	}
+
+	public StorageRack getStorageRack2() {
+		return storageRack2;
+	}
+
+	public void setStorageRack2(StorageRack storageRack2) {
+		this.storageRack2 = storageRack2;
+	}
+
+	public StockPosition getStockPos2() {
+		return stockPos2;
+	}
+
+	public void setStockPos2(StockPosition stockPos2) {
+		this.stockPos2 = stockPos2;
+	}
+
+	public Container getContainer2() {
+		return container2;
+	}
+
+	public void setContainer2(Container container2) {
+		this.container2 = container2;
+	}
+
+	public int getSourceThisId() {
+		return sourceThisId;
+	}
+
+	public void setSourceThisId(int sourceThisId) {
+		this.sourceThisId = sourceThisId;
+	}
+
+	public ICStockBillEntry getSourceThis() {
+		return sourceThis;
+	}
+
+	public void setSourceThis(ICStockBillEntry sourceThis) {
+		this.sourceThis = sourceThis;
+	}
+
+	public String getK3Number() {
+		return k3Number;
+	}
+
+	public void setK3Number(String k3Number) {
+		this.k3Number = k3Number;
+	}
+
+	public double getInventoryNowQty() {
+		return inventoryNowQty;
+	}
+
+	public void setInventoryNowQty(double inventoryNowQty) {
+		this.inventoryNowQty = inventoryNowQty;
 	}
 
 }

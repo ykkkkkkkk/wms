@@ -255,6 +255,8 @@ class Prod_Transfer_Fragment3 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/findEntryList")
         val formBody = FormBody.Builder()
                 .add("icstockBillId", parent!!.fragment1.icStockBill.id.toString())
+                .add("moreStock", "1") // 多仓库查询
+                .add("ppBomTransfer_entryType", "1") // 分录类型 1：仓库调车间（qcPassQty = 0），2：车间内调拨（qcPassQty > 0），PDA只查询分类等于1的
                 .build()
 
         val request = Request.Builder()

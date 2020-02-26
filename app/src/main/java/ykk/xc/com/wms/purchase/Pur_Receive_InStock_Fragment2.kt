@@ -635,7 +635,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
     /**
      *  扫码之后    物料启用批次
      */
-    fun startBatchCode(fqty : Double) {
+    fun setBatchCode(fqty : Double) {
         val entryBarcode = ICStockBillEntry_Barcode()
         entryBarcode.parentId = smICStockBillEntry!!.id
         entryBarcode.barcode = getValues(et_code)
@@ -654,7 +654,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
     /**
      *  扫码之后    物料启用序列号
      */
-    fun startSnCode() {
+    fun setSnCode() {
         val entryBarcode = ICStockBillEntry_Barcode()
         entryBarcode.parentId = smICStockBillEntry!!.id
         entryBarcode.barcode = getValues(et_code)
@@ -707,7 +707,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
             showInputDialog("数量", showInfo, "", "0.0", SM_RESULT_NUM)
 
         } else if(icEntry.icItem.snManager.equals("Y")) { // 启用序列号
-            startSnCode()
+            setSnCode()
 
         } else { // 未启用
             unStartBatchOrSnCode(1.0)
@@ -883,7 +883,6 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
                     if(data!!.getSerializableExtra("stockPos") != null) {
                         stockPos = data!!.getSerializableExtra("stockPos") as StockPosition
                     }
-
                     getStockGroup(null)
                 }
             }
@@ -936,7 +935,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
                         val num = parseDouble(value)
-                        startBatchCode(num)
+                        setBatchCode(num)
                     }
                 }
             }

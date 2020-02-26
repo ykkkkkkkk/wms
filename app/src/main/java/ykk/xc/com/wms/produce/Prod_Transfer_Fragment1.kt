@@ -22,7 +22,6 @@ import ykk.xc.com.wms.basics.Emp_DialogActivity
 import ykk.xc.com.wms.basics.Supplier_DialogActivity
 import ykk.xc.com.wms.bean.*
 import ykk.xc.com.wms.bean.k3Bean.Emp
-import ykk.xc.com.wms.bean.pur.POInStockEntry
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.JsonUtil
@@ -67,7 +66,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
     private var timesTamp:String? = null // 时间戳
     var icStockBill = ICStockBill() // 保存的对象
 //    var isReset = false // 是否点击了重置按钮.
-    var poInStockEntryList:List<POInStockEntry>? = null
+    var ppBomTransferEntryList:List<PPBomTransferEntry>? = null
     private var icStockBillId = 0 // 上个页面传来的id
 
     // 消息处理
@@ -112,16 +111,14 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     FIND_SOURCE ->{ // 查询源单 返回
-                        val list = JsonUtil.strToList(msgObj, POInStockEntry::class.java)
-                        m.poInStockEntryList = list
-                        m.icStockBill.fsupplyId = list[0].poInStock.supplier.supplierId
-                        m.icStockBill.suppName = list[0].poInStock.supplier.fname
-                        if(list[0].poInStock.department != null) {
-                            m.icStockBill.fdeptId = list[0].poInStock.department.fitemID
-                            m.icStockBill.deptName = list[0].poInStock.department.departmentName
+                        val list = JsonUtil.strToList(msgObj, PPBomTransferEntry::class.java)
+                        m.ppBomTransferEntryList = list
+                        if(list[0].ppBomTransfer.dept != null) {
+                            m.icStockBill.fdeptId = list[0].ppBomTransfer.dept.fitemID
+                            m.icStockBill.deptName = list[0].ppBomTransfer.dept.departmentName
                             m.tv_deptSel.text = m.icStockBill.deptName
                         }
-                        m.tv_suppSel.text = m.icStockBill.suppName
+//                        m.tv_suppSel.text = m.icStockBill.suppName
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         m.toasts("该页面有错误！2秒后自动关闭...")
@@ -231,6 +228,10 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         tv_inDateSel.text = Comm.getSysDate(7)
         tv_operationManName.text = user!!.empName
+        tv_emp1Sel.text = user!!.empName
+        tv_emp2Sel.text = user!!.empName
+        tv_emp3Sel.text = user!!.empName
+        tv_emp4Sel.text = user!!.empName
 
         icStockBill.billType = "SCDB" // 生产调拨
         icStockBill.ftranType = 1
@@ -258,7 +259,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
             if(bundle.containsKey("missionBill")) {
                 val missionBill = bundle.getSerializable("missionBill") as MissionBill
                 icStockBill.missionBillId = missionBill.id // 记录任务单的id
-                run_poInStockList(missionBill.sourceBillId)
+                run_ppBomTransferList(missionBill.sourceBillId)
                 if (missionBill.sourceBillId > 0) {
                     // 修改任务单状态
                     run_missionBillModifyStatus(missionBill.id)
@@ -355,10 +356,10 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
      * 保存检查数据判断
      */
     fun checkSave() : Boolean {
-        if (icStockBill.fsupplyId == 0) {
-            Comm.showWarnDialog(mContext, "请选择供应商！")
-            return false;
-        }
+//        if (icStockBill.fsupplyId == 0) {
+//            Comm.showWarnDialog(mContext, "请选择供应商！")
+//            return false;
+//        }
         if(icStockBill.fsmanagerId == 0) {
             Comm.showWarnDialog(mContext, "请选择保管人！")
             return false
@@ -562,15 +563,14 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
     }
 
     /**
-     * 根据任务单查询收料通知单
+     * 根据任务单查询投料调拨单
      */
-    private fun run_poInStockList(finterid: Int) {
+    private fun run_ppBomTransferList(ppBomTransferId: Int) {
         showLoadDialog("保存中...", false)
-        val mUrl = getURL("poInStock/findListByParam")
+        val mUrl = getURL("ppBomTransfer/findListByParam")
 
-        val mJson = JsonUtil.objectToString(icStockBill)
         val formBody = FormBody.Builder()
-                .add("finterid", finterid.toString())
+                .add("ppBomTransferId", ppBomTransferId.toString())
                 .build()
 
         val request = Request.Builder()

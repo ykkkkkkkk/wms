@@ -17,6 +17,7 @@ import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
+import ykk.xc.com.wms.produce.Prod_Transfer_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_QC_MainActivity
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
@@ -134,7 +135,7 @@ class OutInStock_Search_Fragment8_ProdTransfer : BaseFragment() {
             override fun onSearch(entity: ICStockBill, position: Int) {
                 val bundle = Bundle()
                 bundle.putInt("id", entity.id)
-                show(Pur_Receive_QC_MainActivity::class.java, bundle)
+                show(Prod_Transfer_MainActivity::class.java, bundle)
             }
             override fun onUpload(entity: ICStockBill, position: Int) {
                 val list = ArrayList<ICStockBill>()
