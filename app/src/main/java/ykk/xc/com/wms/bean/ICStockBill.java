@@ -52,6 +52,7 @@ public class ICStockBill implements Serializable {
 	private Stock unQualifiedStock;			// 不合格仓库对象
 	private Supplier supplier;			// 供应商对象
 	private MissionBill missionBill;	// 任务单对象
+	private Department department;	// 部门对象
 
 	// 临时字段，不存表
 	private String summary; 			// 主表摘要
@@ -379,6 +380,14 @@ public class ICStockBill implements Serializable {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

@@ -98,11 +98,11 @@ class OutInStock_Search_Fragment8_ProdTransfer : BaseFragment() {
                     }
                     m.UPLOAD -> { // 上传单据 进入
                         val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0) {
-                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
-                        } else {
+//                        if(retMsg.length > 0) {
+//                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
+//                        } else {
                             m.toasts("上传成功")
-                        }
+//                        }
                         m.run_findList()
                     }
                     m.UNUPLOAD -> { // 上传单据  失败

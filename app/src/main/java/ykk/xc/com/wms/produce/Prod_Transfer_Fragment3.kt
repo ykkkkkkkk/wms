@@ -217,7 +217,7 @@ class Prod_Transfer_Fragment3 : BaseFragment() {
                         return
                     }
                     if(it.fqty == 0.0) {
-                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（入库数）！")
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（实发数）！")
                         return
                     }
                 }
@@ -256,7 +256,6 @@ class Prod_Transfer_Fragment3 : BaseFragment() {
         val formBody = FormBody.Builder()
                 .add("icstockBillId", parent!!.fragment1.icStockBill.id.toString())
                 .add("moreStock", "1") // 多仓库查询
-                .add("ppBomTransfer_entryType", "1") // 分录类型 1：仓库调车间（qcPassQty = 0），2：车间内调拨（qcPassQty > 0），PDA只查询分类等于1的
                 .build()
 
         val request = Request.Builder()

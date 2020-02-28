@@ -1218,13 +1218,10 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             entry.fsourceInterId = it.ppBomTransferId
             entry.fsourceEntryId = it.id
             entry.fsourceQty = it.mustQty
+            entry.qcPassQty = it.erpQty // 使用qcPassQty来保存投料调拨单的Erp申请数
             entry.fsourceTranType = 0
             entry.fsourceBillNo = it.ppBomTransfer.billNo
             entry.fdetailId = it.id
-            if(it.entryType == 2) { // 这种的不用在pda显示出来
-                entry.fqty = it.mustQty
-                entry.qcPassQty = it.mustQty
-            }
 
             entry.mtlNumber = it.icItem.fnumber
             entry.mtlName = it.icItem.fname
@@ -1253,7 +1250,6 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
         var moreStock:String? = null // 多仓库查询
         var billType:String? = null // 单据类型
         var checkInventoryNow:String? = null // 是否检查库存
-        var ppBomTransfer_entryType:String? = null // 分录类型 1：仓库调车间（qcPassQty = 0），2：车间内调拨（qcPassQty > 0），PDA只查询分类等于1的
         when(smqFlag) {
             '1' -> {
                 mUrl = getURL("stockPosition/findBarcodeGroup")
@@ -1262,7 +1258,6 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                 moreStock = ""
                 billType = ""
                 checkInventoryNow = ""
-                ppBomTransfer_entryType = ""
             }
             '2' -> {
                 mUrl = getURL("stockBill_WMS/findBarcode_EntryItem")
@@ -1271,7 +1266,6 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                 moreStock = "1"
                 billType = parent!!.fragment1.icStockBill.billType
                 checkInventoryNow = "1"
-                ppBomTransfer_entryType = "1"
             }
         }
         val formBody = FormBody.Builder()
@@ -1280,7 +1274,6 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                 .add("moreStock", moreStock)
                 .add("billType", billType)
                 .add("checkInventoryNow", checkInventoryNow)
-                .add("ppBomTransfer_entryType", ppBomTransfer_entryType)
                 .build()
 
         val request = Request.Builder()

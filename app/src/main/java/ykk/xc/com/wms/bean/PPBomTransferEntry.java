@@ -25,18 +25,6 @@ public class PPBomTransferEntry implements Serializable {
 
 	private ICItem icItem;
 
-	//生产/委外单号
-	private String icmoBillNo;
-
-	//投料单号
-	private String ppBomBillNo;
-
-	//投料单ID
-	private int ppBomId;
-
-	//投料单子表ID
-	private int ppBomEntryId;
-
 	//ERP申请数量
 	private double erpQty;
 
@@ -142,38 +130,6 @@ public class PPBomTransferEntry implements Serializable {
 
 	public void setIcItem(ICItem icItem) {
 		this.icItem = icItem;
-	}
-
-	public String getIcmoBillNo() {
-		return icmoBillNo;
-	}
-
-	public void setIcmoBillNo(String icmoBillNo) {
-		this.icmoBillNo = icmoBillNo;
-	}
-
-	public String getPpBomBillNo() {
-		return ppBomBillNo;
-	}
-
-	public void setPpBomBillNo(String ppBomBillNo) {
-		this.ppBomBillNo = ppBomBillNo;
-	}
-
-	public int getPpBomId() {
-		return ppBomId;
-	}
-
-	public void setPpBomId(int ppBomId) {
-		this.ppBomId = ppBomId;
-	}
-
-	public int getPpBomEntryId() {
-		return ppBomEntryId;
-	}
-
-	public void setPpBomEntryId(int ppBomEntryId) {
-		this.ppBomEntryId = ppBomEntryId;
 	}
 
 	public double getErpQty() {
@@ -432,22 +388,5 @@ public class PPBomTransferEntry implements Serializable {
 		this.masterBillNo = masterBillNo;
 	}
 
-	@Override
-	public String toString() {
-		return "PPBomTransferEntry [id=" + id + ", ppBomTransferId=" + ppBomTransferId + ", ppBomTransfer="
-				+ ppBomTransfer + ", icItemId=" + icItemId + ", icItem=" + icItem + ", icmoBillNo=" + icmoBillNo
-				+ ", ppBomBillNo=" + ppBomBillNo + ", ppBomId=" + ppBomId + ", ppBomEntryId=" + ppBomEntryId
-				+ ", erpQty=" + erpQty + ", mrpQty=" + mrpQty + ", minQty=" + minQty + ", applyQty=" + applyQty
-				+ ", mustQty=" + mustQty + ", realQty=" + realQty + ", unitId=" + unitId + ", unit=" + unit
-				+ ", entryType=" + entryType + ", outStockId=" + outStockId + ", outStock=" + outStock
-				+ ", outStockAreaId=" + outStockAreaId + ", outStockArea=" + outStockArea + ", outStorageRackId="
-				+ outStorageRackId + ", outStorageRack=" + outStorageRack + ", outStockPositionId=" + outStockPositionId
-				+ ", outStockPosition=" + outStockPosition + ", outContainerId=" + outContainerId + ", outContainer="
-				+ outContainer + ", inStockId=" + inStockId + ", inStock=" + inStock + ", inStockAreaId="
-				+ inStockAreaId + ", inStockArea=" + inStockArea + ", inStorageRackId=" + inStorageRackId
-				+ ", inStorageRack=" + inStorageRack + ", inStockPositionId=" + inStockPositionId + ", inStockPosition="
-				+ inStockPosition + ", inContainerId=" + inContainerId + ", inContainer=" + inContainer
-				+ ", masterBillNo=" + masterBillNo + "]";
-	}
 
 }

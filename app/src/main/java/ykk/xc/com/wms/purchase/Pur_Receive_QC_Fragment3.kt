@@ -218,6 +218,10 @@ class Pur_Receive_QC_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
                         return
                     }
+                    if(it.qcPassQty == 0.0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（合格数）！")
+                        return
+                    }
                 }
                 val list = ArrayList<ICStockBill>()
                 list.add(parent!!.fragment1.icStockBill)
