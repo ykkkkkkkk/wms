@@ -13,7 +13,6 @@ import android.os.Handler
 import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
@@ -32,7 +31,6 @@ import ykk.xc.com.wms.util.blueTooth.DeviceListActivity
 import ykk.xc.com.wms.warehouse.OutInStock_Search_MainActivity
 import java.io.IOException
 import java.io.InputStream
-import java.text.DecimalFormat
 import java.util.*
 
 /**

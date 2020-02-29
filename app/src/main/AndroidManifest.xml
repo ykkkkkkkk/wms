@@ -167,6 +167,9 @@
         <activity
             android:name=".warehouse.OutInStock_Search_MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.PlantMould_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
         <!-- 采购模块 -->

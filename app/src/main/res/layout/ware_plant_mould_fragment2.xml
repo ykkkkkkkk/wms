@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_getFocus"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:inputType="none" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:layout_marginTop="@dimen/_5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="4"
+            android:gravity="center"
+            android:text="使用类型"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_use"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="领用"
+                android:textColor="@color/black" />
+
+            <RadioButton
+                android:id="@+id/radio_return"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:text="归还"
+                android:textColor="@color/black" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="2"
+            android:gravity="center"
+            android:text="移出位置"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_positionScan"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/btn_scan_selector" />
+
+            <EditText
+                android:id="@+id/et_positionCode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="扫描物料条码"
+                android:inputType="none"
+                android:paddingLeft="@dimen/_2dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sp" />
+
+            <Button
+                android:id="@+id/btn_positionSel"
+                android:layout_width="@dimen/_42dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_1dp"
+                android:visibility="invisible"
+                android:background="@drawable/btn_blue_selector"
+                android:text="选择"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_12dp"
+        android:layout_marginRight="@dimen/_12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_mouldName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="模具："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_14sp" />
+
+        <TextView
+            android:id="@+id/tv_stockName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="仓库："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_stockAreaName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库区："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_storageRackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="货架："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_stockPosName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库位："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_containerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="容器："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="2"
+            android:gravity="center"
+            android:text="移入位置"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_positionScan2"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/btn_scan_selector" />
+
+            <EditText
+                android:id="@+id/et_positionCode2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="扫描位置条码"
+                android:inputType="none"
+                android:paddingLeft="@dimen/_2dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sp" />
+
+            <Button
+                android:id="@+id/btn_positionSel2"
+                android:layout_width="@dimen/_42dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_1dp"
+                android:background="@drawable/btn_blue_selector"
+                android:text="选择"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_12dp"
+        android:layout_marginRight="@dimen/_12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_stockName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="仓库："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_stockAreaName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库区："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_storageRackName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="货架："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_stockPosName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库位："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_3dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:background="@color/c_eaeaea" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_margin="@dimen/_6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="2"
+            android:gravity="center"
+            android:text="使用时间"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_useBegDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:drawableRight="@drawable/xiala3"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_3dp"
+            android:ems="2"
+            android:gravity="center"
+            android:text="结束时间"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_useEndDate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:drawableRight="@drawable/xiala3"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="3"
+            android:gravity="center"
+            android:text="使用人"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_useMan"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:drawableRight="@drawable/xiala3"
+            android:gravity="center"
+            android:text="张三"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_margin="@dimen/_6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="3"
+            android:gravity="center"
+            android:text="工单号"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_positionScan3"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/btn_scan_selector" />
+
+            <EditText
+                android:id="@+id/et_positionCode3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="扫描工单条码，或长按输入"
+                android:inputType="none"
+                android:paddingLeft="@dimen/_2dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="3"
+            android:gravity="center"
+            android:text="用途"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_purpose"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:gravity="center|left"
+            android:maxLength="80"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_clone"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_gray2_selector"
+            android:gravity="center"
+            android:text="重置"
+            android:textColor="@color/c_666666"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="2"
+            android:background="@drawable/btn_blue2_selector"
+            android:gravity="center"
+            android:text="确认移动"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

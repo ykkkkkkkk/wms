@@ -580,6 +580,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
         tv_stockQty.text = "即时库存："
         tv_batchNo.text = ""
         tv_num.text = ""
+        tv_sourceQty.text = ""
         tv_referenceNum.text = ""
         tv_weight.text = ""
         tv_unitSel.text = ""
@@ -739,6 +740,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
 //        icStockBillEntry.fbatchNo = icEntry.fbatchNo
 //        icStockBillEntry.fqty = icEntry.fqty
         icStockBillEntry.fsourceQty = icEntry.fsourceQty
+        icStockBillEntry.qcPassQty = icEntry.qcPassQty
         icStockBillEntry.fprice = icEntry.fprice
         icStockBillEntry.weight = icEntry.weight
         icStockBillEntry.referenceNum = icEntry.referenceNum

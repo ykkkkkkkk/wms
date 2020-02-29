@@ -175,8 +175,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="invisible">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/imgView6"
@@ -184,7 +183,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_4" />
+                android:src="@drawable/aa_ico4a_10" />
 
 
             <TextView
@@ -194,7 +193,7 @@
                 android:layout_below="@+id/imgView6"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="其它出库"
+                android:text="工具移动"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

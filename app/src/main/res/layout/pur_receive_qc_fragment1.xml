@@ -208,7 +208,7 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="不合格仓库"
+                    android:text="不合格仓库*"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 

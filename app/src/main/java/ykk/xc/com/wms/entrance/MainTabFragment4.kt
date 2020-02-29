@@ -35,9 +35,8 @@ class MainTabFragment4 : BaseFragment() {
             -> show(ICInvBackup_MainActivity::class.java, null)
             R.id.relative5 // 复盘
             -> show(ICInvBackup_Repeat_MainActivity::class.java, null)
-            R.id.relative6 // 其他出库
-            -> {
-            }
+            R.id.relative6 // 工具移库
+            -> show(PlantMould_MainActivity::class.java, null)
             R.id.relative7 // 库存查询
             -> {
             }

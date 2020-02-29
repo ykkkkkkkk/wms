@@ -107,6 +107,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                     SUCC1 -> { // 扫码成功 进入
                         when(m.smqFlag) {
                             '1' -> { // 仓库位置扫描
+                                m.resetStockGroup()
                                 m.getStockGroup(msgObj)
                             }
                             '2' -> { // 容器扫描
@@ -569,6 +570,13 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         run_findListByParamWms()
     }
 
+    fun resetStockGroup() {
+        stock = null
+        stockArea = null
+        storageRack = null
+        stockPos = null
+    }
+
     /**
      * 得到仓库组
      */
@@ -582,10 +590,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         tv_stockPosName.visibility = View.INVISIBLE
 
         if(msgObj != null) {
-            stock = null
-            stockArea = null
-            storageRack = null
-            stockPos = null
+            resetStockGroup()
 
             var caseId:Int = 0
             if(msgObj.indexOf("Stock_CaseId=1") > -1) {
@@ -701,10 +706,17 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         when (requestCode) {
             SEL_STOCK -> {// 仓库	返回
                 if (resultCode == Activity.RESULT_OK) {
+                    resetStockGroup()
                     stock = data!!.getSerializableExtra("stock") as Stock
-                    stockArea = data!!.getSerializableExtra("stockArea") as StockArea
-                    storageRack = data!!.getSerializableExtra("storageRack") as StorageRack
-                    stockPos = data!!.getSerializableExtra("stockPos") as StockPosition
+                    if(data!!.getSerializableExtra("stockArea") != null) {
+                        stockArea = data!!.getSerializableExtra("stockArea") as StockArea
+                    }
+                    if(data!!.getSerializableExtra("storageRack") != null) {
+                        storageRack = data!!.getSerializableExtra("storageRack") as StorageRack
+                    }
+                    if(data!!.getSerializableExtra("stockPos") != null) {
+                        stockPos = data!!.getSerializableExtra("stockPos") as StockPosition
+                    }
                     getStockGroup(null)
                 }
             }

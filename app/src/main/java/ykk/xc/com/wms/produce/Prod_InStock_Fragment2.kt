@@ -550,25 +550,31 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         when (requestCode) {
             SEL_STOCK -> {// 仓库	返回
                 if (resultCode == Activity.RESULT_OK) {
-                    val stock = data!!.getSerializableExtra("stock") as Stock
-                    val stockArea = data!!.getSerializableExtra("stockArea") as StockArea
-                    val storageRack = data!!.getSerializableExtra("storageRack") as StorageRack
-                    val stockPos = data!!.getSerializableExtra("stockPos") as StockPosition
+                    stock = data!!.getSerializableExtra("stock") as Stock
+                    if(data!!.getSerializableExtra("stockArea") != null) {
+                        stockArea = data!!.getSerializableExtra("stockArea") as StockArea
+                    }
+                    if(data!!.getSerializableExtra("storageRack") != null) {
+                        storageRack = data!!.getSerializableExtra("storageRack") as StorageRack
+                    }
+                    if(data!!.getSerializableExtra("stockPos") != null) {
+                        stockPos = data!!.getSerializableExtra("stockPos") as StockPosition
+                    }
                     tv_stockName.text = "仓库："
                     tv_stockAreaName.text = "库区："
                     tv_storageRackName.text = "货架："
                     tv_stockPosName.text = "库位："
                     if(stock != null ) {
-                        tv_stockName.text = Html.fromHtml("仓库：<font color='#000000'>"+stock.stockName+"</font>")
+                        tv_stockName.text = Html.fromHtml("仓库：<font color='#000000'>"+stock!!.stockName+"</font>")
                     }
                     if(stockArea != null ) {
-                        tv_stockAreaName.text = Html.fromHtml("库区：<font color='#000000'>"+stockArea.fname+"</font>")
+                        tv_stockAreaName.text = Html.fromHtml("库区：<font color='#000000'>"+stockArea!!.fname+"</font>")
                     }
                     if(storageRack != null ) {
-                        tv_storageRackName.text = Html.fromHtml("货架：<font color='#000000'>"+storageRack.fnumber+"</font>")
+                        tv_storageRackName.text = Html.fromHtml("货架：<font color='#000000'>"+storageRack!!.fnumber+"</font>")
                     }
                     if(stockPos != null ) {
-                        tv_stockPosName.text = Html.fromHtml("库位：<font color='#000000'>"+stockPos.stockPositionName+"</font>")
+                        tv_stockPosName.text = Html.fromHtml("库位：<font color='#000000'>"+stockPos!!.stockPositionName+"</font>")
                     }
                 }
             }
