@@ -1181,7 +1181,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         icStockBillEntry.mtlNumber = icItem.fnumber
         icStockBillEntry.fmode = icItem.fmodel
         icStockBillEntry.mtlName = icItem.fname
-        icStockBillEntry.funitId = icItem.unit.getfUnitId()
+        icStockBillEntry.funitId = icItem.unit.funitId
         icStockBillEntry.unitName = icItem.unit.unitName
         // 满足条件就查询库存
         if(icItem.inventoryQty <= 0 && icStockBillEntry.fdcStockId > 0 && icStockBillEntry.fitemId > 0) {

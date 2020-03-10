@@ -92,7 +92,6 @@
                 android:layout_marginLeft="@dimen/_8dp"
                 android:layout_marginRight="@dimen/_8dp"
                 android:layout_marginTop="@dimen/_8dp"
-                android:visibility="gone"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -103,7 +102,7 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="供应商*"
+                    android:text="供应商"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 

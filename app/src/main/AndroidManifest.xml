@@ -124,6 +124,10 @@
             android:name=".basics.Container_DialogActivity"
             android:theme="@style/dialogStyle"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".basics.Box_DialogActivity"
+            android:theme="@style/dialogStyle"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <!-- 仓库模块 -->
@@ -168,7 +172,7 @@
             android:name=".warehouse.OutInStock_Search_MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".warehouse.PlantMould_MainActivity"
+            android:name=".warehouse.ToolMove_MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
@@ -201,6 +205,12 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".produce.Prod_Transfer_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".produce.Prod_Box_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".produce.Prod_Box_UnBind_MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- 销售模块 -->

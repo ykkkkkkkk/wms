@@ -63,6 +63,7 @@ public class ICStockBillEntry implements Serializable {
 	private String fkfDate; 			// 生产/采购日期
 	private int fkfPeriod;				// 保质期
 	private int sourceThisId;			// 来源本身id
+	private int materialBinningRecordId;// 装箱表id
 
 	private Stock stock;
 	private StockArea stockArea;
@@ -642,6 +643,14 @@ public class ICStockBillEntry implements Serializable {
 
 	public void setInventoryNowQty(double inventoryNowQty) {
 		this.inventoryNowQty = inventoryNowQty;
+	}
+
+	public int getMaterialBinningRecordId() {
+		return materialBinningRecordId;
+	}
+
+	public void setMaterialBinningRecordId(int materialBinningRecordId) {
+		this.materialBinningRecordId = materialBinningRecordId;
 	}
 
 }

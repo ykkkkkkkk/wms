@@ -12,7 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.ware_plant_mould_fragment2.*
+import kotlinx.android.synthetic.main.ware_tool_move_fragment2.*
 import okhttp3.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.basics.Container_DialogActivity
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
  * 描述：其他出库
  * 作者：ykk
  */
-class PlantMould_Fragment2 : BaseFragment() {
+class ToolMove_Fragment2 : BaseFragment() {
 
     companion object {
         private val SEL_STOCK = 11
@@ -58,15 +58,15 @@ class PlantMould_Fragment2 : BaseFragment() {
     private var storageRack:StorageRack? = null
     private var stockPos:StockPosition? = null
     private var mContext: Activity? = null
-    private var parent: PlantMould_MainActivity? = null
+    private var parent: ToolMove_MainActivity? = null
     private var isTextChange: Boolean = false // 是否进入TextChange事件
     private var record = PlantMould_UseRecord()
     private var smqType = 1 // 扫描类型1：移入容器扫描，2：移出位置扫描
 
     // 消息处理
     private val mHandler = MyHandler(this)
-    private class MyHandler(activity: PlantMould_Fragment2) : Handler() {
-        private val mActivity: WeakReference<PlantMould_Fragment2>
+    private class MyHandler(activity: ToolMove_Fragment2) : Handler() {
+        private val mActivity: WeakReference<ToolMove_Fragment2>
 
         init {
             mActivity = WeakReference(activity)
@@ -127,12 +127,12 @@ class PlantMould_Fragment2 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.ware_plant_mould_fragment2, container, false)
+        return inflater.inflate(R.layout.ware_tool_move_fragment2, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as PlantMould_MainActivity
+        parent = mContext as ToolMove_MainActivity
 
     }
 

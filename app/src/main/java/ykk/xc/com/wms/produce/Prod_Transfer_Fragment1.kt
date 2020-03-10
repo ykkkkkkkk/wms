@@ -113,12 +113,25 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
                     FIND_SOURCE ->{ // 查询源单 返回
                         val list = JsonUtil.strToList(msgObj, PPBomTransferEntry::class.java)
                         m.ppBomTransferEntryList = list
-                        if(list[0].ppBomTransfer.dept != null) {
-                            m.icStockBill.fdeptId = list[0].ppBomTransfer.dept.fitemID
-                            m.icStockBill.deptName = list[0].ppBomTransfer.dept.departmentName
-                            m.tv_deptSel.text = m.icStockBill.deptName
+                        val ppBomTransfer = list[0].ppBomTransfer
+                        when(ppBomTransfer.sourceBillType) {
+                            1 -> { // 显示部门
+                                if(ppBomTransfer.dept != null) {
+                                    m.icStockBill.fdeptId = ppBomTransfer.dept.fitemID
+                                    m.icStockBill.deptName = ppBomTransfer.dept.departmentName
+                                    m.tv_deptSel.text = m.icStockBill.deptName
+                                    m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
+                                }
+                            }
+                            2 -> { // 显示供应商
+                                if(ppBomTransfer.supplier != null) {
+                                    m.icStockBill.fsupplyId = ppBomTransfer.supplier.supplierId
+                                    m.icStockBill.suppName = ppBomTransfer.supplier.fname
+                                    m.tv_suppSel.text = m.icStockBill.deptName
+                                    m.setEnables(m.tv_suppSel, R.drawable.back_style_gray3b, false)
+                                }
+                            }
                         }
-//                        m.tv_suppSel.text = m.icStockBill.suppName
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         m.toasts("该页面有错误！2秒后自动关闭...")
@@ -377,6 +390,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
 
     fun reset() {
         setEnables(tv_suppSel, R.drawable.back_style_blue2, true)
+        setEnables(tv_deptSel, R.drawable.back_style_blue2, true)
         parent!!.isMainSave = false
         parent!!.viewPager.setScanScroll(false) // 禁止滑动
         tv_pdaNo.text = ""

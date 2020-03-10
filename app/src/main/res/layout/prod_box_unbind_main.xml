@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="生产装箱"
+            android:text="开箱取货"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
@@ -30,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4dp"
             android:layout_marginRight="@dimen/_4dp"
+            android:visibility="invisible"
             android:background="@drawable/aa_ico5a_5b"
             android:textColor="#ffffff"
             android:textSize="14sp" />
@@ -41,6 +42,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/_2dp"
+        android:visibility="gone"
         android:text="@string/str_conn_state_disconnect"
         android:textColor="@color/c_666666"
         android:textSize="12sp" />

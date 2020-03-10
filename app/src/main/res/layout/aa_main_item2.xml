@@ -42,7 +42,7 @@
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/aa_ico2a_1" />
+                android:background="@drawable/aa_ico2a_2b" />
 
             <TextView
                 android:id="@+id/tab1"
@@ -51,7 +51,7 @@
                 android:layout_below="@+id/tvImg1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="生产入库"
+                android:text="生产装箱"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -70,7 +70,7 @@
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/aa_ico2a_10" />
+                android:background="@drawable/aa_ico2a_2" />
 
             <TextView
                 android:id="@+id/tab2"
@@ -79,7 +79,7 @@
                 android:layout_below="@+id/tvImg2"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="生产领料"
+                android:text="开箱取货"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -92,14 +92,14 @@
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tvImg3"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/aa_ico2a_9" />
+                android:background="@drawable/aa_ico2a_1" />
 
             <TextView
                 android:id="@+id/tab3"
@@ -108,7 +108,7 @@
                 android:layout_below="@+id/tvImg3"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="物料查询"
+                android:text="生产入库"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

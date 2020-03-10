@@ -3,6 +3,7 @@ package ykk.xc.com.wms.bean;
 import java.io.Serializable;
 
 import ykk.xc.com.wms.bean.k3Bean.ICItem;
+import ykk.xc.com.wms.comm.Comm;
 
 /**
  * 条码表
@@ -63,7 +64,7 @@ public class BarCodeTable implements Serializable {
 	}
 
 	public String getSnCode() {
-		return snCode;
+		return Comm.isNULLS(snCode);
 	}
 
 	public void setSnCode(String snCode) {
@@ -71,7 +72,7 @@ public class BarCodeTable implements Serializable {
 	}
 
 	public String getBatchCode() {
-		return batchCode;
+		return Comm.isNULLS(batchCode);
 	}
 
 	public void setBatchCode(String batchCode) {

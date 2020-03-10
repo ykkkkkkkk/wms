@@ -38,6 +38,12 @@ public class Supplier implements Serializable {
 
 	/*超收的是否赠送    （赠送：990655，不赠送：990656）*/
 	private int isDonate;
+	//倒冲仓  erp ID
+	private int bwStockErpId;
+	private Stock supp_BwStock;
+	//MRP仓 erp ID
+	private Integer mrpStockErpId;
+	private Stock supp_MrpStock;
 
 	public Supplier() {
 		super();
@@ -153,6 +159,38 @@ public class Supplier implements Serializable {
 
 	public void setIsDonate(int isDonate) {
 		this.isDonate = isDonate;
+	}
+
+	public int getBwStockErpId() {
+		return bwStockErpId;
+	}
+
+	public void setBwStockErpId(int bwStockErpId) {
+		this.bwStockErpId = bwStockErpId;
+	}
+
+	public Stock getSupp_BwStock() {
+		return supp_BwStock;
+	}
+
+	public void setSupp_BwStock(Stock supp_BwStock) {
+		this.supp_BwStock = supp_BwStock;
+	}
+
+	public Integer getMrpStockErpId() {
+		return mrpStockErpId;
+	}
+
+	public void setMrpStockErpId(Integer mrpStockErpId) {
+		this.mrpStockErpId = mrpStockErpId;
+	}
+
+	public Stock getSupp_MrpStock() {
+		return supp_MrpStock;
+	}
+
+	public void setSupp_MrpStock(Stock supp_MrpStock) {
+		this.supp_MrpStock = supp_MrpStock;
 	}
 
 

@@ -10,8 +10,9 @@ import java.io.Serializable;
 public class PlantMould implements Serializable{
 
 	private int id;
-	private int fitemId; 				// 物料id
+	private String fnumber; 			// 模具代码
 	private String fname;				// 模具名称
+	private String barcode;				// 模具条码
 	private String purpose;				// 用途
 	private int useCount;				// 使用次数
 	private int stockId;				// 默认仓库id
@@ -20,10 +21,11 @@ public class PlantMould implements Serializable{
 	private int stockPosId;				// 默认库位id
 	private int containerId;			// 默认的容器id
 	private double worth;				// 价值
-	private int period;					// 生命周期
+	private double period;				// 生命周期
+	private double usePeriod;           // 已使用生码周期
 	private int unitId;					// 生命周期单位id
 	private String dutyMan;				// 责任人
-	private char useType;				// 使用类型	L：领用，H：归还
+	private char useType;				// 使用类型	L：领用，H：归还，N：未领用
 	private char status;				// 状态 A：正常，B：损坏
 	private int createUserId;			// 创建人
 	private String createDate;			// 创建日期
@@ -46,12 +48,12 @@ public class PlantMould implements Serializable{
 		this.id = id;
 	}
 
-	public int getFitemId() {
-		return fitemId;
+	public String getFnumber() {
+		return fnumber;
 	}
 
-	public void setFitemId(int fitemId) {
-		this.fitemId = fitemId;
+	public void setFnumber(String fnumber) {
+		this.fnumber = fnumber;
 	}
 
 	public String getFname() {
@@ -60,6 +62,14 @@ public class PlantMould implements Serializable{
 
 	public void setFname(String fname) {
 		this.fname = fname;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 
 	public String getPurpose() {
@@ -124,14 +134,6 @@ public class PlantMould implements Serializable{
 
 	public void setWorth(double worth) {
 		this.worth = worth;
-	}
-
-	public int getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(int period) {
-		this.period = period;
 	}
 
 	public int getUnitId() {
@@ -222,5 +224,31 @@ public class PlantMould implements Serializable{
 		this.container = container;
 	}
 
+	public double getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(double period) {
+		this.period = period;
+	}
+
+	public double getUsePeriod() {
+		return usePeriod;
+	}
+
+	public void setUsePeriod(double usePeriod) {
+		this.usePeriod = usePeriod;
+	}
+
+	@Override
+	public String toString() {
+		return "PlantMould [id=" + id + ", fnumber=" + fnumber + ", fname=" + fname + ", barcode=" + barcode
+				+ ", purpose=" + purpose + ", useCount=" + useCount + ", stockId=" + stockId + ", stockAreaId="
+				+ stockAreaId + ", storageRackId=" + storageRackId + ", stockPosId=" + stockPosId + ", containerId="
+				+ containerId + ", worth=" + worth + ", period=" + period + ", usePeriod=" + usePeriod + ", unitId="
+				+ unitId + ", dutyMan=" + dutyMan + ", useType=" + useType + ", status=" + status + ", createUserId="
+				+ createUserId + ", createDate=" + createDate + ", stock=" + stock + ", stockArea=" + stockArea
+				+ ", storageRack=" + storageRack + ", stockPos=" + stockPos + ", container=" + container + "]";
+	}
 
 }

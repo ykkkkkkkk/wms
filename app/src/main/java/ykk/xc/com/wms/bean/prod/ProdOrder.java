@@ -39,6 +39,8 @@ public class ProdOrder implements Serializable {
     private String unitName;
     /*生产数量*/
     private double fqty;
+    /*生码数量 ， 对应FHeadSelfJ01102 字段*/
+    private double createCodeQty;
     /*销售订单分录id*/
     private int salOrderEntryId;
     /*销售订单id*/
@@ -59,12 +61,15 @@ public class ProdOrder implements Serializable {
     private String prodStatus;
     /*生产任务单是否关闭标志*/
     private String prodClosed;
+    //生产订单是否装箱（990662代表是，990663代表否）
+    private int prodBinning;
+    private double fauxInHighLimitQty;	// 完工入库上限数量
+
+
     private ICItem icItem;
-//    private Organization cust; // 客户对象
+    // 客户对象
     private Customer cust;
     private Department department; // 部门对象
-    /*订单产品类型*/
-    private int goodsType;
 
     // 临时字段，不存表
     private int isCheck; // 是否选中
@@ -164,13 +169,6 @@ public class ProdOrder implements Serializable {
         this.unitName = unitName;
     }
 
-    public double getFqty() {
-        return fqty;
-    }
-
-    public void setFqty(double fqty) {
-        this.fqty = fqty;
-    }
 
     public int getSalOrderEntryId() {
         return salOrderEntryId;
@@ -252,6 +250,14 @@ public class ProdOrder implements Serializable {
         this.prodClosed = prodClosed;
     }
 
+    public double getFqty() {
+        return fqty;
+    }
+
+    public void setFqty(double fqty) {
+        this.fqty = fqty;
+    }
+
     public ICItem getIcItem() {
         return icItem;
     }
@@ -300,20 +306,21 @@ public class ProdOrder implements Serializable {
         this.department = department;
     }
 
+
+    public double getCreateCodeQty() {
+        return createCodeQty;
+    }
+
+    public void setCreateCodeQty(double createCodeQty) {
+        this.createCodeQty = createCodeQty;
+    }
+
     public String getBarcodeCreateDate() {
         return barcodeCreateDate;
     }
 
     public void setBarcodeCreateDate(String barcodeCreateDate) {
         this.barcodeCreateDate = barcodeCreateDate;
-    }
-
-    public int getGoodsType() {
-        return goodsType;
-    }
-
-    public void setGoodsType(int goodsType) {
-        this.goodsType = goodsType;
     }
 
     public String getFconfirmDate() {
@@ -324,5 +331,20 @@ public class ProdOrder implements Serializable {
         this.fconfirmDate = fconfirmDate;
     }
 
+    public int getProdBinning() {
+        return prodBinning;
+    }
+
+    public void setProdBinning(int prodBinning) {
+        this.prodBinning = prodBinning;
+    }
+
+    public double getFauxInHighLimitQty() {
+        return fauxInHighLimitQty;
+    }
+
+    public void setFauxInHighLimitQty(double fauxInHighLimitQty) {
+        this.fauxInHighLimitQty = fauxInHighLimitQty;
+    }
 
 }
