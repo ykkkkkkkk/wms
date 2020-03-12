@@ -45,6 +45,15 @@ public class User implements Serializable {
     private String empName;
     /*所属职员编码*/
     private String empNumber;
+    /*对应ERP里用户t_User表中的FUserID*/
+    private int erpUserId;
+    /*ERP用户名*/
+    private String erpUserName;
+    /* 用户类型。1内部用户，2供应商 */
+    private int accountType;
+    /* 供应商id */
+    private Integer supplierId;
+    private Supplier supplier;
 
     // 临时字段，不存表
     private Stock receiveStock; 			// 采购默认的收料仓库
@@ -208,12 +217,44 @@ public class User implements Serializable {
         this.receiveStockPos = receiveStockPos;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", sex=" + sex + ", truename="
-                + truename + ", createTime=" + createTime + ", createrId=" + createrId + ", createrName=" + createrName
-                + ", status=" + status + ", roles=" + roles + ", kdAcctName=" + kdAcctName + ", kdDBName=" + kdDBName
-                + ", empId=" + empId + ", empName=" + empName + ", empNumber=" + empNumber + "]";
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
+    public int getErpUserId() {
+        return erpUserId;
+    }
+
+    public void setErpUserId(int erpUserId) {
+        this.erpUserId = erpUserId;
+    }
+
+    public String getErpUserName() {
+        return erpUserName;
+    }
+
+    public void setErpUserName(String erpUserName) {
+        this.erpUserName = erpUserName;
     }
 
 }

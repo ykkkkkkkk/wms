@@ -57,10 +57,8 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         private val UNSUCC1 = 500
         private val SUCC2 = 201
         private val UNSUCC2 = 501
-        private val SUCC3 = 202
-        private val UNSUCC3 = 502
-        private val SAVE = 203
-        private val UNSAVE = 503
+        private val SAVE = 202
+        private val UNSAVE = 502
 
         private val SETFOCUS = 1
         private val SAOMA = 2
@@ -154,22 +152,6 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
                     }
                     UNSUCC2 -> { // 查询库存  失败
                         m.tv_stockQty.text = "0"
-                    }
-                    SUCC3 -> { // 查询仓库库位 进入
-                        var list = JsonUtil.strToList<List<String>>(msgObj)
-                        if(list.size == 1) { // 一个对象，仓库
-                            m.stock = null
-                            m.stock = JsonUtil.stringToObject(list[0].toString(), Stock::class.java)
-
-                        } else if(list.size == 2) { // 两个对象，仓库和库位
-                            m.stock = null
-                            m.stockPos = null
-                            m.stock = JsonUtil.stringToObject(list[0].toString(), Stock::class.java)
-                            m.stockPos = JsonUtil.stringToObject(list[1].toString(), StockPosition::class.java)
-                        }
-                    }
-                    UNSUCC3 -> { // 查询仓库库位    失败
-                        Comm.showWarnDialog(m.mContext,"请检查仓库是否设置为禁用！")
                     }
                     SAVE -> { // 保存成功 进入
                         // 保存了分录，供应商就不能修改

@@ -29,10 +29,15 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
         tv_row!!.text = (pos + 1).toString()
         tv_date!!.text = entity.createTime
         tv_billNo!!.text = entity.billNo
+        // 1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨
         if(entity.missionType == 1) {
             tv_missionType!!.text = "外购收料任务"
+        } else if(entity.missionType == 21) {
+            tv_missionType!!.text = "销售发货任务"
         } else if(entity.missionType == 31) {
-            tv_missionType!!.text = "收料质检任务"
+            tv_missionType!!.text = "仓库外购收货任务"
+        } else if(entity.missionType == 41) {
+            tv_missionType!!.text = "投料调拨任务"
         } else {
             tv_missionType!!.text = "外购收料任务"
         }

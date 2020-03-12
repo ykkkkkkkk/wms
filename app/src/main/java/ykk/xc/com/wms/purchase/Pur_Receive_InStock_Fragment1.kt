@@ -231,7 +231,7 @@ class Pur_Receive_InStock_Fragment1 : BaseFragment() {
         getUserInfo()
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         tv_inDateSel.text = Comm.getSysDate(7)
-        tv_operationManName.text = user!!.empName
+        tv_operationManName.text = user!!.erpUserName
         tv_emp1Sel.text = user!!.empName
         tv_emp2Sel.text = user!!.empName
         tv_emp3Sel.text = user!!.empName
@@ -249,7 +249,7 @@ class Pur_Receive_InStock_Fragment1 : BaseFragment() {
         icStockBill.fuzheMan = user!!.empName
         icStockBill.ffmanagerId = user!!.empId
         icStockBill.yanshouMan = user!!.empName
-        icStockBill.fbillerId = user!!.empId
+        icStockBill.fbillerId = user!!.erpUserId
         icStockBill.createUserId = user!!.id
         icStockBill.createUserName = user!!.username
 

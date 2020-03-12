@@ -17,10 +17,8 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.prod_in_stock_fragment1.tv_roughWeight
-import kotlinx.android.synthetic.main.prod_in_stock_fragment1.tv_connBlueTooth
-import kotlinx.android.synthetic.main.prod_in_stock_fragment2.tv_num
-import kotlinx.android.synthetic.main.prod_in_stock_fragment2.tv_connBlueTooth2
+import kotlinx.android.synthetic.main.prod_in_stock_fragment1.*
+import kotlinx.android.synthetic.main.prod_in_stock_fragment2.*
 import kotlinx.android.synthetic.main.prod_in_stock_main.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.comm.BaseActivity
@@ -243,7 +241,15 @@ class Prod_InStock_MainActivity : BaseActivity() {
                 BLUETOOTH_REC -> { // 得到电子秤返回的数据
                     when(pageId) {
                         0 -> context!!.fragment1.tv_roughWeight.text = smsg.toString()
-                        1 -> context!!.fragment2.tv_num.text = smsg.toString()
+                        1 -> {
+//                            // 物料启用了称重，才写数据
+                            val icItem = context!!.fragment2.icStockBillEntry.icItem
+                            if(icItem.calByWeight.equals("M") || icItem.calByWeight.equals("Y")) {
+                                context!!.fragment2.tv_weight.text = smsg.toString()
+                            } else {
+//                                Comm.showWarnDialog(context,"请选择物料称重！")
+                            }
+                        }
                     }
                     this.sendEmptyMessageDelayed(RESET_TEXT,300)
                 }

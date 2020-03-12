@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import butterknife.OnClick
 import kotlinx.android.synthetic.main.prod_in_stock_fragment3.*
 import kotlinx.android.synthetic.main.prod_in_stock_main.*
 import okhttp3.*
@@ -16,6 +17,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.EventBusEntity
+import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.ICStockBillEntry
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
@@ -43,6 +45,8 @@ class Prod_InStock_Fragment3 : BaseFragment() {
         private val UNSUCC1 = 500
         private val DELETE = 201
         private val UNDELETE = 501
+        private val UPLOAD = 202
+        private val UNUPLOAD = 502
     }
     private val context = this
     private var parent: Prod_InStock_MainActivity? = null
@@ -99,12 +103,26 @@ class Prod_InStock_Fragment3 : BaseFragment() {
                         m.tv_sumMoney.text = "0"
                     }
                     DELETE -> { // 删除分录 进入
-                        m.checkDatas.removeAt(m.curPos)
-
-                        m.mAdapter!!.notifyDataSetChanged()
+                        m.run_findEntryList()
                     }
                     UNDELETE -> { // 删除分录  失败
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
+                    }
+                    UPLOAD -> { // 上传单据 进入
+                        val retMsg = JsonUtil.strToString(msgObj)
+                        if(retMsg.length > 0) {
+                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
+                        } else {
+                            m.toasts("上传成功")
+                        }
+                        // 滑动第一个页面
+                        m.parent!!.viewPager!!.setCurrentItem(0, false)
+                        m.parent!!.fragment1.reset() // 重置
+                    }
+                    UNUPLOAD -> { // 上传单据  失败
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
                     }
                 }
             }
@@ -114,7 +132,7 @@ class Prod_InStock_Fragment3 : BaseFragment() {
     @Subscribe
     fun onEventBus(entity: EventBusEntity) {
         when (entity.caseId) {
-            21 -> { // 接收第二个页面发来的指令
+            12,21 -> { // 接收第一个页面（12）发来的指令，接收第二个页面（21）发来的指令
                 run_findEntryList()
             }
         }
@@ -137,11 +155,11 @@ class Prod_InStock_Fragment3 : BaseFragment() {
 
         // 行事件
         mAdapter!!.setCallBack(object : Prod_InStock_Fragment3_Adapter.MyCallBack {
-            override fun onModify(entity: ICStockBillEntry, position: Int) {
-                EventBus.getDefault().post(EventBusEntity(31, entity))
-                // 滑动第二个页面
-                parent!!.viewPager!!.setCurrentItem(1, false)
-            }
+//            override fun onModify(entity: ICStockBillEntry, position: Int) {
+//                EventBus.getDefault().post(EventBusEntity(31, entity))
+//                // 滑动第二个页面
+//                parent!!.viewPager!!.setCurrentItem(1, false)
+//            }
             override fun onDelete(entity: ICStockBillEntry, position: Int) {
                 curPos = position
                 run_removeEntry(entity.id)
@@ -149,13 +167,23 @@ class Prod_InStock_Fragment3 : BaseFragment() {
         })
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            if(curPos > -1) {
-                checkDatas[curPos].isShowButton = false
+            if(checkDatas[0].materialBinningRecordId > 0) {
+                Comm.showWarnDialog(mContext,"箱子里的数量不能修改！")
+            } else {
+                EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))
+                // 滑动第二个页面
+                parent!!.viewPager!!.setCurrentItem(1, false)
             }
-            curPos = pos
-            checkDatas[pos].isShowButton = true
-            mAdapter!!.notifyDataSetChanged()
         }
+
+        // 长按查看条码
+//        mAdapter!!.onItemLongClickListener = BaseRecyclerAdapter.OnItemLongClickListener{ adapter, holder, view, pos ->
+//            EventBus.getDefault().post(EventBusEntity(32, checkDatas[pos], (pos+1)))
+//            // 滑动第四个页面
+//            parent!!.viewPager!!.setCurrentItem(3, false)
+//            true
+//        }
+
     }
 
     override fun initData() {
@@ -178,64 +206,33 @@ class Prod_InStock_Fragment3 : BaseFragment() {
         }
     }
 
-//    @OnClick(R.id.tv_deptSel, R.id.tv_suppSel, R.id.tv_stockSel, R.id.btn_scan_stockPos, R.id.btn_stockPosSel, R.id.btn_scan, R.id.btn_mtlSel, R.id.btn_save, R.id.btn_clone)
-//    fun onViewClicked(view: View) {
-//        var bundle: Bundle? = null
-//        when (view.id) {
-//            R.id.tv_deptSel -> { // 选择部门
-//                showForResult(Dept_DialogActivity::class.java, SEL_DEPT, null)
-//            }
-//            R.id.tv_suppSel -> { // 选择供应商
-//                showForResult(Supplier_DialogActivity::class.java, SEL_SUPP, null)
-//            }
-//            R.id.tv_stockSel -> { // 选择收货仓库
-//                showForResult(Stock_DialogActivity::class.java, SEL_STOCK, null)
-//            }
-//            R.id.btn_stockPosSel -> { // 选择调出库位
-//                if(!checkSelStockPos()) return
-//                var bundle = Bundle()
-//                bundle.putInt("fspGroupId", stock!!.fspGroupId);
-//                showForResult(StockPos_DialogActivity::class.java, SEL_STOCKPOS, bundle)
-//            }
-//            R.id.btn_mtlSel -> { // 选择物料
-//                if(!checkSelStockPos()) return
-//                bundle = Bundle()
-//                bundle.putInt("fStockId", stock!!.fitemId)
-//                bundle.putInt("fStockPlaceID", if(stockPos != null) stockPos!!.fspId else 0)
-//                showForResult(StockTransfer_Material_DialogActivity::class.java, SEL_MTL, bundle)
-//            }
-//            R.id.btn_scan_stockPos -> { // 调用摄像头扫描（调出库位）
-//                if(!checkSelStockPos()) return
-//                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
-//            }
-//            R.id.btn_scan -> { // 调用摄像头扫描（物料）
-//                if(!checkSelStockPos()) return
-//                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
-//            }
-//            R.id.btn_save -> { // 保存
-//                if(checkDatas.size == 0) {
-//                    Comm.showWarnDialog(mContext,"请选择物料或者扫码条码！")
-//                    return
-//                }
-//                run_save();
-//            }
-//            R.id.btn_clone -> { // 重置
-//                if (parent!!.isChange) {
-//                    val build = AlertDialog.Builder(mContext)
-//                    build.setIcon(R.drawable.caution)
-//                    build.setTitle("系统提示")
-//                    build.setMessage("您有未保存的数据，继续重置吗？")
-//                    build.setPositiveButton("是") { dialog, which -> reset(true) }
-//                    build.setNegativeButton("否", null)
-//                    build.setCancelable(false)
-//                    build.show()
-//
-//                } else {
-//                    reset(true)
-//                }
-//            }
-//        }
-//    }
+    @OnClick(R.id.btn_upload)
+    fun onViewClicked(view: View) {
+        when (view.id) {
+            R.id.btn_upload -> { // 上传
+                val size = checkDatas.size
+                if(size == 0) {
+                    Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
+                    return
+                }
+                checkDatas.forEachIndexed { index, it ->
+                    if(it.stockId_wms == 0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
+                        return
+                    }
+                    if(it.fqty == 0.0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（入库数）！")
+                        return
+                    }
+                }
+
+                val list = ArrayList<ICStockBill>()
+                list.add(parent!!.fragment1.icStockBill)
+                val strJson = JsonUtil.objectToString(list)
+                run_uploadToK3(strJson)
+            }
+        }
+    }
 
     override fun setListener() {
 
@@ -325,6 +322,44 @@ class Prod_InStock_Fragment3 : BaseFragment() {
                     return
                 }
                 val msg = mHandler.obtainMessage(DELETE, result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 上传单据
+     */
+    private fun run_uploadToK3(strJson : String) {
+        showLoadDialog("加载中...", false)
+        val mUrl = getURL("stockBill_WMS/uploadToK3")
+        val formBody = FormBody.Builder()
+                .add("strJson", strJson)
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNUPLOAD)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                LogUtil.e("run_uploadToK3 --> onResponse", result)
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNUPLOAD, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(UPLOAD, result)
                 mHandler.sendMessage(msg)
             }
         })

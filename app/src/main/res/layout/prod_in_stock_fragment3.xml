@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_25dp"
-        android:background="@drawable/back_style_blue_line_top"
+        android:background="@color/c_d8d8d8"
         android:orientation="horizontal">
 
         <TextView
@@ -42,6 +42,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_10dp"
             android:gravity="center"
+            android:visibility="gone"
             android:text="总金额："
             android:textColor="@color/c_515151"
             android:textSize="14sp" />
@@ -51,9 +52,27 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:visibility="gone"
             android:gravity="center"
             android:textColor="@color/c_FF4400"
             android:textSize="14sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_upload"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/btn_blue2_selector"
+            android:gravity="center"
+            android:text="上传"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

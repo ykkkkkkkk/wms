@@ -143,10 +143,10 @@ class MainTabFragment1 : BaseFragment(), IDownloadContract.View {
                 show(OutInStock_Search_MainActivity::class.java, bundle)
             }
             R.id.relative5 -> { // 仓库收货上传
-                val bundle = Bundle()
-                bundle.putInt("pageId", 6)
-                bundle.putString("billType", "CGSHCZ")
-                show(OutInStock_Search_MainActivity::class.java, bundle)
+//                val bundle = Bundle()
+//                bundle.putInt("pageId", 6)
+//                bundle.putString("billType", "CGSHCZ")
+//                show(OutInStock_Search_MainActivity::class.java, bundle)
             }
         }//                show(Pur_OrderSearchActivity.class, null);
         //                show(Pur_InStock_MainActivity.class,null);

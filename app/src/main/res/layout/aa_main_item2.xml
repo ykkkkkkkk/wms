@@ -108,7 +108,7 @@
                 android:layout_below="@+id/tvImg3"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="生产入库"
+                android:text="产品入库"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -130,14 +130,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tvImg4"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/aa_ico2a_1" />
+                android:background="@drawable/upload" />
 
             <TextView
                 android:id="@+id/tab4"
@@ -146,7 +146,7 @@
                 android:layout_below="@+id/tvImg4"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="产品入库"
+                android:text="待上传"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

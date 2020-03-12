@@ -1,16 +1,17 @@
 package ykk.xc.com.wms.entrance
 
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import butterknife.OnClick
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.produce.Prod_Box_MainActivity
-import ykk.xc.com.wms.produce.Prod_InStock_MainActivity
 import ykk.xc.com.wms.produce.Prod_Box_UnBind_MainActivity
+import ykk.xc.com.wms.produce.Prod_InStock_MainActivity
+import ykk.xc.com.wms.warehouse.OutInStock_Search_MainActivity
 
 /**
  * 生产
@@ -31,12 +32,14 @@ class MainTabFragment2 : BaseFragment() {
                 show(Prod_Box_UnBind_MainActivity::class.java, null)
             }
             R.id.relative3  -> { // 生产入库
-//                show(Prod_InStock_MainActivity::class.java, null)
-            }
-            R.id.relative4  -> { // 产品入库
                 show(Prod_InStock_MainActivity::class.java, null)
             }
-        }//                show(Prod_ScInOtherMainActivity.class,null);
-        //                show(Mtl_SmSearch_MainActivity.class,null);
+            R.id.relative4  -> { // 待上传
+                val bundle = Bundle()
+                bundle.putInt("pageId", 4)
+                bundle.putString("billType", "SCRK")
+                show(OutInStock_Search_MainActivity::class.java, bundle)
+            }
+        }
     }
 }

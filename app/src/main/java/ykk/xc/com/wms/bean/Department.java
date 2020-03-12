@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Department implements Serializable{
 
 	//K3部门id
-	private Integer fitemID;
+	private int fitemID;
 	//部门条码
 	private String barcode;
 	//K3部门编码
@@ -20,7 +20,7 @@ public class Department implements Serializable{
 	//部门属性 1070-车间,1071-非车间
 	private int departmentProperty;
 	//调入仓库
-	private Integer inStockId;
+	private int inStockId;
 	/*K3数据状态*/
 	private String dataStatus;
 	/*wms非物理删除标识*/
@@ -33,15 +33,32 @@ public class Department implements Serializable{
 	private String prefix;
 	//是否属于装卸部门，1属于，2不属于
 	private int isload;
+	//倒冲仓  erp ID
+	private int bwStockErpId;
+
+	private Stock bwStock;
+
+	//MRP仓 erp ID
+	private int mrpStockErpId;
+
+	private Stock mrpStock;
+
+	//车间成品仓 erp ID
+	private int productStockId;
+
+	private Stock productStock;
+
+	//是否合并领料  990660代表合并；990661代表不合并
+	private int mergeItem;
 
 	public Department() {
 		super();
 	}
 
-	public Integer getFitemID() {
+	public int getFitemID() {
 		return fitemID;
 	}
-	public void setFitemID(Integer fitemID) {
+	public void setFitemID(int fitemID) {
 		this.fitemID = fitemID;
 	}
 	public String getBarcode() {
@@ -109,11 +126,11 @@ public class Department implements Serializable{
 		this.prefix = prefix;
 	}
 
-	public Integer getInStockId() {
+	public int getInStockId() {
 		return inStockId;
 	}
 
-	public void setInStockId(Integer inStockId) {
+	public void setInStockId(int inStockId) {
 		this.inStockId = inStockId;
 	}
 
@@ -125,13 +142,60 @@ public class Department implements Serializable{
 		this.isload = isload;
 	}
 
-	@Override
-	public String toString() {
-		return "Department [fitemID=" + fitemID + ", barcode=" + barcode + ", departmentNumber="
-				+ departmentNumber + ", departmentName=" + departmentName + ", departmentUseOrgId=" + departmentUseOrgId
-				+ ", departmentProperty=" + departmentProperty + ", inStockId=" + inStockId + ", dataStatus="
-				+ dataStatus + ", isDelete=" + isDelete + ", enabled=" + enabled + ", fModifyDate=" + fModifyDate
-				+ ", prefix=" + prefix + ", isload=" + isload + "]";
+	public int getBwStockErpId() {
+		return bwStockErpId;
+	}
+
+	public void setBwStockErpId(int bwStockErpId) {
+		this.bwStockErpId = bwStockErpId;
+	}
+
+	public Stock getBwStock() {
+		return bwStock;
+	}
+
+	public void setBwStock(Stock bwStock) {
+		this.bwStock = bwStock;
+	}
+
+	public int getMrpStockErpId() {
+		return mrpStockErpId;
+	}
+
+	public void setMrpStockErpId(int mrpStockErpId) {
+		this.mrpStockErpId = mrpStockErpId;
+	}
+
+	public Stock getMrpStock() {
+		return mrpStock;
+	}
+
+	public void setMrpStock(Stock mrpStock) {
+		this.mrpStock = mrpStock;
+	}
+
+	public int getProductStockId() {
+		return productStockId;
+	}
+
+	public void setProductStockId(int productStockId) {
+		this.productStockId = productStockId;
+	}
+
+	public Stock getProductStock() {
+		return productStock;
+	}
+
+	public void setProductStock(Stock productStock) {
+		this.productStock = productStock;
+	}
+
+	public int getMergeItem() {
+		return mergeItem;
+	}
+
+	public void setMergeItem(int mergeItem) {
+		this.mergeItem = mergeItem;
 	}
 
 }

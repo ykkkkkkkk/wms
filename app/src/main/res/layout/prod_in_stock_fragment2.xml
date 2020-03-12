@@ -23,46 +23,193 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:ems="4"
+            android:ems="2"
             android:gravity="center"
-            android:text="源单类型"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:text="位置"
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
         <LinearLayout
+            android:id="@+id/lin_focusPosition"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/back_style_gray3"
             android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_sourceTypeSel"
+            <Button
+                android:id="@+id/btn_positionScan"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:visibility="gone"
+                android:background="@drawable/btn_scan_selector" />
+
+            <EditText
+                android:id="@+id/et_positionCode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/back_style_blue2"
-                android:drawableRight="@drawable/xiala3"
-                android:gravity="center|left"
-                android:paddingLeft="@dimen/_6dp"
-                android:text="无源单"
+                android:enabled="false"
+                android:background="@color/transparent"
+                android:hint="扫描位置条码"
+                android:visibility="gone"
+                android:inputType="none"
+                android:paddingLeft="@dimen/_2dp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sp" />
+                android:textSize="@dimen/_12sp" />
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_2dp"
+                android:layout_marginTop="@dimen/_2dp"
+                android:background="@color/c_eaeaea" />
+
+            <TextView
+                android:id="@+id/tv_positionName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/c_6a5acd"
+                android:textSize="@dimen/_12sp" />
 
             <Button
-                android:id="@+id/btn_sourceNoSel"
-                android:layout_width="@dimen/_46dp"
+                android:id="@+id/btn_positionSel"
+                android:layout_width="@dimen/_42dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_6dp"
-                android:background="@drawable/btn_blue2_selector"
-                android:text="选单"
+                android:layout_margin="@dimen/_1dp"
+                android:visibility="gone"
+                android:background="@drawable/btn_blue_selector"
+                android:text="选择"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_14sp"
-                android:visibility="gone" />
+                android:textSize="@dimen/_12sp" />
         </LinearLayout>
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/relative_stockGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_12dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_stockName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="仓库："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_stockAreaName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_stockName"
+            android:text="库区："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_storageRackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_stockAreaName"
+            android:text="货架："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_stockPosName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_storageRackName"
+            android:text="库位："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_getBox"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ems="2"
+            android:gravity="center"
+            android:text="箱码"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/lin_focusBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_scanBox"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/btn_scan_selector" />
+
+            <EditText
+                android:id="@+id/et_boxCode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="扫描包装条码"
+                android:inputType="none"
+                android:paddingLeft="@dimen/_2dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sp" />
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_2dp"
+                android:layout_marginTop="@dimen/_2dp"
+                android:background="@color/c_eaeaea" />
+
+            <TextView
+                android:id="@+id/tv_boxName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/c_6a5acd"
+                android:textSize="@dimen/_12sp" />
+
+            <Button
+                android:id="@+id/btn_boxSel"
+                android:layout_width="@dimen/_42dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_1dp"
+                android:background="@drawable/btn_blue_selector"
+                android:text="选择"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lin_getMtl"
@@ -70,7 +217,8 @@
         android:layout_height="38dp"
         android:layout_margin="@dimen/_6dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -108,6 +256,22 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sp" />
 
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_2dp"
+                android:layout_marginTop="@dimen/_2dp"
+                android:background="@color/c_eaeaea" />
+
+            <TextView
+                android:id="@+id/tv_icItemName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/c_6a5acd"
+                android:textSize="@dimen/_12sp" />
+
             <Button
                 android:id="@+id/btn_mtlSel"
                 android:layout_width="@dimen/_42dp"
@@ -116,110 +280,21 @@
                 android:background="@drawable/btn_blue_selector"
                 android:text="选择"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sp" />
+                android:textSize="@dimen/_12sp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_mtlName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:textColor="@color/c_FF4400"
-        android:textSize="@dimen/_16sp" />
-
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_marginRight="@dimen/_6dp"
-        android:layout_marginTop="@dimen/_5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="物料代码："
-            android:textColor="@color/c_666666"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_mtlNumber"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_3dp"
-            android:gravity="center"
-            android:text="规格型号："
-            android:textColor="@color/c_666666"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_fmodel"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_marginRight="@dimen/_6dp"
-        android:layout_marginTop="@dimen/_5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="总金额："
-            android:textColor="@color/c_666666"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_sumMoney"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_3dp"
-            android:gravity="center"
-            android:text="即时库存："
-            android:textColor="@color/c_666666"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_stockQty"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sp" />
-
-    </LinearLayout>
+        android:layout_height="@dimen/_3dp"
+        android:background="@color/c_d8d8d8" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_2dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -227,107 +302,47 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
+            <TextView
+                android:id="@+id/tv_mtlName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_6dp"
-                android:layout_marginRight="@dimen/_6dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:ems="2"
-                    android:gravity="center"
-                    android:text="仓库"
-                    android:textColor="#000000"
-                    android:textSize="12sp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_blue"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_stockScan"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:background="@drawable/btn_scan_selector" />
-
-                    <EditText
-                        android:id="@+id/et_stockCode"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@color/transparent"
-                        android:hint="扫描库位条码"
-                        android:inputType="none"
-                        android:paddingLeft="@dimen/_2dp"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sp" />
-
-                    <Button
-                        android:id="@+id/btn_stockSel"
-                        android:layout_width="@dimen/_42dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/_1dp"
-                        android:background="@drawable/btn_blue_selector"
-                        android:text="选择"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_12sp" />
-                </LinearLayout>
-
-            </LinearLayout>
+                android:textColor="@color/c_FF4400"
+                android:textSize="@dimen/_16sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10dp"
-                android:layout_marginRight="@dimen/_10dp">
+                android:layout_marginLeft="@dimen/_6dp"
+                android:layout_marginRight="@dimen/_6dp"
+                android:layout_marginTop="@dimen/_5dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_stockName"
+                    android:id="@+id/tv_mtlNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="仓库："
+                    android:text="物料代码："
                     android:textColor="@color/c_666666"
-                    android:textSize="@dimen/_12sp" />
+                    android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_stockAreaName"
+                    android:id="@+id/tv_fmodel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/tv_stockName"
-                    android:layout_marginLeft="@dimen/_16dp"
-                    android:text="库区："
+                    android:layout_below="@+id/tv_mtlNumber"
+                    android:text="规格型号："
                     android:textColor="@color/c_666666"
-                    android:textSize="@dimen/_12sp" />
+                    android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_storageRackName"
+                    android:id="@+id/tv_stockQty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_stockName"
-                    android:text="货架："
+                    android:layout_below="@+id/tv_fmodel"
+                    android:text="即时库存："
                     android:textColor="@color/c_666666"
-                    android:textSize="@dimen/_12sp" />
-
-                <TextView
-                    android:id="@+id/tv_stockPosName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_stockName"
-                    android:layout_toRightOf="@+id/tv_storageRackName"
-                    android:layout_marginLeft="@dimen/_16dp"
-                    android:text="库位："
-                    android:textColor="@color/c_666666"
-                    android:textSize="@dimen/_12sp" />
-
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <LinearLayout
@@ -342,27 +357,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:ems="2"
-                    android:gravity="center"
-                    android:text="单价"
-                    android:textColor="#000000"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tv_price"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_blue"
-                    android:gravity="center|left"
-                    android:paddingLeft="@dimen/_3dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_3dp"
                     android:ems="2"
                     android:gravity="center"
                     android:text="批号"
@@ -380,6 +374,26 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_3dp"
+                    android:ems="2"
+                    android:gravity="center"
+                    android:text="单位"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_unitSel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_gray3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -416,8 +430,8 @@
                 <TextView
                     android:id="@+id/tv_connBlueTooth2"
                     android:layout_width="@dimen/_72dp"
-                    android:layout_marginLeft="@dimen/_3dp"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_3dp"
                     android:background="@drawable/btn_blue_selector"
                     android:gravity="center"
                     android:text="连接蓝牙"
@@ -440,7 +454,7 @@
                     android:layout_height="match_parent"
                     android:ems="2"
                     android:gravity="center"
-                    android:text="数量"
+                    android:text="入库数"
                     android:textColor="#000000"
                     android:textSize="12sp" />
 
@@ -458,19 +472,123 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_3dp"
                     android:ems="2"
+                    android:layout_marginLeft="@dimen/_3dp"
                     android:gravity="center"
-                    android:text="单位"
+                    android:text="源单数量"
                     android:textColor="#000000"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_unitSel"
+                    android:id="@+id/tv_sourceQty"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/back_style_gray3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_6dp"
+                android:layout_marginRight="@dimen/_6dp"
+                android:layout_marginTop="@dimen/_5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="2"
+                    android:gravity="center"
+                    android:text="参考数"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_referenceNum"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_gray3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="2"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/_3dp"
+                    android:text="称重数"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_6dp"
+                android:layout_marginRight="@dimen/_6dp"
+                android:layout_marginTop="@dimen/_5dp"
+                android:visibility="gone"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="4"
+                    android:gravity="center"
+                    android:text="生产/采购日期"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_fkfDate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="3"
+                    android:layout_marginLeft="@dimen/_3dp"
+                    android:gravity="center"
+                    android:text="保质期(天)"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_fkfPeriod"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:background="@drawable/back_style_blue"
                     android:gravity="center|left"
                     android:paddingLeft="@dimen/_3dp"
                     android:textColor="@color/black"
@@ -513,7 +631,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_20dp" />
         </LinearLayout>
-
     </ScrollView>
 
     <LinearLayout

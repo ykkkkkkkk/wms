@@ -137,11 +137,11 @@ class Wwjg_InStock_Fragment3 : BaseFragment() {
 
         // 行事件
         mAdapter!!.setCallBack(object : Prod_InStock_Fragment3_Adapter.MyCallBack {
-            override fun onModify(entity: ICStockBillEntry, position: Int) {
-                EventBus.getDefault().post(EventBusEntity(31, entity))
-                // 滑动第二个页面
-                parent!!.viewPager!!.setCurrentItem(1, false)
-            }
+//            override fun onModify(entity: ICStockBillEntry, position: Int) {
+//                EventBus.getDefault().post(EventBusEntity(31, entity))
+//                // 滑动第二个页面
+//                parent!!.viewPager!!.setCurrentItem(1, false)
+//            }
             override fun onDelete(entity: ICStockBillEntry, position: Int) {
                 curPos = position
                 run_removeEntry(entity.id)

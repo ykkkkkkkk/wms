@@ -126,6 +126,7 @@
                 android:layout_height="38dp"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:layout_marginRight="@dimen/_8dp"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/_8dp"
                 android:gravity="center"
                 android:orientation="horizontal">

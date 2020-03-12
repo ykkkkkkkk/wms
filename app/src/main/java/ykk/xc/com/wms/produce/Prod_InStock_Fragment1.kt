@@ -25,6 +25,7 @@ import ykk.xc.com.wms.bean.*
 import ykk.xc.com.wms.bean.k3Bean.Emp
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
+import ykk.xc.com.wms.purchase.Pur_Receive_InStock_Fragment1
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.blueTooth.Constant
@@ -51,6 +52,8 @@ class Prod_InStock_Fragment1 : BaseFragment() {
         private val RESULT_NUM = 1
         private val SAVE = 202
         private val UNSAVE = 502
+        private val FIND_ICSTOCKBILL = 204
+        private val UNFIND_ICSTOCKBILL = 504
     }
 
     private val context = this
@@ -61,6 +64,7 @@ class Prod_InStock_Fragment1 : BaseFragment() {
     private var timesTamp:String? = null // 时间戳
     var icStockBill = ICStockBill() // 保存的对象
     private val df = DecimalFormat("#.###") // 重量保存三位小数
+    private var icStockBillId = 0 // 上个页面传来的id
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -96,16 +100,89 @@ class Prod_InStock_Fragment1 : BaseFragment() {
                         m.toasts("保存成功✔")
                         // 滑动第二个页面
                         m.parent!!.viewPager!!.setCurrentItem(1, false)
-                        m.parent!!.isChange = true
+                        m.parent!!.isChange = if(m.icStockBillId == 0) true else false
                     }
                     UNSAVE -> { // 保存失败
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "保存失败！"
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
+                    FIND_ICSTOCKBILL -> { // 查询主表信息 成功
+                        val icsBill = JsonUtil.strToObject(msgObj, ICStockBill::class.java)
+                        m.setICStockBill(icsBill)
+                    }
+                    UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
+                        m.toasts("查询信息有错误！2秒后自动关闭...")
+                        m.mHandler.postDelayed(Runnable {
+                            m.mContext!!.finish()
+                        },2000)
+                    }
                 }
             }
         }
+    }
+
+    fun setICStockBill(m : ICStockBill) {
+        icStockBill.id = m.id
+        icStockBill.pdaNo = m.pdaNo
+        icStockBill.fdate = m.fdate
+        icStockBill.fsupplyId = m.fsupplyId
+        icStockBill.suppName = m.suppName
+        icStockBill.fdeptId = m.fdeptId
+        icStockBill.fempId = m.fempId
+        icStockBill.fsmanagerId = m.fsmanagerId
+        icStockBill.fmanagerId = m.fmanagerId
+        icStockBill.ffmanagerId = m.ffmanagerId
+        icStockBill.fbillerId = m.fbillerId
+        icStockBill.fselTranType = m.fselTranType
+
+        icStockBill.suppName = m.suppName
+        icStockBill.deptName = m.deptName
+        icStockBill.yewuMan = m.yewuMan          // 业务员
+        icStockBill.baoguanMan = m.baoguanMan          // 保管人
+        icStockBill.fuzheMan = m.fuzheMan           // 负责人
+        icStockBill.yanshouMan = m.yanshouMan            // 验收人
+        icStockBill.createUserId = m.createUserId        // 创建人id
+        icStockBill.createUserName = m.createUserName        // 创建人
+        icStockBill.createDate = m.createDate            // 创建日期
+        icStockBill.isToK3 = m.isToK3                   // 是否提交到K3
+        icStockBill.roughWeight = m.roughWeight            // 毛重
+        icStockBill.netWeight = m.netWeight          // 净重
+        icStockBill.weightUnitType = m.weightUnitType            // 重量单位类型(1：千克，2：克，3：磅)
+        icStockBill.k3Number = m.k3Number                // k3返回的单号
+        icStockBill.qualifiedStockId = m.qualifiedStockId       // 合格仓库id
+        icStockBill.unQualifiedStockId = m.unQualifiedStockId       // 不合格仓库id
+        icStockBill.missionBillId = m.missionBillId
+
+        icStockBill.supplier = m.supplier
+        icStockBill.department = m.department
+        icStockBill.qualifiedStock = m.qualifiedStock
+        icStockBill.unQualifiedStock = m.unQualifiedStock
+
+        tv_pdaNo.text = m.pdaNo
+        tv_inDateSel.text = m.fdate
+        tv_deptSel.text = m.deptName
+        tv_emp2Sel.text = m.baoguanMan
+        tv_emp4Sel.text = m.yanshouMan
+        tv_roughWeight.text = df.format(m.roughWeight)
+        tv_netWeight.text = df.format(m.netWeight)
+        // 重量单位类型(1：千克，2：克，3：磅)
+        when(m.weightUnitType) {
+            1 -> { // 千克（kg）
+                tv_weightUnitType.text = "千克（kg）"
+            }
+            2 -> { // 克（g）
+                tv_weightUnitType.text = "克（g）"
+            }
+            3 -> { // 磅（lb）
+                tv_weightUnitType.text = "磅（lb）"
+            }
+        }
+
+        parent!!.isChange = false
+        parent!!.isMainSave = true
+        parent!!.viewPager.setScanScroll(true); // 放开左右滑动
+        EventBus.getDefault().post(EventBusEntity(12)) // 发送指令到fragment3，查询分类信息
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
@@ -130,15 +207,38 @@ class Prod_InStock_Fragment1 : BaseFragment() {
         getUserInfo()
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         tv_inDateSel.text = Comm.getSysDate(7)
-        tv_operationManName.text = user!!.empName
+        tv_operationManName.text = user!!.erpUserName
+        tv_emp2Sel.text = user!!.empName
+        tv_emp4Sel.text = user!!.empName
 
         icStockBill.billType = "SCRK"
         icStockBill.ftranType = 2
         icStockBill.frob = 1
         icStockBill.weightUnitType = 1
-        icStockBill.fbillerId = user!!.empId
+        icStockBill.fempId = user!!.empId
+        icStockBill.yewuMan = user!!.empName
+        icStockBill.fsmanagerId = user!!.empId
+        icStockBill.baoguanMan = user!!.empName
+        icStockBill.fmanagerId = user!!.empId
+        icStockBill.fuzheMan = user!!.empName
+        icStockBill.ffmanagerId = user!!.empId
+        icStockBill.yanshouMan = user!!.empName
+        icStockBill.fbillerId = user!!.erpUserId
         icStockBill.createUserId = user!!.id
         icStockBill.createUserName = user!!.username
+
+        bundle()
+    }
+
+    fun bundle() {
+        val bundle = mContext!!.intent.extras
+        if(bundle != null) {
+            if(bundle.containsKey("id")) { // 查询过来的
+                icStockBillId = bundle.getInt("id") // ICStockBill主表id
+                // 查询主表信息
+                run_findStockBill(icStockBillId)
+            }
+        }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -198,7 +298,7 @@ class Prod_InStock_Fragment1 : BaseFragment() {
                 if(!checkSave()) return
                 icStockBill.fdate = getValues(tv_inDateSel)
                 icStockBill.roughWeight = parseDouble(getValues(tv_roughWeight))
-                run_save();
+                run_save()
             }
             R.id.btn_clone -> { // 重置
                 if (parent!!.isChange) {
@@ -226,10 +326,10 @@ class Prod_InStock_Fragment1 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请选择部门！")
             return false;
         }
-        if (icStockBill.stock == null) {
-            Comm.showWarnDialog(mContext, "请选择收料仓库！")
-            return false;
-        }
+//        if (icStockBill.stock == null) {
+//            Comm.showWarnDialog(mContext, "请选择收料仓库！")
+//            return false;
+//        }
         if(icStockBill.fsmanagerId == 0) {
             Comm.showWarnDialog(mContext, "请选择保管人！")
             return false
@@ -277,6 +377,7 @@ class Prod_InStock_Fragment1 : BaseFragment() {
 //        icStockBill.weightUnitType = 1
         icStockBill.netWeight = 0.0
         icStockBill.stock = null
+        icStockBill.department = null
 
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         parent!!.isChange = false
@@ -331,9 +432,15 @@ class Prod_InStock_Fragment1 : BaseFragment() {
             SEL_DEPT -> {//查询部门	返回
                 if (resultCode == Activity.RESULT_OK) {
                     val dept = data!!.getSerializableExtra("obj") as Department
+                    if(dept.productStockId == 0) {
+                        Comm.showWarnDialog(mContext,"该仓库没有设置成品仓！")
+                        return
+                    }
                     tv_deptSel.text = dept!!.departmentName
                     icStockBill.fdeptId = dept.fitemID
                     icStockBill.deptName = dept.departmentName
+                    icStockBill.department = dept
+
                 }
             }
             SEL_STOCK -> {// 仓库	返回
@@ -408,6 +515,44 @@ class Prod_InStock_Fragment1 : BaseFragment() {
                 }
                 val msg = mHandler.obtainMessage(SAVE, result)
                 LogUtil.e("run_save --> onResponse", result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     *  查询主表信息
+     */
+    private fun run_findStockBill(id: Int) {
+        val mUrl = getURL("stockBill_WMS/findStockBill")
+
+        val formBody = FormBody.Builder()
+                .add("id", id.toString())
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNFIND_ICSTOCKBILL)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNFIND_ICSTOCKBILL, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(FIND_ICSTOCKBILL, result)
+                LogUtil.e("run_missionBillModifyStatus --> onResponse", result)
                 mHandler.sendMessage(msg)
             }
         })

@@ -2,6 +2,7 @@ package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
@@ -16,6 +17,7 @@ import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
+import ykk.xc.com.wms.produce.Prod_InStock_MainActivity
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
@@ -97,7 +99,7 @@ class OutInStock_Search_Fragment5_ProdInStock : BaseFragment() {
                     m.UPLOAD -> { // 上传单据 进入
                         val retMsg = JsonUtil.strToString(msgObj)
                         if(retMsg.length > 0) {
-                            Comm.showWarnDialog(m.mContext, retMsg+"单，库存不足，不能上传！")
+                            Comm.showWarnDialog(m.mContext, retMsg+"单，下推的数量大于源单可入库数，不能上传！")
                         } else {
                             m.toasts("上传成功")
                         }
@@ -129,9 +131,9 @@ class OutInStock_Search_Fragment5_ProdInStock : BaseFragment() {
         // 行事件
         mAdapter!!.setCallBack(object : OutInStockSearchFragment5_ProdInStock_Adapter.MyCallBack {
             override fun onSearch(entity: ICStockBill, position: Int) {
-//                val bundle = Bundle()
-//                bundle.putInt("id", entity.id)
-//                show(Pur_Receive_InStock_MainActivity::class.java, bundle)
+                val bundle = Bundle()
+                bundle.putInt("id", entity.id)
+                show(Prod_InStock_MainActivity::class.java, bundle)
             }
             override fun onUpload(entity: ICStockBill, position: Int) {
                 val list = ArrayList<ICStockBill>()
