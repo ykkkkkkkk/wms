@@ -10,8 +10,8 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.prod_transfer_fragment4.*
-import kotlinx.android.synthetic.main.prod_transfer_main.*
+import kotlinx.android.synthetic.main.prod_instock_transfer_fragment4.*
+import kotlinx.android.synthetic.main.prod_instock_transfer_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -22,7 +22,7 @@ import ykk.xc.com.wms.bean.ICStockBillEntry_Barcode
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
-import ykk.xc.com.wms.produce.adapter.Prod_Transfer_Fragment4_Adapter
+import ykk.xc.com.wms.produce.adapter.Prod_InStock_Transfer_Fragment4_Adapter
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit
  * 描述：生产调拨
  * 作者：ykk
  */
-class Prod_Transfer_Fragment4 : BaseFragment() {
+class Prod_InStock_Transfer_Fragment4 : BaseFragment() {
 
     companion object {
         private val SUCC1 = 200
@@ -47,11 +47,11 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
 
     }
     private val context = this
-    private var parent: Prod_Transfer_MainActivity? = null
+    private var parent: Prod_InStock_Transfer_MainActivity? = null
 
     val checkDatas = ArrayList<ICStockBillEntry_Barcode>()
     private var okHttpClient: OkHttpClient? = null
-    private var mAdapter: Prod_Transfer_Fragment4_Adapter? = null
+    private var mAdapter: Prod_InStock_Transfer_Fragment4_Adapter? = null
     private var user: User? = null
     private var mContext: Activity? = null
     private var curPos:Int = -1 // 当前行
@@ -61,8 +61,8 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Prod_Transfer_Fragment4) : Handler() {
-        private val mActivity: WeakReference<Prod_Transfer_Fragment4>
+    private class MyHandler(activity: Prod_InStock_Transfer_Fragment4) : Handler() {
+        private val mActivity: WeakReference<Prod_InStock_Transfer_Fragment4>
 
         init {
             mActivity = WeakReference(activity)
@@ -178,22 +178,22 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.prod_transfer_fragment4, container, false)
+        return inflater.inflate(R.layout.prod_instock_transfer_fragment4, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Prod_Transfer_MainActivity
+        parent = mContext as Prod_InStock_Transfer_MainActivity
 
         recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = Prod_Transfer_Fragment4_Adapter(mContext!!, checkDatas)
+        mAdapter = Prod_InStock_Transfer_Fragment4_Adapter(mContext!!, checkDatas)
         recyclerView.adapter = mAdapter
         // 设值listview空间失去焦点
         recyclerView.isFocusable = false
 
         // 行事件
-        mAdapter!!.setCallBack(object : Prod_Transfer_Fragment4_Adapter.MyCallBack {
+        mAdapter!!.setCallBack(object : Prod_InStock_Transfer_Fragment4_Adapter.MyCallBack {
 //            override fun onModify(entity: ICStockBillEntry, position: Int) {
 //                EventBus.getDefault().post(EventBusEntity(31, entity))
 //                // 滑动第二个页面
@@ -201,7 +201,7 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
 //            }
             override fun onDelete(entity: ICStockBillEntry, position: Int) {
                 curPos = position
-                run_removeEntry(entity.id)
+                run_removeEntry(icstockBillEntry!!.id)
             }
         })
 

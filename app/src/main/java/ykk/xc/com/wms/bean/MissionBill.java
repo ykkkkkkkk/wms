@@ -13,7 +13,7 @@ public class MissionBill implements Serializable {
 	private int id;
 	//任务单编号
 	private String billNo;
-	//任务类型 	1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨
+	//任务类型 	1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨，42：代表生产入库调拨
 	private int missionType;
 	//创建时间
 	private String createTime;

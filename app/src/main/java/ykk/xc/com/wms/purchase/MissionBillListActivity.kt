@@ -16,6 +16,7 @@ import ykk.xc.com.wms.bean.MissionBill
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseActivity
 import ykk.xc.com.wms.comm.Comm
+import ykk.xc.com.wms.produce.Prod_InStock_Transfer_MainActivity
 import ykk.xc.com.wms.produce.Prod_Transfer_MainActivity
 import ykk.xc.com.wms.purchase.adapter.MissionBill_List_Adapter
 import ykk.xc.com.wms.util.JsonUtil
@@ -107,6 +108,7 @@ class MissionBillListActivity : BaseActivity(), XRecyclerView.LoadingListener {
                 1 -> showForResult(Pur_Receive_InStock_MainActivity::class.java, REFRESH, bundle)
                 31 -> showForResult(Pur_Receive_QC_MainActivity::class.java, REFRESH, bundle)
                 41 -> showForResult(Prod_Transfer_MainActivity::class.java, REFRESH, bundle)
+                42 -> showForResult(Prod_InStock_Transfer_MainActivity::class.java, REFRESH, bundle)
             }
         }
     }

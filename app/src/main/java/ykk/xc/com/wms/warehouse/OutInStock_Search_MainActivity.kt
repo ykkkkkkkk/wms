@@ -1,6 +1,5 @@
 package ykk.xc.com.wms.warehouse
 
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -40,6 +39,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
     var fragment6:OutInStock_Search_Fragment6_PurReceiveInStock? = null
     var fragment7:OutInStock_Search_Fragment7_PurReceiveQC? = null
     var fragment8:OutInStock_Search_Fragment8_ProdTransfer? = null
+    var fragment9:OutInStock_Search_Fragment9_ProdInStockTransfer? = null
 
     override fun setLayoutResID(): Int {
         return R.layout.ware_outin_stock_search_main;
@@ -96,6 +96,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         fragment6 = OutInStock_Search_Fragment6_PurReceiveInStock()
         fragment7 = OutInStock_Search_Fragment7_PurReceiveQC()
         fragment8 = OutInStock_Search_Fragment8_ProdTransfer()
+        fragment9 = OutInStock_Search_Fragment9_ProdInStockTransfer()
 
         listFragment.add(fragment1!!)
         listFragment.add(fragment2!!)
@@ -105,6 +106,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         listFragment.add(fragment6!!)
         listFragment.add(fragment7!!)
         listFragment.add(fragment8!!)
+        listFragment.add(fragment9!!)
 
         viewPager.setScanScroll(false); // 禁止左右滑动
         //ViewPager设置适配器
@@ -146,6 +148,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                 5 -> tv_billType.text = "外购入库单列表"
                 6 -> tv_billType.text = "仓库收料单列表"
                 7 -> tv_billType.text = "生产调拨单列表"
+                8 -> tv_billType.text = "生产入库调拨单列表"
             }
             billType = bundle.getString("billType")
         }
@@ -171,6 +174,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                     5 ->  fragment6!!.findFun()
                     6 ->  fragment7!!.findFun()
                     7 ->  fragment8!!.findFun()
+                    8 ->  fragment9!!.findFun()
                 }
             }
             R.id.btn_batchUpload -> { // 批量上传
@@ -183,6 +187,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                     5 -> fragment6!!.batchUpload()
                     6 -> fragment7!!.batchUpload()
                     7 -> fragment8!!.batchUpload()
+                    8 -> fragment9!!.batchUpload()
                 }
             }
         }
@@ -242,6 +247,10 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                     tv_billType.text = "生产调拨单列表"
                     pageId = 7
                 }
+                R.id.tv9 -> {
+                    tv_billType.text = "生产入库调拨单列表"
+                    pageId = 8
+                }
             }
             viewPager!!.setCurrentItem(pageId)
             popWindow!!.dismiss()
@@ -254,6 +263,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         popV.findViewById<View>(R.id.tv6).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv7).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv8).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv9).setOnClickListener(click)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

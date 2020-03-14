@@ -291,6 +291,14 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_deptName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/c_6a5acd"
+        android:textSize="12sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"

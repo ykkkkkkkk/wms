@@ -12,8 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.prod_transfer_fragment1.*
-import kotlinx.android.synthetic.main.prod_transfer_main.*
+import kotlinx.android.synthetic.main.prod_instock_transfer_fragment1.*
+import kotlinx.android.synthetic.main.prod_instock_transfer_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import ykk.xc.com.wms.R
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit
  * 描述：生产调拨
  * 作者：ykk
  */
-class Prod_Transfer_Fragment1 : BaseFragment() {
+class Prod_InStock_Transfer_Fragment1 : BaseFragment() {
 
     companion object {
         private val SEL_DEPT = 10
@@ -61,19 +61,19 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
     private var okHttpClient: OkHttpClient? = null
     private var user: User? = null
     private var mContext: Activity? = null
-    private var parent: Prod_Transfer_MainActivity? = null
+    private var parent: Prod_InStock_Transfer_MainActivity? = null
     private val df = DecimalFormat("#.###")
     private var timesTamp:String? = null // 时间戳
     var icStockBill = ICStockBill() // 保存的对象
 //    var isReset = false // 是否点击了重置按钮.
-    var ppBomTransferEntryList:List<PPBomTransferEntry>? = null
+    var icstockBillEntryList:List<ICStockBillEntry>? = null
     private var icStockBillId = 0 // 上个页面传来的id
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Prod_Transfer_Fragment1) : Handler() {
-        private val mActivity: WeakReference<Prod_Transfer_Fragment1>
+    private class MyHandler(activity: Prod_InStock_Transfer_Fragment1) : Handler() {
+        private val mActivity: WeakReference<Prod_InStock_Transfer_Fragment1>
 
         init {
             mActivity = WeakReference(activity)
@@ -111,26 +111,14 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     FIND_SOURCE ->{ // 查询源单 返回
-                        val list = JsonUtil.strToList(msgObj, PPBomTransferEntry::class.java)
-                        m.ppBomTransferEntryList = list
-                        val ppBomTransfer = list[0].ppBomTransfer
-                        when(ppBomTransfer.sourceBillType) {
-                            1 -> { // 显示部门
-                                if(ppBomTransfer.dept != null) {
-                                    m.icStockBill.fdeptId = ppBomTransfer.dept.fitemID
-                                    m.icStockBill.deptName = ppBomTransfer.dept.departmentName
-                                    m.tv_deptSel.text = m.icStockBill.deptName
-                                    m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
-                                }
-                            }
-                            2 -> { // 显示供应商
-                                if(ppBomTransfer.supplier != null) {
-                                    m.icStockBill.fsupplyId = ppBomTransfer.supplier.supplierId
-                                    m.icStockBill.suppName = ppBomTransfer.supplier.fname
-                                    m.tv_suppSel.text = m.icStockBill.deptName
-                                    m.setEnables(m.tv_suppSel, R.drawable.back_style_gray3b, false)
-                                }
-                            }
+                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry::class.java)
+                        m.icstockBillEntryList = list
+                        val icstockBill = list[0].icstockBill
+                        if(icstockBill.department != null) {
+                            m.icStockBill.fdeptId = icstockBill.fdeptId
+                            m.icStockBill.deptName = icstockBill.deptName
+                            m.tv_deptSel.text = icstockBill.deptName
+//                            m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
                         }
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
@@ -220,12 +208,12 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.prod_transfer_fragment1, container, false)
+        return inflater.inflate(R.layout.prod_instock_transfer_fragment1, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Prod_Transfer_MainActivity
+        parent = mContext as Prod_InStock_Transfer_MainActivity
     }
 
     override fun initData() {
@@ -246,7 +234,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
         tv_emp3Sel.text = user!!.empName
         tv_emp4Sel.text = user!!.empName
 
-        icStockBill.billType = "SCDB" // 生产调拨
+        icStockBill.billType = "SCRKDB" // 生产入库调拨
         icStockBill.ftranType = 1
         icStockBill.frob = 1
         icStockBill.weightUnitType = 1
@@ -272,7 +260,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
             if(bundle.containsKey("missionBill")) {
                 val missionBill = bundle.getSerializable("missionBill") as MissionBill
                 icStockBill.missionBillId = missionBill.id // 记录任务单的id
-                run_ppBomTransferList(missionBill.sourceBillId)
+                run_findEntryListAndICStockBill(missionBill.sourceBillId)
                 if (missionBill.sourceBillId > 0) {
                     // 修改任务单状态
                     run_missionBillModifyStatus(missionBill.id)
@@ -577,15 +565,14 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
     }
 
     /**
-     * 根据任务单查询投料调拨单
+     * 根据任务单查询生产入库单
      */
-    private fun run_ppBomTransferList(ppBomTransferId: Int) {
+    private fun run_findEntryListAndICStockBill(icstockBillId: Int) {
         showLoadDialog("保存中...", false)
-        val mUrl = getURL("ppBomTransfer/findListByParam")
+        val mUrl = getURL("stockBill_WMS/findEntryListAndICStockBill")
 
         val formBody = FormBody.Builder()
-                .add("ppBomTransferId", ppBomTransferId.toString())
-                .add("entryType", "1") // 分录类型 1：仓库调车间，2：车间内调拨
+                .add("icstockBillId", icstockBillId.toString())
                 .build()
 
         val request = Request.Builder()

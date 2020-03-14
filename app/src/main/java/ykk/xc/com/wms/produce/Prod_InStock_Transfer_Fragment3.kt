@@ -6,23 +6,24 @@ import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.prod_transfer_fragment4.*
-import kotlinx.android.synthetic.main.prod_transfer_main.*
+import butterknife.OnClick
+import kotlinx.android.synthetic.main.prod_instock_transfer_fragment3.*
+import kotlinx.android.synthetic.main.prod_instock_transfer_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.EventBusEntity
+import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.ICStockBillEntry
-import ykk.xc.com.wms.bean.ICStockBillEntry_Barcode
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
-import ykk.xc.com.wms.produce.adapter.Prod_Transfer_Fragment4_Adapter
+import ykk.xc.com.wms.produce.adapter.Prod_InStock_Transfer_Fragment3_Adapter
+import ykk.xc.com.wms.util.BigdecimalUtil
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
@@ -34,35 +35,37 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：生产调拨
+ * 描述：生产入库调拨
  * 作者：ykk
  */
-class Prod_Transfer_Fragment4 : BaseFragment() {
+class Prod_InStock_Transfer_Fragment3 : BaseFragment() {
 
     companion object {
         private val SUCC1 = 200
         private val UNSUCC1 = 500
         private val DELETE = 201
         private val UNDELETE = 501
+        private val UPLOAD = 202
+        private val UNUPLOAD = 502
 
     }
     private val context = this
-    private var parent: Prod_Transfer_MainActivity? = null
+    private var parent: Prod_InStock_Transfer_MainActivity? = null
 
-    val checkDatas = ArrayList<ICStockBillEntry_Barcode>()
+    val checkDatas = ArrayList<ICStockBillEntry>()
     private var okHttpClient: OkHttpClient? = null
-    private var mAdapter: Prod_Transfer_Fragment4_Adapter? = null
+    private var mAdapter: Prod_InStock_Transfer_Fragment3_Adapter? = null
     private var user: User? = null
     private var mContext: Activity? = null
     private var curPos:Int = -1 // 当前行
+    private var timesTamp:String? = null // 时间戳
     private val df = DecimalFormat("#.######")
-    private var icstockBillEntry:ICStockBillEntry? = null
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Prod_Transfer_Fragment4) : Handler() {
-        private val mActivity: WeakReference<Prod_Transfer_Fragment4>
+    private class MyHandler(activity: Prod_InStock_Transfer_Fragment3) : Handler() {
+        private val mActivity: WeakReference<Prod_InStock_Transfer_Fragment3>
 
         init {
             mActivity = WeakReference(activity)
@@ -81,18 +84,46 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
                 when (msg.what) {
                     SUCC1 -> { // 查询分录 进入
                         m.checkDatas.clear()
-                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry_Barcode::class.java)
+                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry::class.java)
                         m.checkDatas.addAll(list)
+
+                        var sumNum = 0.0
+                        var sumMoney = 0.0
+                        list.forEach() {
+                            sumNum += it.fqty
+                            val mul = BigdecimalUtil.mul(it.fqty, it.fprice)
+                            sumMoney += mul
+                        }
+                        m.tv_sumNum.text = m.df.format(sumNum)
+                        m.tv_sumMoney.text = m.df.format(sumMoney)
 
                         m.mAdapter!!.notifyDataSetChanged()
                     }
                     UNSUCC1 -> { // 查询分录  失败
+                        m.tv_sumNum.text = "0"
+                        m.tv_sumMoney.text = "0"
                     }
                     DELETE -> { // 删除分录 进入
-                        m.run_findEntry_BarcodeList()
+                        m.run_findEntryList()
                     }
                     UNDELETE -> { // 删除分录  失败
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
+                    }
+                    UPLOAD -> { // 上传单据 进入
+                        val retMsg = JsonUtil.strToString(msgObj)
+                        if(retMsg.length > 0) {
+                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
+                        } else {
+                            // 滑动第一个页面
+                            m.parent!!.viewPager!!.setCurrentItem(0, false)
+                            m.parent!!.fragment1.reset() // 重置
+                            m.toasts("上传成功")
+                        }
+                    }
+                    UNUPLOAD -> { // 上传单据  失败
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
                     }
                 }
             }
@@ -102,98 +133,29 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
     @Subscribe
     fun onEventBus(entity: EventBusEntity) {
         when (entity.caseId) {
-            32 -> { // 接收第三个页面（32）发来的指令
-                icstockBillEntry = entity.obj as ICStockBillEntry
-
-                tv_row.text = entity.obj2.toString()
-                tv_mtlName.text = icstockBillEntry!!.mtlName
-                tv_mtlNumber.text = Html.fromHtml("代码:&nbsp;<font color='#6a5acd'>"+icstockBillEntry!!.mtlNumber+"</font>")
-                if(Comm.isNULLS(icstockBillEntry!!.strBatchCode).length > 0) {
-                    tv_batchNo.visibility = View.VISIBLE
-                    tv_batchNo.text = Html.fromHtml("批次:&nbsp;<font color='#6a5acd'>" + icstockBillEntry!!.strBatchCode + "</font>")
-                } else {
-                    tv_batchNo.visibility = View.INVISIBLE
-                }
-                tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+ Comm.isNULLS(icstockBillEntry!!.fmode)+"</font>")
-
-                tv_num.text = Html.fromHtml("实发数:&nbsp;<font color='#6a5acd'>"+ df.format(icstockBillEntry!!.fqty) +"</font>")
-                tv_sourceQty.text = Html.fromHtml("应发数:&nbsp;<font color='#6a5acd'>"+ df.format(icstockBillEntry!!.fsourceQty) +"&nbsp;"+ icstockBillEntry!!.unitName +"</font>")
-                tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(icstockBillEntry!!.weight > 0) df.format(icstockBillEntry!!.weight) else "") +"</font>")
-                tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(icstockBillEntry!!.referenceNum > 0) df.format(icstockBillEntry!!.referenceNum) else "")+"</font>")
-
-                // 显示调入仓库组信息
-                if(icstockBillEntry!!.stock != null ) {
-                    tv_stockName.visibility = View.VISIBLE
-                    tv_stockName.text = Html.fromHtml("调入仓库:&nbsp;<font color='#000000'>"+icstockBillEntry!!.stock!!.stockName+"</font>")
-                } else {
-                    tv_stockName.visibility = View.INVISIBLE
-                }
-                if(icstockBillEntry!!.stockArea != null ) {
-                    tv_stockAreaName.visibility = View.VISIBLE
-                    tv_stockAreaName.text = Html.fromHtml("库区:&nbsp;<font color='#000000'>"+icstockBillEntry!!.stockArea!!.fname+"</font>")
-                } else {
-                    tv_stockAreaName.visibility = View.INVISIBLE
-                }
-                if(icstockBillEntry!!.storageRack != null ) {
-                    tv_storageRackName.visibility = View.VISIBLE
-                    tv_storageRackName.text = Html.fromHtml("货架:&nbsp;<font color='#000000'>"+icstockBillEntry!!.storageRack!!.fnumber+"</font>")
-                } else {
-                    tv_storageRackName.visibility = View.INVISIBLE
-                }
-                if(icstockBillEntry!!.stockPos != null ) {
-                    tv_stockPosName.visibility = View.VISIBLE
-                    tv_stockPosName.text = Html.fromHtml("库位:&nbsp;<font color='#000000'>"+icstockBillEntry!!.stockPos!!.stockPositionName+"</font>")
-                } else {
-                    tv_stockPosName.visibility = View.INVISIBLE
-                }
-                // 显示调出仓库组信息
-                if(icstockBillEntry!!.stock2 != null ) {
-                    tv_stockName2.visibility = View.VISIBLE
-                    tv_stockName2.text = Html.fromHtml("调出仓库:&nbsp;<font color='#000000'>"+icstockBillEntry!!.stock2!!.stockName+"</font>")
-                } else {
-                    tv_stockName2.visibility = View.INVISIBLE
-                }
-                if(icstockBillEntry!!.stockArea2 != null ) {
-                    tv_stockAreaName2.visibility = View.VISIBLE
-                    tv_stockAreaName2.text = Html.fromHtml("库区:&nbsp;<font color='#000000'>"+icstockBillEntry!!.stockArea2!!.fname+"</font>")
-                } else {
-                    tv_stockAreaName2.visibility = View.INVISIBLE
-                }
-                if(icstockBillEntry!!.storageRack2 != null ) {
-                    tv_storageRackName2.visibility = View.VISIBLE
-                    tv_storageRackName2.text = Html.fromHtml("货架:&nbsp;<font color='#000000'>"+icstockBillEntry!!.storageRack2!!.fnumber+"</font>")
-                } else {
-                    tv_storageRackName2.visibility = View.INVISIBLE
-                }
-                if(icstockBillEntry!!.stockPos2 != null ) {
-                    tv_stockPosName2.visibility = View.VISIBLE
-                    tv_stockPosName2.text = Html.fromHtml("库位:&nbsp;<font color='#000000'>"+icstockBillEntry!!.stockPos2!!.stockPositionName+"</font>")
-                } else {
-                    tv_stockPosName2.visibility = View.INVISIBLE
-                }
-
-                run_findEntry_BarcodeList()
+            12,21 -> { // 接收第一个页面（12）发来的指令，接收第二个页面（21）发来的指令
+                run_findEntryList()
             }
         }
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.prod_transfer_fragment4, container, false)
+        return inflater.inflate(R.layout.prod_instock_transfer_fragment3, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Prod_Transfer_MainActivity
+        parent = mContext as Prod_InStock_Transfer_MainActivity
 
         recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = Prod_Transfer_Fragment4_Adapter(mContext!!, checkDatas)
+        mAdapter = Prod_InStock_Transfer_Fragment3_Adapter(mContext!!, checkDatas)
         recyclerView.adapter = mAdapter
         // 设值listview空间失去焦点
         recyclerView.isFocusable = false
 
         // 行事件
-        mAdapter!!.setCallBack(object : Prod_Transfer_Fragment4_Adapter.MyCallBack {
+        mAdapter!!.setCallBack(object : Prod_InStock_Transfer_Fragment3_Adapter.MyCallBack {
 //            override fun onModify(entity: ICStockBillEntry, position: Int) {
 //                EventBus.getDefault().post(EventBusEntity(31, entity))
 //                // 滑动第二个页面
@@ -206,9 +168,21 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
         })
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))
-            // 滑动第二个页面
-            parent!!.viewPager!!.setCurrentItem(1, false)
+//            if(checkDatas[pos].materialBinningRecordId > 0) {
+//                Comm.showWarnDialog(mContext,"箱子里的数量不能修改！")
+//            } else {
+                EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))
+                // 滑动第二个页面
+                parent!!.viewPager!!.setCurrentItem(1, false)
+//            }
+        }
+
+        // 长按查看条码
+        mAdapter!!.onItemLongClickListener = BaseRecyclerAdapter.OnItemLongClickListener{ adapter, holder, view, pos ->
+            EventBus.getDefault().post(EventBusEntity(32, checkDatas[pos], (pos+1)))
+            // 滑动第四个页面
+            parent!!.viewPager!!.setCurrentItem(3, false)
+            true
         }
     }
 
@@ -222,6 +196,7 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
         }
 
         getUserInfo()
+        timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         EventBus.getDefault().register(this)
     }
 
@@ -231,13 +206,33 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
         }
     }
 
-//    @OnClick(R.id.btn_upload)
-//    fun onViewClicked(view: View) {
-//        when (view.id) {
-//            R.id.btn_upload -> { // 上传
-//            }
-//        }
-//    }
+    @OnClick(R.id.btn_upload)
+    fun onViewClicked(view: View) {
+        when (view.id) {
+            R.id.btn_upload -> { // 上传
+                val size = checkDatas.size
+                if(size == 0) {
+                    Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
+                    return
+                }
+                checkDatas.forEachIndexed { index, it ->
+                    if(it.stockId_wms == 0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
+                        return
+                    }
+                    if(it.fqty == 0.0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（实发数）！")
+                        return
+                    }
+                }
+
+                val list = ArrayList<ICStockBill>()
+                list.add(parent!!.fragment1.icStockBill)
+                val strJson = JsonUtil.objectToString(list)
+                run_uploadToK3(strJson)
+            }
+        }
+    }
 
     override fun setListener() {
 
@@ -259,11 +254,12 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
     /**
      * 历史查询
      */
-    private fun run_findEntry_BarcodeList() {
+    private fun run_findEntryList() {
         showLoadDialog("加载中...", false)
-        val mUrl = getURL("stockBill_WMS/findEntry_BarcodeList")
+        val mUrl = getURL("stockBill_WMS/findEntryList")
         val formBody = FormBody.Builder()
-                .add("icstockBillEntryId", icstockBillEntry!!.id.toString())
+                .add("icstockBillId", parent!!.fragment1.icStockBill.id.toString())
+                .add("moreStock", "1") // 多仓库查询
                 .build()
 
         val request = Request.Builder()
@@ -282,7 +278,7 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()
                 val result = body.string()
-                LogUtil.e("run_findEntry_BarcodeList --> onResponse", result)
+                LogUtil.e("run_findEntryList --> onResponse", result)
                 if (!JsonUtil.isSuccess(result)) {
                     val msg = mHandler.obtainMessage(UNSUCC1, result)
                     mHandler.sendMessage(msg)
@@ -327,6 +323,44 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
                     return
                 }
                 val msg = mHandler.obtainMessage(DELETE, result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 上传单据
+     */
+    private fun run_uploadToK3(strJson : String) {
+        showLoadDialog("加载中...", false)
+        val mUrl = getURL("stockBill_WMS/uploadToK3")
+        val formBody = FormBody.Builder()
+                .add("strJson", strJson)
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNUPLOAD)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                LogUtil.e("run_uploadToK3 --> onResponse", result)
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNUPLOAD, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(UPLOAD, result)
                 mHandler.sendMessage(msg)
             }
         })

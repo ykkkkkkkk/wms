@@ -113,11 +113,11 @@ class Prod_InStock_Fragment3 : BaseFragment() {
                         if(retMsg.length > 0) {
                             Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
                         } else {
+                            // 滑动第一个页面
+                            m.parent!!.viewPager!!.setCurrentItem(0, false)
+                            m.parent!!.fragment1.reset() // 重置
                             m.toasts("上传成功")
                         }
-                        // 滑动第一个页面
-                        m.parent!!.viewPager!!.setCurrentItem(0, false)
-                        m.parent!!.fragment1.reset() // 重置
                     }
                     UNUPLOAD -> { // 上传单据  失败
                         errMsg = JsonUtil.strToString(msgObj)
@@ -167,7 +167,7 @@ class Prod_InStock_Fragment3 : BaseFragment() {
         })
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            if(checkDatas[0].materialBinningRecordId > 0) {
+            if(checkDatas[pos].materialBinningRecordId > 0) {
                 Comm.showWarnDialog(mContext,"箱子里的数量不能修改！")
             } else {
                 EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))

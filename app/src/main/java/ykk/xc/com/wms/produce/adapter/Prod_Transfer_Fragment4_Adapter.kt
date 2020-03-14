@@ -10,7 +10,7 @@ import ykk.xc.com.wms.util.basehelper.BaseArrayRecyclerAdapter
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import java.text.DecimalFormat
 
-class Prod_Picking_Fragment4_Adapter(private val context: Activity, datas: List<ICStockBillEntry_Barcode>) : BaseArrayRecyclerAdapter<ICStockBillEntry_Barcode>(datas) {
+class Prod_Transfer_Fragment4_Adapter(private val context: Activity, datas: List<ICStockBillEntry_Barcode>) : BaseArrayRecyclerAdapter<ICStockBillEntry_Barcode>(datas) {
     private val df = DecimalFormat("#.######")
     private var callBack: MyCallBack? = null
 

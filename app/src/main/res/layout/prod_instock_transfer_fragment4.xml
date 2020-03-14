@@ -24,7 +24,6 @@
             android:id="@+id/view_del"
             android:layout_width="@dimen/_38dp"
             android:layout_height="@dimen/_38dp"
-            android:visibility="invisible"
             android:layout_alignParentRight="true"
             android:background="@drawable/ico_del2" />
 
@@ -76,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_fmodel"
-            android:text="实发数："
+            android:text="调拨数："
             android:textColor="@color/c_666666"
             android:textSize="@dimen/_12sp" />
 
@@ -87,7 +86,7 @@
             android:layout_below="@+id/tv_fmodel"
             android:layout_marginLeft="@dimen/_6dp"
             android:layout_toRightOf="@+id/tv_num"
-            android:text="应发数："
+            android:text="入库数："
             android:textColor="@color/c_666666"
             android:textSize="@dimen/_12sp" />
 

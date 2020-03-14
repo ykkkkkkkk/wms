@@ -33,10 +33,14 @@ public class MaterialBinningRecord implements Serializable {
 	private int createUserId;				// 创建人id
 	private String modifyDate;				// 修改日期
 	private int modifyUserId;				// 修改人id
+	private int fdeptId;					// 部门id
 
 	private BoxBarCode boxBarCode;
 	private Box box;
 	private ICItem icItem;
+	private User createUser;
+	private User modifyUser;
+	private Department dept;
 
 	// 临时字段，不存表
 	private List<MaterialBinningRecord_Barcode> mbrBarcodes;
@@ -275,4 +279,41 @@ public class MaterialBinningRecord implements Serializable {
 		this.autoCreateParentBoxBarCodeId = autoCreateParentBoxBarCodeId;
 	}
 
+	public User getCreateUser() {
+		return createUser;
+	}
+
+
+	public void setCreateUser(User createUser) {
+		this.createUser = createUser;
+	}
+
+
+	public User getModifyUser() {
+		return modifyUser;
+	}
+
+
+	public void setModifyUser(User modifyUser) {
+		this.modifyUser = modifyUser;
+	}
+
+	public int getFdeptId() {
+		return fdeptId;
+	}
+
+
+	public void setFdeptId(int fdeptId) {
+		this.fdeptId = fdeptId;
+	}
+
+
+	public Department getDept() {
+		return dept;
+	}
+
+
+	public void setDept(Department dept) {
+		this.dept = dept;
+	}
 }

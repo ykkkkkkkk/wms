@@ -67,7 +67,7 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="入库日期*"
+                    android:text="领料日期*"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -78,42 +78,6 @@
                     android:layout_marginLeft="@dimen/_6dp"
                     android:layout_weight="1"
                     android:background="@drawable/back_style_blue2"
-                    android:drawableRight="@drawable/xiala3"
-                    android:gravity="center|left"
-                    android:paddingLeft="@dimen/_6dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:layout_marginRight="@dimen/_8dp"
-                android:layout_marginTop="@dimen/_8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="#b7b7b7"
-                    android:ems="6"
-                    android:gravity="center|right"
-                    android:paddingRight="@dimen/_6dp"
-                    android:text="部门"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_deptSel"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_6dp"
-                    android:enabled="false"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_gray3b"
                     android:drawableRight="@drawable/xiala3"
                     android:gravity="center|left"
                     android:paddingLeft="@dimen/_6dp"
@@ -139,12 +103,12 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="收料仓库*"
+                    android:text="供应商"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tv_stockSel"
+                    android:id="@+id/tv_suppSel"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/_6dp"
@@ -174,7 +138,77 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="保管*"
+                    android:text="领料部门"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_deptSel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:drawableRight="@drawable/xiala3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="业务员"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_emp1Sel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:drawableRight="@drawable/xiala3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="发料*"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -209,12 +243,12 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="验收*"
+                    android:text="负责人"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tv_emp4Sel"
+                    android:id="@+id/tv_emp3Sel"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/_6dp"
@@ -326,6 +360,41 @@
                     android:paddingLeft="@dimen/_6dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="领料*"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_emp4Sel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:drawableRight="@drawable/xiala3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
             </LinearLayout>
 
             <LinearLayout

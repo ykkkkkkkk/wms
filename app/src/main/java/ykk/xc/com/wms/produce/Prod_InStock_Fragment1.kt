@@ -65,6 +65,7 @@ class Prod_InStock_Fragment1 : BaseFragment() {
     var icStockBill = ICStockBill() // 保存的对象
     private val df = DecimalFormat("#.###") // 重量保存三位小数
     private var icStockBillId = 0 // 上个页面传来的id
+    var saveNeedHint = true // 保存之后需要提示
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -95,12 +96,15 @@ class Prod_InStock_Fragment1 : BaseFragment() {
                             m.icStockBill.pdaNo = arr[1]
                             m.tv_pdaNo.text = arr[1]
                         }
-                        m.parent!!.isMainSave = true
-                        m.parent!!.viewPager.setScanScroll(true); // 放开左右滑动
-                        m.toasts("保存成功✔")
-                        // 滑动第二个页面
-                        m.parent!!.viewPager!!.setCurrentItem(1, false)
-                        m.parent!!.isChange = if(m.icStockBillId == 0) true else false
+                        if(m.saveNeedHint) {
+                            m.parent!!.isMainSave = true
+                            m.parent!!.viewPager.setScanScroll(true); // 放开左右滑动
+                            m.toasts("保存成功✔")
+                            // 滑动第二个页面
+                            m.parent!!.viewPager!!.setCurrentItem(1, false)
+                            m.parent!!.isChange = if(m.icStockBillId == 0) true else false
+                        }
+                        m.saveNeedHint = true
                     }
                     UNSAVE -> { // 保存失败
                         errMsg = JsonUtil.strToString(msgObj)
@@ -322,10 +326,10 @@ class Prod_InStock_Fragment1 : BaseFragment() {
      * 保存检查数据判断
      */
     fun checkSave() : Boolean {
-        if (icStockBill.fdeptId == 0) {
-            Comm.showWarnDialog(mContext, "请选择部门！")
-            return false;
-        }
+//        if (icStockBill.fdeptId == 0) {
+//            Comm.showWarnDialog(mContext, "请选择部门！")
+//            return false;
+//        }
 //        if (icStockBill.stock == null) {
 //            Comm.showWarnDialog(mContext, "请选择收料仓库！")
 //            return false;
@@ -346,15 +350,15 @@ class Prod_InStock_Fragment1 : BaseFragment() {
     }
 
     fun reset() {
-        setEnables(tv_deptSel, R.drawable.back_style_blue2, true)
+//        setEnables(tv_deptSel, R.drawable.back_style_blue2, true)
         parent!!.isMainSave = false
         parent!!.viewPager.setScanScroll(false) // 禁止滑动
         tv_pdaNo.text = ""
         tv_inDateSel.text = Comm.getSysDate(7)
         tv_deptSel.text = ""
         tv_stockSel.text = ""
-        tv_emp2Sel.text = ""
-        tv_emp4Sel.text = ""
+//        tv_emp2Sel.text = ""
+//        tv_emp4Sel.text = ""
 //        tv_weightUnitType.text = "千克（kg）"
         tv_roughWeight.text = ""
         tv_netWeight.text = ""
@@ -363,16 +367,16 @@ class Prod_InStock_Fragment1 : BaseFragment() {
         icStockBill.pdaNo = ""
         icStockBill.fsupplyId = 0
         icStockBill.fdeptId = 0
-        icStockBill.fempId = 0
-        icStockBill.fsmanagerId = 0
-        icStockBill.fmanagerId = 0
-        icStockBill.ffmanagerId = 0
+//        icStockBill.fempId = 0
+//        icStockBill.fsmanagerId = 0
+//        icStockBill.fmanagerId = 0
+//        icStockBill.ffmanagerId = 0
         icStockBill.suppName = ""
         icStockBill.deptName = ""
-        icStockBill.yewuMan = ""
-        icStockBill.baoguanMan = ""
-        icStockBill.fuzheMan = ""
-        icStockBill.yanshouMan = ""
+//        icStockBill.yewuMan = ""
+//        icStockBill.baoguanMan = ""
+//        icStockBill.fuzheMan = ""
+//        icStockBill.yanshouMan = ""
         icStockBill.roughWeight = 0.0
 //        icStockBill.weightUnitType = 1
         icStockBill.netWeight = 0.0
@@ -381,6 +385,7 @@ class Prod_InStock_Fragment1 : BaseFragment() {
 
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         parent!!.isChange = false
+        saveNeedHint = true
         EventBus.getDefault().post(EventBusEntity(11)) // 发送指令到fragment2，告其清空
     }
 
@@ -483,7 +488,7 @@ class Prod_InStock_Fragment1 : BaseFragment() {
     /**
      * 保存
      */
-    private fun run_save() {
+    fun run_save() {
         showLoadDialog("保存中...", false)
         val mUrl = getURL("stockBill_WMS/save")
 

@@ -3,6 +3,7 @@ package ykk.xc.com.wms.produce
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
@@ -17,6 +18,7 @@ import butterknife.OnClick
 import kotlinx.android.synthetic.main.prod_box_fragment1.*
 import okhttp3.*
 import ykk.xc.com.wms.R
+import ykk.xc.com.wms.basics.BatchAndNumInputDialog
 import ykk.xc.com.wms.basics.Box_DialogActivity
 import ykk.xc.com.wms.bean.*
 import ykk.xc.com.wms.bean.k3Bean.ICItem
@@ -58,6 +60,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
         private val WRITE_CODE = 4
         private val RESULT_WEIGHT = 5
         private val RESULT_VOLUME = 6
+        private val RESULT_BATCH_NUM = 7
     }
     private val context = this
     private var okHttpClient: OkHttpClient? = null
@@ -77,6 +80,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
     private var autoSave = false // 点击封箱自动保存
     private var autoSaveAferBarcode:String? = null
     private var curBoxStatus = 0   // 记录当前扫描箱码的状态
+    private var bt :BarCodeTable? = null  // 记录当前物料扫描返回的对象
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -121,8 +125,22 @@ class Prod_Box_Fragment1 : BaseFragment() {
                                 m.getBoxBarcode2(m.boxBarCode2!!)
                             }
                             '3'-> { // 物料
-                                val bt = JsonUtil.strToObject(msgObj, BarCodeTable::class.java)
-                                m.getMaterial(bt)
+                                m.bt = JsonUtil.strToObject(msgObj, BarCodeTable::class.java)
+                                val prodOrder = JsonUtil.stringToObject(m.bt!!.relationObj, ProdOrder::class.java)
+                                // 启用批次号就弹出输入批次
+                                if(prodOrder.icItem.batchManager.equals("Y")) {
+                                    if (m.checkDatas.size > 0 && prodOrder.workShopId != m.checkDatas[0].fdeptId) {
+                                        Comm.showWarnDialog(m.mContext, "请扫描相同（生产车间）的生产任务单条码！")
+                                        return
+                                    }
+                                    val bundle = Bundle()
+                                    bundle.putString("batchCode", m.bt!!.batchCode)
+                                    bundle.putDouble("fqty", prodOrder.useableQty)
+                                    m.showForResult(BatchAndNumInputDialog::class.java, RESULT_BATCH_NUM, bundle)
+
+                                } else {
+                                    m.getMaterial()
+                                }
                             }
                         }
                     }
@@ -518,6 +536,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
         tv_boxSize2.text = ""
         tv_realWeight.text = ""
         tv_realVolume.text = ""
+        tv_deptName.text = ""
 
         modifyBoxStatus = 1
         boxBarCode = null
@@ -551,6 +570,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
             }
         }
         if(m.listMbr != null && m.listMbr.size > 0) {
+            tv_deptName.text = m.listMbr[0].dept.departmentName
             checkDatas.addAll(m.listMbr)
             checkDatas.forEachIndexed { index, it ->
                 it.rowNo = (index+1) // 自动算出行号
@@ -654,12 +674,13 @@ class Prod_Box_Fragment1 : BaseFragment() {
         entryBarcode.batchCode = batchCode
         entryBarcode.snCode = ""
         entryBarcode.fqty = fqty
-        entryBarcode.isUniqueness = 'Y'
+        entryBarcode.isUniqueness = 'N'
         entryBarcode.createUserName = user!!.username
 
         checkDatas[pos].mbrBarcodes.add(entryBarcode)
-        val addVal = BigdecimalUtil.add(checkDatas[pos].fqty, fqty)
-        checkDatas[pos].fqty = addVal
+//        val addVal = BigdecimalUtil.add(checkDatas[pos].fqty, fqty)
+//        checkDatas[pos].fqty = addVal
+        checkDatas[pos].fqty = fqty
     }
 
     /**
@@ -701,11 +722,16 @@ class Prod_Box_Fragment1 : BaseFragment() {
     /**
      *  物料扫码后处理
      */
-    fun getMaterial(bt: BarCodeTable) {
-        val prodOrder = JsonUtil.stringToObject(bt.relationObj, ProdOrder::class.java)
+    fun getMaterial() {
+        val prodOrder = JsonUtil.stringToObject(bt!!.relationObj, ProdOrder::class.java)
         if(checkDatas.size > 0) {
             checkDatas.forEach {
-                if(it.icItem.batchManager.equals("Y") || it.icItem.snManager.equals("Y")) {
+                if(prodOrder.workShopId != it.fdeptId) {
+                    Comm.showWarnDialog(mContext,"请扫描相同（生产车间）的生产任务单条码！")
+                    return
+                }
+//              if(it.icItem.batchManager.equals("Y") || it.icItem.snManager.equals("Y")) {
+                if(it.icItem.snManager.equals("Y")) {
                     for (it2 in it.mbrBarcodes) {
                         if (getValues(et_mtlCode) == it2.barcode) {
                             Comm.showWarnDialog(mContext, "条码已使用！")
@@ -720,23 +746,23 @@ class Prod_Box_Fragment1 : BaseFragment() {
                 if (prodOrder.prodId == it.fsourceInterId) {
                     isBool = true
                     if (it.icItem.batchManager.equals("Y")) { // 启用批次号
-                        setBatchCode(index, bt.batchCode, bt.barcodeQty)
+                        setBatchCode(index, bt!!.batchCode, bt!!.barcodeQty)
 
                     } else if (it.icItem.snManager.equals("Y")) { // 启用序列号
-                        setSnCode(index, bt.snCode)
+                        setSnCode(index, bt!!.snCode)
 
                     } else { // 未启用
-                        var fqty = if (bt.barcodeQty > 0) bt.barcodeQty else 1.0
+                        var fqty = if (bt!!.barcodeQty > 0) bt!!.barcodeQty else 1.0
                         unSetBatchOrSnCode(index, fqty)
                     }
                     break
                 }
             }
             if(!isBool) { // 添加新行
-                addRow(bt.batchCode, bt.snCode, bt.barcodeQty, prodOrder)
+                addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
             }
         } else { // 添加新行
-            addRow(bt.batchCode, bt.snCode, bt.barcodeQty, prodOrder)
+            addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
         }
         mAdapter!!.notifyDataSetChanged()
     }
@@ -761,6 +787,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
         mbr.createUserName = user!!.username
         mbr.icItem = prodOrder.icItem
         mbr.boxBarCode = boxBarCode
+        mbr.fdeptId = prodOrder.workShopId
 
         mbr.useableQty = prodOrder.useableQty
         if(checkDatas.size == 0) {
@@ -781,6 +808,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
             var fqty = if (barcodeQty > 0) barcodeQty else 1.0
             unSetBatchOrSnCode(pos, fqty)
         }
+        tv_deptName.text = prodOrder.deptName
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -861,6 +889,18 @@ class Prod_Box_Fragment1 : BaseFragment() {
                             return
                         }
                         tv_realVolume.text = value
+                    }
+                }
+            }
+            RESULT_BATCH_NUM -> {// 批次和数量  返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.extras
+                    if (bundle != null) {
+                        val batchCode = bundle.getString("batchCode")
+                        val fqty = bundle.getDouble("fqty")
+                        bt!!.batchCode = batchCode
+                        bt!!.barcodeQty = fqty
+                        getMaterial()
                     }
                 }
             }
