@@ -33,6 +33,7 @@ public class BoxBarCode implements Serializable {
 
 	// 临时数据, 不存表
 	List<MaterialBinningRecord> listMbr; // 物料装箱记录
+	private boolean check;	// 前端用的是否选中
 
 	public BoxBarCode() {
 		super();
@@ -140,5 +141,13 @@ public class BoxBarCode implements Serializable {
 
 	public void setIsOutStock(int isOutStock) {
 		this.isOutStock = isOutStock;
+	}
+
+	public boolean isCheck() {
+		return check;
+	}
+
+	public void setCheck(boolean check) {
+		this.check = check;
 	}
 }

@@ -97,10 +97,19 @@
         android:textSize="@dimen/_12sp" />
 
     <TextView
+        android:id="@+id/tv_boxBarcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_referenceNum"
+        android:text="箱码："
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
         android:id="@+id/tv_stockName"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_below="@+id/tv_referenceNum"
+        android:layout_below="@+id/tv_boxBarcode"
         android:text="仓库："
         android:textColor="@color/c_666666"
         android:textSize="@dimen/_12sp" />
@@ -109,7 +118,7 @@
         android:id="@+id/tv_stockAreaName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_referenceNum"
+        android:layout_below="@+id/tv_boxBarcode"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_toRightOf="@+id/tv_stockName"
         android:text="库区："

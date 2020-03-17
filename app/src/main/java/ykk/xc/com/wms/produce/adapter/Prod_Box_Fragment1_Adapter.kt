@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.MaterialBinningRecord
+import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.basehelper.BaseArrayRecyclerAdapter
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import java.text.DecimalFormat
@@ -29,6 +30,7 @@ class Prod_Box_Fragment1_Adapter(private val context: Activity, datas: List<Mate
         val tv_num = holder.obtainView<TextView>(R.id.tv_num)
         val tv_useableQty = holder.obtainView<TextView>(R.id.tv_useableQty)
         val view_del = holder.obtainView<View>(R.id.view_del)
+        val tv_boxBarcode = holder.obtainView<TextView>(R.id.tv_boxBarcode)
 
         // 赋值
         tv_row.text = entity.rowNo.toString()
@@ -39,6 +41,7 @@ class Prod_Box_Fragment1_Adapter(private val context: Activity, datas: List<Mate
         tv_prodNo.text = Html.fromHtml("生产单号:&nbsp;<font color='#6a5acd'>"+ entity.fsourceNo +"</font>")
         tv_prodQty.text = Html.fromHtml("生产数:&nbsp;<font color='#FF2200'>"+ df.format(entity.fsourceQty) +"</font>")
         tv_useableQty.text = Html.fromHtml("可用数:&nbsp;<font color='#009900'>"+ df.format(entity.useableQty) +"</font>")
+        tv_boxBarcode.text = Html.fromHtml("箱码:&nbsp;<font color='#000000'>"+ if(entity.boxBarCode != null) entity.boxBarCode.barCode else ""  +"</font>")
 
         if(entity.icItem.batchManager.equals("Y") || entity.icItem.snManager.equals("Y")) {
             tv_num.isEnabled = false

@@ -747,7 +747,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
         icStockBillEntry.fkfPeriod = icEntry.fkfPeriod
         icStockBillEntry.remark = icEntry.remark
         icStockBillEntry.inventoryNowQty = icEntry.inventoryNowQty
-        icStockBillEntry.materialBinningRecordId = icEntry.materialBinningRecordId
+        icStockBillEntry.boxBarCodeId = icEntry.boxBarCodeId
 
         icStockBillEntry.icItem = icEntry.icItem
 
@@ -761,13 +761,13 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
 //        } else {
             setEnables(tv_batchNo, R.drawable.back_style_gray3, false)
 //        }
-        if(icEntry.icItem.batchManager.equals("Y") || icEntry.icItem.snManager.equals("Y") || icEntry.materialBinningRecordId > 0) {
+        if(icEntry.icItem.batchManager.equals("Y") || icEntry.icItem.snManager.equals("Y") || icEntry.boxBarCodeId > 0) {
             setEnables(tv_num, R.drawable.back_style_gray3, false)
         } else {
             setEnables(tv_num, R.drawable.back_style_blue, true)
         }
         // 如果是装箱的物料，把扫描物料框禁止
-        if(icEntry.materialBinningRecordId > 0) {
+        if(icEntry.boxBarCodeId > 0) {
             lin_focusMtl.setBackgroundResource(R.drawable.back_style_gray3)
             btn_scan.isEnabled = false
             et_code.isEnabled = false
@@ -786,7 +786,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
         tv_remark.text = icEntry.remark
 
         // 如果物料启用了称重
-        if(icEntry.icItem.calByWeight.equals("M") || icEntry.icItem.calByWeight.equals("N") || icEntry.materialBinningRecordId > 0) {
+        if(icEntry.icItem.calByWeight.equals("M") || icEntry.icItem.calByWeight.equals("N") || icEntry.boxBarCodeId > 0) {
             setEnables(tv_weight, R.drawable.back_style_gray3, false)
         } else {
             setEnables(tv_weight, R.drawable.back_style_blue, true)
@@ -1147,7 +1147,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             icStockBillEntry.inStockPosName = stockPos!!.stockPositionName
         }
 
-        if(stock != null && icStockBillEntry.materialBinningRecordId == 0) {
+        if(stock != null && icStockBillEntry.boxBarCodeId == 0) {
             // 自动跳到物料焦点
             smqFlag = '2'
             mHandler.sendEmptyMessage(SETFOCUS)
@@ -1217,7 +1217,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             entry.storageRackId2_wms = it.storageRackId_wms
             entry.stockPosId2_wms = it.stockPosId_wms
             // 是箱子里的物料，就给值
-            if(it.materialBinningRecordId > 0) {
+            if(it.boxBarCodeId > 0) {
                 entry.fqty = it.fqty
             }
 //            entry.fqty = it.useableQty
@@ -1240,7 +1240,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             entry.unitName = it.unitName
             entry.fkfDate = null
             entry.remark = ""
-            entry.materialBinningRecordId = it.materialBinningRecordId
+            entry.boxBarCodeId = it.boxBarCodeId
             listEntry.add(entry)
         }
         run_save(listEntry)

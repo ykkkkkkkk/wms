@@ -115,6 +115,11 @@ class Prod_Box_Fragment1 : BaseFragment() {
                                     Comm.showWarnDialog(m.mContext,"请扫描已封箱的箱子！")
                                     return
                                 }
+                                // 如果有扫描物料列表在前，箱码在后，那么扫描箱码必须是空箱子
+//                                if(m.boxBarCode == null && m.checkDatas.size > 0 && boxBarCode.listMbr.size > 0) {
+//                                    Comm.showWarnDialog(m.mContext,"请扫描未使用的箱子！")
+//                                    return
+//                                }
                                 if(m.autoSaveAferBarcode != null) {
                                     m.reset(0)
                                 }
@@ -559,6 +564,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
     fun getBoxBarcode(m : BoxBarCode) {
         boxBarCode = m
 
+        lin_box.visibility = View.GONE
         tv_boxName.text = m.box.boxName
         tv_boxSize.text = m.box.boxSize
         // 先扫描物料，再扫描箱码

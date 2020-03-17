@@ -1,9 +1,12 @@
 package ykk.xc.com.wms.purchase.adapter
 
 import android.app.Activity
+import android.text.Html
+import android.view.View
 import android.widget.TextView
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.MissionBill
+import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.basehelper.BaseArrayRecyclerAdapter
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import java.text.DecimalFormat
@@ -23,27 +26,31 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
         val tv_billNo = holder.obtainView<TextView>(R.id.tv_billNo)
         val tv_missionType = holder.obtainView<TextView>(R.id.tv_missionType)
         val tv_missionContent = holder.obtainView<TextView>(R.id.tv_missionContent)
-        val tv_k3Number = holder.obtainView<TextView>(R.id.tv_k3Number)
+        val tv_sourceBillNo = holder.obtainView<TextView>(R.id.tv_sourceBillNo)
 
         // 赋值
-        tv_row!!.text = (pos + 1).toString()
-        tv_date!!.text = entity.createTime
-        tv_billNo!!.text = entity.billNo
-        // 1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨
-        if(entity.missionType == 1) {
-            tv_missionType!!.text = "外购收料任务"
-        } else if(entity.missionType == 21) {
-            tv_missionType!!.text = "销售发货任务"
-        } else if(entity.missionType == 31) {
-            tv_missionType!!.text = "仓库外购收货任务"
-        } else if(entity.missionType == 41) {
-            tv_missionType!!.text = "投料调拨任务"
-        } else {
-            tv_missionType!!.text = "外购收料任务"
+        tv_row.text = (pos + 1).toString()
+        tv_date.text = entity.createTime
+        tv_billNo.text = entity.billNo
+        //任务类型 	1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨，42：代表生产入库调拨，51：拣货任务单，52：出库质检任务，53：仓管复核任务
+        when (entity.missionType) {
+            1 -> tv_missionType.text = "外购收料任务"
+            21 -> tv_missionType.text = "销售发货任务"
+            31 -> tv_missionType.text = "仓库外购收货任务"
+            41 -> tv_missionType.text = "投料调拨任务"
+            42 -> tv_missionType.text = "生产入库调拨任务"
+            51 -> tv_missionType.text = "拣货任务"
+            52 -> tv_missionType.text = "出库质检任务"
+            53 -> tv_missionType.text = "仓管复核任务"
         }
-        tv_missionContent!!.text = entity.missionContent
-        tv_k3Number!!.text = entity.sourceBillNo
-
+        val missionContent = Comm.isNULLS(entity.missionContent)
+        if(missionContent.length > 0) {
+            tv_missionContent.visibility = View.VISIBLE
+        } else {
+            tv_missionContent.visibility = View.INVISIBLE
+        }
+        tv_missionContent.text = Html.fromHtml("任务内容:&nbsp;<font color='#000000'>"+ Comm.isNULLS(entity.missionContent)+"</font>")
+        tv_sourceBillNo.text = Html.fromHtml("来源单:&nbsp;<font color='#6a5acd'>"+ entity.sourceBillNo+"</font>")
     }
 
     fun setCallBack(callBack: MyCallBack) {

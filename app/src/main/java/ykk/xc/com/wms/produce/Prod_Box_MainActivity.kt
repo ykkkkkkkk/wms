@@ -11,6 +11,7 @@ import android.os.Handler
 import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
@@ -411,6 +412,21 @@ class Prod_Box_MainActivity : BaseActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e(TAG, "onDestroy()")
+        closeHandler(mHandler)
+        DeviceConnFactoryManager.closeAllPort()
+        if (threadPool != null) {
+            threadPool!!.stopThreadPool()
         }
     }
 

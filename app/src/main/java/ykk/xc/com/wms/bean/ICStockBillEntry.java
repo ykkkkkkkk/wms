@@ -63,7 +63,7 @@ public class ICStockBillEntry implements Serializable {
 	private String fkfDate; 			// 生产/采购日期
 	private int fkfPeriod;				// 保质期
 	private int sourceThisId;			// 来源本身id
-	private int materialBinningRecordId;// 装箱表id
+	private int boxBarCodeId;			// 装箱表id
 
 	private Stock stock;
 	private StockArea stockArea;
@@ -77,6 +77,7 @@ public class ICStockBillEntry implements Serializable {
 	private Container container2;
 	private ICItem icItem;
 	private ICStockBill icstockBill;
+	private BoxBarCode boxBarCode;
 
 	// 临时字段，不存表
 	private boolean showButton; 		// 是否显示操作按钮
@@ -645,12 +646,19 @@ public class ICStockBillEntry implements Serializable {
 		this.inventoryNowQty = inventoryNowQty;
 	}
 
-	public int getMaterialBinningRecordId() {
-		return materialBinningRecordId;
+	public int getBoxBarCodeId() {
+		return boxBarCodeId;
 	}
 
-	public void setMaterialBinningRecordId(int materialBinningRecordId) {
-		this.materialBinningRecordId = materialBinningRecordId;
+	public void setBoxBarCodeId(int boxBarCodeId) {
+		this.boxBarCodeId = boxBarCodeId;
 	}
 
+	public BoxBarCode getBoxBarCode() {
+		return boxBarCode;
+	}
+
+	public void setBoxBarCode(BoxBarCode boxBarCode) {
+		this.boxBarCode = boxBarCode;
+	}
 }

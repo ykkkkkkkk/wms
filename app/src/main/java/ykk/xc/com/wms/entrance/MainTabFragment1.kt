@@ -47,7 +47,7 @@ class MainTabFragment1 : BaseFragment(), IDownloadContract.View {
     private var mContext: Activity? = null
     private val okHttpClient = OkHttpClient()
     private var mPresenter: IDownloadPresenter? = null
-    private var isCheckUpdate = false // 是否已经检查过更新
+//    private var isCheckUpdate = false // 是否已经检查过更新
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -75,7 +75,7 @@ class MainTabFragment1 : BaseFragment(), IDownloadContract.View {
                 when (msg.what) {
                     UPDATE // 更新版本  成功
                     -> {
-                        m.isCheckUpdate = true
+//                        m.isCheckUpdate = true
                         val appInfo = JsonUtil.strToObject(msg.obj as String, AppInfo::class.java)
                         if (m.getAppVersionCode(m.mContext) != appInfo!!.appVersion) {
                             m.showNoticeDialog(appInfo.appRemark)
@@ -117,11 +117,11 @@ class MainTabFragment1 : BaseFragment(), IDownloadContract.View {
     }
 
     override fun initData() {
-        mPresenter = IDownloadPresenter(context)
-        if (!isCheckUpdate) {
-            // 执行更新版本请求
-            run_findAppInfo()
-        }
+//        mPresenter = IDownloadPresenter(context)
+//        if (!isCheckUpdate) {
+//            // 执行更新版本请求
+//            run_findAppInfo()
+//        }
     }
 
     @OnClick(R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5)
@@ -131,16 +131,20 @@ class MainTabFragment1 : BaseFragment(), IDownloadContract.View {
 
             }
             R.id.relative2 -> { // 收料任务
-                show(MissionBillListActivity::class.java, null)
-            }
-            R.id.relative3 -> { // 外购入库
-                show(Pur_InStock_MainActivity::class.java, null)
-            }
-            R.id.relative4  -> { // 外购入库上传
                 val bundle = Bundle()
                 bundle.putInt("pageId", 5)
                 bundle.putString("billType", "CGSHRK")
                 show(OutInStock_Search_MainActivity::class.java, bundle)
+//                show(MissionBillListActivity::class.java, null)
+            }
+            R.id.relative3 -> { // 外购入库
+//                show(Pur_InStock_MainActivity::class.java, null)
+            }
+            R.id.relative4  -> { // 外购入库上传
+//                val bundle = Bundle()
+//                bundle.putInt("pageId", 5)
+//                bundle.putString("billType", "CGSHRK")
+//                show(OutInStock_Search_MainActivity::class.java, bundle)
             }
             R.id.relative5 -> { // 仓库收货上传
 //                val bundle = Bundle()

@@ -31,10 +31,22 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/_4dp"
+            android:visibility="gone"
             android:background="@drawable/aa_ico5a_5b"
             android:ems="2"
             android:textColor="#ffffff"
             android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_refresh"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_blue2_selector"
+            android:text="刷新"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_16sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -45,14 +57,42 @@
         android:background="@drawable/back_style_blue6"
         android:orientation="horizontal">
 
+        <RelativeLayout
+            android:id="@+id/relative0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue">
+
+            <RadioButton
+                android:id="@+id/radio0"
+                android:layout_width="@dimen/_26dp"
+                android:layout_marginTop="@dimen/_2dp"
+                android:layout_height="@dimen/_26dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_tabradio0_selector"
+                android:button="@null"
+                android:checked="true" />
+
+            <TextView
+                android:id="@+id/tab0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/radio0"
+                android:layout_centerHorizontal="true"
+                android:text="任务"
+                android:textColor="@color/c_6a5acd"
+                android:textSize="@dimen/_14sp" />
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relative1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_2dp"
-            android:layout_weight="1"
-            android:background="@drawable/back_style_blue">
+            android:layout_weight="1">
 
             <RadioButton
                 android:id="@+id/radio1"
@@ -61,7 +101,7 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/btn_tabradio1_selector"
                 android:button="@null"
-                android:checked="true" />
+                android:checked="false" />
 
             <TextView
                 android:id="@+id/tab1"
@@ -70,7 +110,7 @@
                 android:layout_below="@+id/radio1"
                 android:layout_centerHorizontal="true"
                 android:text="采购"
-                android:textColor="@color/c_6a5acd"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14sp" />
 
         </RelativeLayout>
@@ -163,9 +203,9 @@
             android:id="@+id/relative5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:layout_margin="@dimen/_2dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:visibility="gone">
 
             <RadioButton
                 android:id="@+id/radio5"
@@ -200,7 +240,7 @@
                 android:layout_width="@dimen/_28dp"
                 android:layout_height="@dimen/_28dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/btn_tabradio4_selector"
+                android:background="@drawable/btn_tabradio5_selector"
                 android:button="@null"
                 android:checked="false" />
 

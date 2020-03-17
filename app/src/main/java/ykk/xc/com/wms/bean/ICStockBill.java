@@ -2,6 +2,8 @@ package ykk.xc.com.wms.bean;
 
 import java.io.Serializable;
 
+import ykk.xc.com.wms.bean.k3Bean.Customer;
+
 /**
  * Wms 本地的出入库	主表
  * @author Administrator
@@ -44,6 +46,8 @@ public class ICStockBill implements Serializable {
 	private int qualifiedStockId;		// 合格仓库id
 	private int unQualifiedStockId;		// 不合格仓库id
 	private int missionBillId;			// MissionBill 对象id
+	private int fcustId;				// 客户id
+	private int deliverWay;				// 发货方式( 发货运:990664，送货:990665 )
 
 	// 临时字段，不存表
 	private boolean showButton; 		// 是否显示操作按钮
@@ -53,6 +57,7 @@ public class ICStockBill implements Serializable {
 	private Supplier supplier;			// 供应商对象
 	private MissionBill missionBill;	// 任务单对象
 	private Department department;	// 部门对象
+	private Customer cust;	// 客户对象
 
 	// 临时字段，不存表
 	private String summary; 			// 主表摘要
@@ -388,6 +393,30 @@ public class ICStockBill implements Serializable {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public int getFcustId() {
+		return fcustId;
+	}
+
+	public void setFcustId(int fcustId) {
+		this.fcustId = fcustId;
+	}
+
+	public int getDeliverWay() {
+		return deliverWay;
+	}
+
+	public void setDeliverWay(int deliverWay) {
+		this.deliverWay = deliverWay;
+	}
+
+	public Customer getCust() {
+		return cust;
+	}
+
+	public void setCust(Customer cust) {
+		this.cust = cust;
 	}
 
 }

@@ -25,20 +25,23 @@ class MainTabFragmentActivity : BaseActivity() {
     private var curRelative: RelativeLayout? = null
     private var curTv: TextView? = null
     private var curRadio: RadioButton? = null
+    private var pageId = 0
+    val fragment0 = MainTabFragment0()
 
     override fun setLayoutResID(): Int {
         return R.layout.aa_main
     }
 
     override fun initData() {
-        curRelative = relative1
-        curTv = tab1
-        curRadio = radio1
+        curRelative = relative0
+        curTv = tab0
+        curRadio = radio0
 
         val user = showUserByXml()
         tv_title!!.text = "操作员：" + user!!.username
 
         val listFragment = ArrayList<Fragment>()
+        listFragment.add(fragment0)
         listFragment.add(MainTabFragment1())
         listFragment.add(MainTabFragment2())
         listFragment.add(MainTabFragment3())
@@ -57,14 +60,15 @@ class MainTabFragmentActivity : BaseActivity() {
 
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    0 -> tabChange(relative1, tab1, radio1, 0)
-                    1 -> tabChange(relative2, tab2, radio2, 1)
-                    2 -> tabChange(relative3, tab3, radio3, 2)
-                    3 -> tabChange(relative4, tab4, radio4, 3)
-                    4 ->
+                    0 -> tabChange(relative0, tab0, radio0, 0)
+                    1 -> tabChange(relative1, tab1, radio1, 1)
+                    2 -> tabChange(relative2, tab2, radio2, 2)
+                    3 -> tabChange(relative3, tab3, radio3, 3)
+                    4 -> tabChange(relative4, tab4, radio4, 4)
+                    5 ->
                         //                        tabChange(relative5, tab5, radio5, 4);
-                        tabChange(relative6, tab6, radio6, 4)
-                    5 -> {
+                        tabChange(relative6, tab6, radio6, 5)
+                    6 -> {
                         //                        tabChange(relative6, tab6, radio6, 5);
                     }
                 }
@@ -76,7 +80,7 @@ class MainTabFragmentActivity : BaseActivity() {
         })
     }
 
-    @OnClick(R.id.btn_close, R.id.btn_print, R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5, R.id.relative6, R.id.radio1, R.id.radio2, R.id.radio3, R.id.radio4, R.id.radio5, R.id.radio6)
+    @OnClick(R.id.btn_close, R.id.btn_print, R.id.btn_refresh, R.id.relative0, R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5, R.id.relative6, R.id.radio0, R.id.radio1, R.id.radio2, R.id.radio3, R.id.radio4, R.id.radio5, R.id.radio6)
     fun onViewClicked(view: View) {
         // setCurrentItem第二个参数控制页面切换动画
         //  true:打开/false:关闭
@@ -96,29 +100,33 @@ class MainTabFragmentActivity : BaseActivity() {
                 build.setCancelable(false)
                 build.show()
             }
-            R.id.btn_print // 打印
-            -> show(PrintMainActivity::class.java, null)
-            R.id.relative1 -> tabChange(relative1, tab1, radio1, 0)
-            R.id.relative2 -> tabChange(relative2, tab2, radio2, 1)
-            R.id.relative3 -> tabChange(relative3, tab3, radio3, 2)
-            R.id.relative4 -> tabChange(relative4, tab4, radio4, 3)
-            R.id.relative5 ->
-                //                tabChange(relative5, tab5, radio5, 4);
-                tabChange(relative6, tab6, radio6, 4)
-            R.id.relative6 -> {
-                //                tabChange(relative6, tab6, radio6, 5);
+            R.id.btn_print -> {// 打印
+                show(PrintMainActivity::class.java, null)
             }
+            R.id.btn_refresh -> { // 刷新页面
+                fragment0.initLoadDatas()
+            }
+            R.id.relative0 -> tabChange(relative0, tab0, radio0, 0)
+            R.id.relative1 -> tabChange(relative1, tab1, radio1, 1)
+            R.id.relative2 -> tabChange(relative2, tab2, radio2, 2)
+            R.id.relative3 -> tabChange(relative3, tab3, radio3, 3)
+            R.id.relative4 -> tabChange(relative4, tab4, radio4, 4)
+            R.id.relative5 -> {
+                //                tabChange(relative5, tab5, radio5, 4);
+//                tabChange(relative6, tab6, radio6, 5)
+            }
+            R.id.relative6 -> tabChange(relative6, tab6, radio6, 5);
+
             // --------------------------------------------
-            R.id.radio1 -> tabChange(relative1, tab1, radio1, 0)
-            R.id.radio2 -> tabChange(relative2, tab2, radio2, 1)
-            R.id.radio3 -> tabChange(relative3, tab3, radio3, 2)
-            R.id.radio4 -> tabChange(relative4, tab4, radio4, 3)
+            R.id.radio0 -> tabChange(relative0, tab0, radio0, 0)
+            R.id.radio1 -> tabChange(relative1, tab1, radio1, 1)
+            R.id.radio2 -> tabChange(relative2, tab2, radio2, 2)
+            R.id.radio3 -> tabChange(relative3, tab3, radio3, 3)
+            R.id.radio4 -> tabChange(relative4, tab4, radio4, 4)
             R.id.radio5 -> {
                 //                tabChange(relative5, tab5, radio5, 4);
             }
-            R.id.radio6 -> {
-                tabChange(relative6, tab6, radio6, 4)
-            }
+            R.id.radio6 -> tabChange(relative6, tab6, radio6, 5)
         }
     }
 
@@ -138,8 +146,16 @@ class MainTabFragmentActivity : BaseActivity() {
     }
 
     private fun tabChange(relative: RelativeLayout?, tv: TextView?, radio: RadioButton?, page: Int) {
+        pageId = page
         tabSelected(relative!!, tv!!, radio!!)
         viewPager!!.setCurrentItem(page, false)
+        if(pageId == 0) {
+            btn_print.visibility = View.GONE
+            btn_refresh.visibility = View.VISIBLE
+        } else {
+            btn_print.visibility = View.VISIBLE
+            btn_refresh.visibility = View.GONE
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

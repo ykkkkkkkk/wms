@@ -167,7 +167,7 @@ class Prod_InStock_Fragment3 : BaseFragment() {
         })
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            if(checkDatas[pos].materialBinningRecordId > 0) {
+            if(checkDatas[pos].boxBarCodeId > 0) {
                 Comm.showWarnDialog(mContext,"箱子里的数量不能修改！")
             } else {
                 EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))

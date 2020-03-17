@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:layout_margin="@dimen/_3dp">
 
 
     <TextView
         android:id="@+id/tv_row"
-        android:layout_width="32dp"
-        android:layout_height="@dimen/_46dp"
+        android:layout_width="38dp"
+        android:layout_height="wrap_content"
+        android:background="@color/c_666666"
         android:gravity="center"
-        android:text="行号"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/tv_date"
-        android:layout_width="68dp"
-        android:layout_height="@dimen/_46dp"
-        android:gravity="center"
-        android:text="日期"
-        android:maxLength="19"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sp" />
 
     <TextView
         android:id="@+id/tv_billNo"
-        android:layout_width="88dp"
-        android:layout_height="@dimen/_46dp"
-        android:gravity="center"
-        android:text="任务单号"
-        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="DD00001044"
+        android:textColor="@color/c_FF4400"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_missionType"
-        android:layout_width="88dp"
-        android:layout_height="@dimen/_46dp"
-        android:gravity="center"
-        android:text="任务类型"
-        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="外购收料任务"
+        android:textColor="@color/c_515151"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_missionContent"
-        android:layout_width="108dp"
-        android:layout_height="@dimen/_46dp"
-        android:gravity="center"
-        android:text="任务内容"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_row"
+        android:text="内容：我是你爸爸真伟大，养你这么大，你还不听话，一天到晚去玩耍，滚吧滚吧"
+        android:textColor="@color/c_666666"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLength="19"
+        android:text="2020-03-14"
+        android:layout_below="@+id/tv_missionContent"
         android:textColor="@color/black"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_k3Number"
-        android:layout_width="88dp"
-        android:layout_height="@dimen/_46dp"
-        android:gravity="center"
-        android:text="K3单号"
-        android:textColor="@color/black"
+        android:id="@+id/tv_sourceBillNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_missionContent"
+        android:text="源单号：SEOUT019524"
+        android:textColor="@color/c_666666"
         android:textSize="12sp" />
 
 
-</LinearLayout>
+</RelativeLayout>

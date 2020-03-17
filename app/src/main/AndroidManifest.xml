@@ -214,6 +214,9 @@
             android:name=".produce.Prod_Box_MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".produce.Prod_Box_FindByBarcodeActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name=".produce.Prod_Box_UnBind_MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
@@ -253,7 +256,9 @@
         <activity android:name=".util.ImageLoadActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".WebViewTestActivity" />
-        <activity android:name=".entrance.MainTabFragmentActivity" />
+        <activity
+            android:name=".entrance.MainTabFragmentActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".LoadMoreActivity" />
         <activity android:name=".LoadMoreWrapperActivity" />
     </application>

@@ -158,14 +158,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tvImg5"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/aa_ico1a_2" />
+                android:background="@drawable/aa_ico2a_8" />
 
             <TextView
                 android:id="@+id/tab5"
@@ -174,7 +174,7 @@
                 android:layout_below="@+id/tvImg5"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="外购入库"
+                android:text="装箱补码"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

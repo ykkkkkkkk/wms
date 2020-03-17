@@ -1360,7 +1360,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
             entry.inStockPosName = ""
             entry.unitName = it.icItem.unit.unitName
             entry.remark = ""
-            entry.materialBinningRecordId = boxBarCode.id
+            entry.boxBarCodeId = boxBarCode.id
 
             listEntry.add(entry)
         }
