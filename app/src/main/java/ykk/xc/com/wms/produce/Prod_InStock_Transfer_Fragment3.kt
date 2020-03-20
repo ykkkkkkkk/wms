@@ -114,9 +114,10 @@ class Prod_InStock_Transfer_Fragment3 : BaseFragment() {
                         if(retMsg.length > 0) {
                             Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
                         } else {
-                            // 滑动第一个页面
-                            m.parent!!.viewPager!!.setCurrentItem(0, false)
-                            m.parent!!.fragment1.reset() // 重置
+//                            // 滑动第一个页面
+//                            m.parent!!.viewPager!!.setCurrentItem(0, false)
+//                            m.parent!!.fragment1.reset() // 重置
+                            m.parent!!.finish()
                             m.toasts("上传成功")
                         }
                     }

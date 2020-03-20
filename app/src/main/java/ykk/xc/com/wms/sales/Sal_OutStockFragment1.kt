@@ -237,7 +237,6 @@ class Sal_OutStockFragment1 : BaseFragment() {
         tv_inDateSel.text = Comm.getSysDate(7)
         tv_suppSel.text = ""
         tv_deptSel.text = ""
-        tv_stockSel.text = ""
         tv_emp1Sel.text = ""
         tv_emp2Sel.text = ""
         tv_emp3Sel.text = ""
@@ -267,29 +266,6 @@ class Sal_OutStockFragment1 : BaseFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            SEL_SUPP -> {//查询客户	返回
-                if (resultCode == Activity.RESULT_OK) {
-                    val cust = data!!.getSerializableExtra("obj") as Customer
-                    tv_suppSel.text = cust.fname
-                    icStockBill.fsupplyId = cust.fitemId
-                    icStockBill.suppName = cust.fname
-                }
-            }
-            SEL_DEPT -> {//查询部门	返回
-                if (resultCode == Activity.RESULT_OK) {
-                    val dept = data!!.getSerializableExtra("obj") as Department
-                    tv_deptSel.text = dept!!.departmentName
-                    icStockBill.fdeptId = dept.fitemID
-                    icStockBill.deptName = dept.departmentName
-                }
-            }
-            SEL_STOCK -> {// 仓库	返回
-                if (resultCode == Activity.RESULT_OK) {
-                    val stock = data!!.getSerializableExtra("obj") as Stock
-                    tv_stockSel.text = stock!!.fname
-                    icStockBill.stock = stock
-                }
-            }
             SEL_EMP1 -> {//查询业务员	返回
                 if (resultCode == Activity.RESULT_OK) {
                     val emp = data!!.getSerializableExtra("obj") as Emp

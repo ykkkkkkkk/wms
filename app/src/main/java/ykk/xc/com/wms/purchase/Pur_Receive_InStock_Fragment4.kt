@@ -116,7 +116,7 @@ class Pur_Receive_InStock_Fragment4 : BaseFragment() {
                 }
                 tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+ Comm.isNULLS(icstockBillEntry!!.fmode)+"</font>")
 
-                tv_num.text = Html.fromHtml("入库数:&nbsp;<font color='#6a5acd'>"+ df.format(icstockBillEntry!!.fqty) + icstockBillEntry!!.unitName +"</font>")
+                tv_num.text = Html.fromHtml("入库数:&nbsp;<font color='#FF0000'>"+ df.format(icstockBillEntry!!.fqty) +"</font>&nbsp;<font color='#666666'>"+ icstockBillEntry!!.unitName +"</font>")
                 tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(icstockBillEntry!!.weight > 0) df.format(icstockBillEntry!!.weight) else "") +"</font>")
                 tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(icstockBillEntry!!.referenceNum > 0) df.format(icstockBillEntry!!.referenceNum) else "")+"</font>")
 

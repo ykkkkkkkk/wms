@@ -661,7 +661,7 @@ class Sal_OutStockFragment2 : BaseFragment() {
             entry.fsourceInterId = it.finterid
             entry.fsourceEntryId = it.fentryid
             entry.fsourceTranType = 83
-            entry.fsourceBillNo = it.fbillno
+//            entry.fsourceBillNo = it.fbillno
             entry.fdetailId = it.fdetailid
 
             entry.mtlNumber = it.icItem.fnumber
@@ -669,7 +669,7 @@ class Sal_OutStockFragment2 : BaseFragment() {
             entry.fmode = it.icItem.fmodel
             entry.inStockName = icStockBillEntry.inStockName
             entry.inStockPosName = ""
-            entry.unitName = it.unitName
+//            entry.unitName = it.unitName
             entry.remark = ""
             listEntry.add(entry)
         }

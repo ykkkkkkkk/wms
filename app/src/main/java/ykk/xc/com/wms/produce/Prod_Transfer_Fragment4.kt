@@ -116,8 +116,8 @@ class Prod_Transfer_Fragment4 : BaseFragment() {
                 }
                 tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+ Comm.isNULLS(icstockBillEntry!!.fmode)+"</font>")
 
-                tv_num.text = Html.fromHtml("实发数:&nbsp;<font color='#6a5acd'>"+ df.format(icstockBillEntry!!.fqty) +"</font>")
-                tv_sourceQty.text = Html.fromHtml("应发数:&nbsp;<font color='#6a5acd'>"+ df.format(icstockBillEntry!!.fsourceQty) +"&nbsp;"+ icstockBillEntry!!.unitName +"</font>")
+                tv_num.text = Html.fromHtml("实发数:&nbsp;<font color='#FF0000'>"+ df.format(icstockBillEntry!!.fqty) +"</font>")
+                tv_sourceQty.text = Html.fromHtml("应发数:&nbsp;<font color='#6a5acd'>"+ df.format(icstockBillEntry!!.fsourceQty) +"</font>&nbsp;<font color='#666666'>"+ icstockBillEntry!!.unitName +"</font>")
                 tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(icstockBillEntry!!.weight > 0) df.format(icstockBillEntry!!.weight) else "") +"</font>")
                 tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(icstockBillEntry!!.referenceNum > 0) df.format(icstockBillEntry!!.referenceNum) else "")+"</font>")
 

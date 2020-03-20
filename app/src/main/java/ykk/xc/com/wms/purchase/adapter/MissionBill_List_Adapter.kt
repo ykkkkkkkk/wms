@@ -39,9 +39,10 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
             31 -> tv_missionType.text = "仓库外购收货任务"
             41 -> tv_missionType.text = "投料调拨任务"
             42 -> tv_missionType.text = "生产入库调拨任务"
-            51 -> tv_missionType.text = "拣货任务"
+            51 -> tv_missionType.text = "销售拣货任务"
             52 -> tv_missionType.text = "出库质检任务"
             53 -> tv_missionType.text = "仓管复核任务"
+            54 -> tv_missionType.text = "销售装箱任务"
         }
         val missionContent = Comm.isNULLS(entity.missionContent)
         if(missionContent.length > 0) {
@@ -51,6 +52,13 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
         }
         tv_missionContent.text = Html.fromHtml("任务内容:&nbsp;<font color='#000000'>"+ Comm.isNULLS(entity.missionContent)+"</font>")
         tv_sourceBillNo.text = Html.fromHtml("来源单:&nbsp;<font color='#6a5acd'>"+ entity.sourceBillNo+"</font>")
+
+        val view = tv_row.parent as View
+        if(entity.isCheck) {
+            view.setBackgroundResource(R.drawable.back_style_check1_true)
+        } else {
+            view.setBackgroundResource(R.drawable.back_style_check1_false)
+        }
     }
 
     fun setCallBack(callBack: MyCallBack) {

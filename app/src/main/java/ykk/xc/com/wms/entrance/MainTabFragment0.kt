@@ -39,6 +39,9 @@ import ykk.xc.com.wms.produce.Prod_Transfer_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_InStock_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_QC_MainActivity
 import ykk.xc.com.wms.purchase.adapter.MissionBill_List_Adapter
+import ykk.xc.com.wms.sales.Sal_PickGoods_MainActivity
+import ykk.xc.com.wms.sales.Sal_QcPass_MainActivity
+import ykk.xc.com.wms.sales.Sal_ReCheck_MainActivity
 import ykk.xc.com.wms.util.IDownloadContract
 import ykk.xc.com.wms.util.IDownloadPresenter
 import ykk.xc.com.wms.util.JsonUtil
@@ -48,6 +51,7 @@ import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * 任务列表
@@ -76,6 +80,8 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
     private var isLoadMore: Boolean = false
     private var isNextPage: Boolean = false
     private var missionType = 0
+    var isInit = false
+    var isLoadData = false
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -120,12 +126,12 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                         m.mAdapter!!.notifyDataSetChanged()
 
                         if (m.isRefresh) {
-                            m.xRecyclerView!!.refreshComplete(true)
+                            m.xRecyclerView.refreshComplete(true)
                         } else if (m.isLoadMore) {
-                            m.xRecyclerView!!.loadMoreComplete(true)
+                            m.xRecyclerView.loadMoreComplete(true)
                         }
 
-                        m.xRecyclerView!!.isLoadingMoreEnabled = m.isNextPage
+                        m.xRecyclerView?.isLoadingMoreEnabled = m.isNextPage
                     }
                     UNSUCC1 -> { // 数据加载失败！
                         m.mAdapter!!.notifyDataSetChanged()
@@ -172,20 +178,40 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         xRecyclerView.setLoadingMoreEnabled(false); // 不显示下拉刷新的view
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
+            if(missionType == 51) {
+                val check = listDatas[pos-1].isCheck
+                if(check) {
+                    listDatas[pos-1].isCheck = false
+                } else {
+                    listDatas[pos-1].isCheck = true
+                }
+                mAdapter!!.notifyDataSetChanged()
 
-            val bundle = Bundle()
-            bundle.putSerializable("missionBill", listDatas[pos - 1])
-            when(listDatas[pos-1].missionType) {
-                1 -> show(Pur_Receive_InStock_MainActivity::class.java, bundle)
+            } else {
+                val bundle = Bundle()
+                bundle.putSerializable("missionBill", listDatas[pos - 1])
+                when (listDatas[pos - 1].missionType) {
+                    1 -> show(Pur_Receive_InStock_MainActivity::class.java, bundle)
 //                21 -> show(Pur_Receive_InStock_MainActivity::class.java, bundle)
-                31 -> show(Pur_Receive_QC_MainActivity::class.java, bundle)
-                41 -> show(Prod_Transfer_MainActivity::class.java, bundle)
-                42 -> show(Prod_InStock_Transfer_MainActivity::class.java, bundle)
+                    31 -> show(Pur_Receive_QC_MainActivity::class.java, bundle)
+                    41 -> show(Prod_Transfer_MainActivity::class.java, bundle)
+                    42 -> show(Prod_InStock_Transfer_MainActivity::class.java, bundle)
+                    51 -> {
+                        val list = ArrayList<MissionBill>()
+                        list.add(listDatas[pos-1])
+                        bundle.putSerializable("missionBills", list)
+                        show(Sal_PickGoods_MainActivity::class.java, bundle)
+                    }
+                    52 -> show(Sal_QcPass_MainActivity::class.java, bundle)
+                    53 -> show(Sal_ReCheck_MainActivity::class.java, bundle)
+                    54 -> show(Sal_ReCheck_MainActivity::class.java, bundle)
+                }
             }
         }
     }
 
     override fun initData() {
+
         getUserInfo()
 
         mPresenter = IDownloadPresenter(context)
@@ -193,11 +219,21 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
             // 执行更新版本请求
             run_findAppInfo()
         }
+        isInit = true
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(isVisibleToUser && isInit && !isLoadData) {
+            initLoadDatas()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        initLoadDatas()
+        if(userVisibleHint == true) {
+            initLoadDatas()
+        }
     }
 
     @OnClick(R.id.tv_missionType, R.id.tv_date, R.id.btn_confirm)
@@ -212,6 +248,20 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
             }
             R.id.btn_confirm -> { // 确定
                 // 进入拣货页面
+                var isCheck = false
+                var list = ArrayList<MissionBill>()
+                listDatas.forEach {
+                    if(it.isCheck) {
+                        list.add(it)
+                    }
+                }
+                if(list.size == 0) {
+                    Comm.showWarnDialog(mContext,"请选中一行进行拣货！")
+                    return
+                }
+                val bundle = Bundle()
+                bundle.putSerializable("missionBills", list)
+                show(Sal_PickGoods_MainActivity::class.java, bundle)
             }
         }
     }
@@ -230,7 +280,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
         popWindow = PopupWindow(popV, v.width, ViewGroup.LayoutParams.WRAP_CONTENT, true)
         // 设置动画效果
-        // popWindow.setAnimationStyle(R.style.AnimationFade);
+        // popWindow.setAnimationStyle(R.style.AnimationFade)
         popWindow!!.setBackgroundDrawable(BitmapDrawable())
         popWindow!!.isOutsideTouchable = true
         popWindow!!.isFocusable = true
@@ -259,7 +309,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     missionType = 42
                 }
                 R.id.tv6 -> {
-                    tv_missionType.text = "拣货任务"
+                    tv_missionType.text = "销售拣货任务"
                     missionType = 51
                 }
                 R.id.tv7 -> {
@@ -290,6 +340,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
     }
 
     fun initLoadDatas() {
+        isLoadData = true
         limit = 1
         listDatas.clear()
         run_okhttpDatas()

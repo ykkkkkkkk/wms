@@ -52,8 +52,8 @@ class Prod_Transfer_Fragment3_Adapter(private val context: Activity, datas: List
         }
         tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+ Comm.isNULLS(entity.fmode)+"</font>")
 
-        tv_num.text = Html.fromHtml("实发数:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fqty) +"</font>")
-        tv_sourceQty.text = Html.fromHtml("应发数:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fsourceQty) +"&nbsp;"+ entity.unitName +"</font>")
+        tv_num.text = Html.fromHtml("实发数:&nbsp;<font color='#FF0000'>"+ df.format(entity.fqty) +"</font>")
+        tv_sourceQty.text = Html.fromHtml("应发数:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fsourceQty) +"</font>&nbsp;<font color='#666666'>"+ entity.unitName +"</font>")
         tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(entity.weight > 0) df.format(entity.weight) else "") +"</font>")
         tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(entity.referenceNum > 0) df.format(entity.referenceNum) else "")+"</font>")
 

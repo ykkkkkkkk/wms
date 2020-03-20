@@ -123,7 +123,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                                     m.icStockBillEntry.icstockBillId = m.parent!!.fragment1.icStockBill.id
 
                                     m.autoICStockBillEntry = icEntry // 加到自动保存对象
-                                    m.run_save(null);
+                                    m.run_save(null)
 //                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
                                     return
                                 }
@@ -368,14 +368,14 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "调拨数量不能大于入库数！")
             return false
         }
-        if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y"))) {
+        if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y")) && icStockBillEntry.boxBarCodeId == 0) {
             Comm.showWarnDialog(mContext, "请输入称重数量或连接蓝牙自动称重！")
             return false
         }
-        if(icStockBillEntry.icItem.isQualityPeriodManager.equals("Y") && icStockBillEntry.fkfPeriod == 0) {
-            Comm.showWarnDialog(mContext, "请输入保质期！")
-            return false
-        }
+//        if(icStockBillEntry.icItem.isQualityPeriodManager.equals("Y") && icStockBillEntry.fkfPeriod == 0) {
+//            Comm.showWarnDialog(mContext, "请输入保质期！")
+//            return false
+//        }
         return true;
     }
 

@@ -168,7 +168,7 @@ class Sal_OutStock_SelSeOutStockActivity : BaseDialogActivity(), XRecyclerView.L
      */
     private fun run_okhttpDatas() {
         showLoadDialog("加载中...", false)
-        val mUrl = getURL("seoutStock/findList")
+        val mUrl = getURL("seoutStock/findEntryListByPage")
         val formBody = FormBody.Builder()
                 .add("fdateBeg", getValues(tv_date))
                 .add("fdateEnd", getValues(tv_date))

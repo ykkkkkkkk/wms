@@ -61,6 +61,7 @@ public class ICStockBill implements Serializable {
 
 	// 临时字段，不存表
 	private String summary; 			// 主表摘要
+	private String strMissionBillId;	// 用于点击了多个任务单然后保存了这张单
 
 
 	public ICStockBill() {
@@ -417,6 +418,14 @@ public class ICStockBill implements Serializable {
 
 	public void setCust(Customer cust) {
 		this.cust = cust;
+	}
+
+	public String getStrMissionBillId() {
+		return strMissionBillId;
+	}
+
+	public void setStrMissionBillId(String strMissionBillId) {
+		this.strMissionBillId = strMissionBillId;
 	}
 
 }

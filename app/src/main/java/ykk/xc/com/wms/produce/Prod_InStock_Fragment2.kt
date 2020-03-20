@@ -144,6 +144,10 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                             }
                             '3'-> { // 箱码
                                 val boxBarCode = JsonUtil.strToObject(msgObj, BoxBarCode::class.java)
+                                if(boxBarCode.listMbr[0].dept.productStock == null) {
+                                    Comm.showWarnDialog(m.mContext,"请在金蝶中部门（"+boxBarCode.listMbr[0].dept.departmentName+"）设置的成品仓库，然后在PC端同步！")
+                                    return
+                                }
                                 m.tv_boxName.text = boxBarCode.box.boxName
                                 m.setICStockEntry_BoxBarCode(boxBarCode)
                             }
@@ -1260,6 +1264,11 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         if(parent!!.fragment1.icStockBill.fdeptId > 0 && parent!!.fragment1.icStockBill.fdeptId != it.department.fitemID) {
             addFlag = false
             Comm.showWarnDialog(mContext,"请扫描相同（生产车间）的生产任务单条码！")
+            return
+        }
+        if(it.department.productStock == null) {
+            addFlag = false
+            Comm.showWarnDialog(mContext,"请在金蝶中部门（"+it.department.departmentName+"）设置的成品仓库，然后在PC端同步！")
             return
         }
         if(parent!!.fragment1.icStockBill.fdeptId == 0) {

@@ -32,8 +32,8 @@ class Sal_OutStock_SelSeOutStockAdapter(private val context: Activity, private v
         tv_date!!.setText(pur.fdate)
         tv_fbillNo!!.setText(pur.fbillno)
         tv_mtlName!!.setText(entity.icItem.fname)
-        tv_numUnit!!.setText(df.format(entity.useableQty) + "" + entity.unitName)
-        tv_deptName!!.setText(pur.department.departmentName)
+        tv_numUnit!!.setText(df.format(entity.useableQty) + "" + entity.icItem.unit.unitName)
+        tv_deptName!!.setText(pur.dept.departmentName)
 
         val view = tv_row!!.getParent() as View
         if (entity.isCheck == 1) {

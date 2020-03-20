@@ -13,7 +13,8 @@ public class MissionBill implements Serializable {
 	private int id;
 	//任务单编号
 	private String billNo;
-	//任务类型 	1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨，42：代表生产入库调拨，51：拣货任务单，52：出库质检任务，53：仓管复核任务
+	//任务类型 	1：代表外购收料任务，21：代表销售发货任务,31：代表仓库外购收货任务,41：代表投料调拨，42：代表生产入库调拨，
+	//          51：拣货任务单，52：出库质检任务，53：仓管复核任务，54:销售装箱任务
 	private int missionType;
 	//创建时间
 	private String createTime;
@@ -49,10 +50,12 @@ public class MissionBill implements Serializable {
 	private String closerName;
 	//关闭时间
 	private String closeTime;
+	private int icstockBillId;	// 出入库主表id( ICStockBill--》id )
 
 	// 临时字段，不存吧
 	// 关联对象( 把来源对象转成Json字符串  )
 	private String sourceObj;
+	private boolean check; // 前端选中标识
 
 
 	public int getId() {
@@ -181,6 +184,19 @@ public class MissionBill implements Serializable {
 	public void setReceiveUserId(int receiveUserId) {
 		this.receiveUserId = receiveUserId;
 	}
+	public boolean isCheck() {
+		return check;
+	}
+	public void setCheck(boolean check) {
+		this.check = check;
+	}
+	public int getIcstockBillId() {
+		return icstockBillId;
+	}
+	public void setIcstockBillId(int icstockBillId) {
+		this.icstockBillId = icstockBillId;
+	}
+
 
 	@Override
 	public String toString() {

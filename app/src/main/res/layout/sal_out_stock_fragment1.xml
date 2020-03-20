@@ -172,41 +172,6 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="发货仓库*"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_stockSel"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_blue2"
-                    android:drawableRight="@drawable/xiala3"
-                    android:gravity="center|left"
-                    android:paddingLeft="@dimen/_6dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:layout_marginRight="@dimen/_8dp"
-                android:layout_marginTop="@dimen/_8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="#b7b7b7"
-                    android:ems="6"
-                    android:gravity="center|right"
-                    android:paddingRight="@dimen/_6dp"
                     android:text="业务员"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -294,6 +259,106 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="称重单位"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_weightUnitType"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:drawableRight="@drawable/xiala3"
+                    android:gravity="center"
+                    android:text="千克（kg）"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+                <TextView
+                    android:id="@+id/tv_connBlueTooth"
+                    android:layout_width="@dimen/_72dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_3dp"
+                    android:background="@drawable/btn_blue2_selector"
+                    android:gravity="center"
+                    android:text="连接蓝牙"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="毛重"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_roughWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+                <TextView
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:background="#b7b7b7"
+                    android:gravity="center"
+                    android:text="净重"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_netWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_gray1c"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
             </LinearLayout>
 
             <LinearLayout

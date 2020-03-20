@@ -90,7 +90,7 @@
         android:layout_height="38dp"
         android:background="@drawable/btn_blue2_selector"
         android:gravity="center"
-        android:text="拣货任务"
+        android:text="销售拣货任务"
         android:textColor="@color/white"
         android:textSize="14sp" />
 

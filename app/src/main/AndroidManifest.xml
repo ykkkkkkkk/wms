@@ -233,6 +233,15 @@
         <activity
             android:name=".sales.Sal_OutStock_SelSeOutStockActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".sales.Sal_PickGoods_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".sales.Sal_QcPass_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".sales.Sal_ReCheck_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <!-- 图表 -->

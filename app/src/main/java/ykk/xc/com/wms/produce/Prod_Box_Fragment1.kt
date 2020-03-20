@@ -758,7 +758,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
                         setSnCode(index, bt!!.snCode)
 
                     } else { // 未启用
-                        var fqty = if (bt!!.barcodeQty > 0) bt!!.barcodeQty else 1.0
+                        var fqty = if (it.useableQty > 0) it.useableQty else 1.0
                         unSetBatchOrSnCode(index, fqty)
                     }
                     break
