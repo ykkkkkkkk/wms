@@ -95,15 +95,16 @@
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imgView3"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico3a_8" />
+                android:src="@drawable/aa_ico3a_1" />
 
             <TextView
                 android:id="@+id/tvMenu3"
@@ -112,7 +113,7 @@
                 android:layout_below="@+id/imgView3"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="电商退货"
+                android:text="业助回签"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -135,7 +136,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imgView4"
@@ -143,7 +144,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico3a_8" />
+                android:src="@drawable/aa_ico3a_1" />
 
             <TextView
                 android:id="@+id/tvMenu4"
@@ -152,7 +153,7 @@
                 android:layout_below="@+id/imgView4"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="线下退货"
+                android:text="财务回签"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

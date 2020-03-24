@@ -228,7 +228,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
 
             override fun onClick_batch(entity: ICItem, position: Int) {
                 curPos = position
-                showInputDialog("批次号", Comm.isNULLS(entity.batchNo), "none", RESULT_BATCH)
+                showInputDialog("批次号", Comm.isNULLS(entity.batchCode), "none", RESULT_BATCH)
             }
 
             override fun onDelete(entity: ICItem, position: Int) {
@@ -389,7 +389,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                 Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请输入盘点数！")
                 return null
             }
-            if(icItem.batchManager.equals("Y") && Comm.isNULLS(icItem.batchNo).length == 0) {
+            if(icItem.batchManager.equals("Y") && Comm.isNULLS(icItem.batchCode).length == 0) {
                 Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请长按数字框输入批次！")
                 return null
             }
@@ -421,7 +421,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
             m.mtlName = icItem.fname
             m.unitName = icItem.unit.unitName
             m.fmodel = icItem.fmodel
-            m.fbatchNo = icItem.batchNo
+            m.fbatchNo = icItem.batchCode
             m.accountName = "WMS"
 
             list.add(m)
@@ -799,7 +799,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                     val bundle = data!!.getExtras()
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
-                        checkDatas[curPos].batchNo = value
+                        checkDatas[curPos].batchCode = value
                         curPos = -1
                         mAdapter!!.notifyDataSetChanged()
                     }
@@ -854,7 +854,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                     icItem.container = container
                 }
                 if(icItem.batchManager.equals("Y")) { // 启用了批次号，就给个默认值
-                    icItem.batchNo = Comm.getSysDate(3)
+                    icItem.batchCode = Comm.getSysDate(3)
                 }
                 icItem.isCheck = false
                 icItem.realQty = 1.0

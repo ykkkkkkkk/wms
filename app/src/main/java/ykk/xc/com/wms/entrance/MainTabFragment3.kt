@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import butterknife.OnClick
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.comm.BaseFragment
+import ykk.xc.com.wms.sales.Sal_FinanceSignatureActivity
+import ykk.xc.com.wms.sales.Sal_OperationSignatureActivity
 import ykk.xc.com.wms.sales.Sal_OutStockMainActivity
 import ykk.xc.com.wms.warehouse.OutInStock_Search_MainActivity
 
@@ -33,11 +35,11 @@ class MainTabFragment3 : BaseFragment() {
                 bundle.putString("billType", "CGFH")
                 show(OutInStock_Search_MainActivity::class.java, bundle)
             }
-            R.id.relative3 // （电商）销售退货
-            -> {
+            R.id.relative3 -> {// （电商）销售退货
+                show(Sal_OperationSignatureActivity::class.java, null)
             }
-            R.id.relative4 // （内销）销售退货
-            -> {
+            R.id.relative4 -> {// （内销）销售退货
+                show(Sal_FinanceSignatureActivity::class.java, null)
             }
             R.id.relative5 // 电商退生产
             -> {

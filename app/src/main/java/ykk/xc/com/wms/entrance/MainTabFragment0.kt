@@ -39,6 +39,7 @@ import ykk.xc.com.wms.produce.Prod_Transfer_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_InStock_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_QC_MainActivity
 import ykk.xc.com.wms.purchase.adapter.MissionBill_List_Adapter
+import ykk.xc.com.wms.sales.Sal_Box_MainActivity
 import ykk.xc.com.wms.sales.Sal_PickGoods_MainActivity
 import ykk.xc.com.wms.sales.Sal_QcPass_MainActivity
 import ykk.xc.com.wms.sales.Sal_ReCheck_MainActivity
@@ -204,7 +205,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     }
                     52 -> show(Sal_QcPass_MainActivity::class.java, bundle)
                     53 -> show(Sal_ReCheck_MainActivity::class.java, bundle)
-                    54 -> show(Sal_ReCheck_MainActivity::class.java, bundle)
+                    54 -> show(Sal_Box_MainActivity::class.java, bundle)
                 }
             }
         }
@@ -320,6 +321,10 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     tv_missionType.text = "仓管复核任务"
                     missionType = 53
                 }
+                R.id.tv9 -> {
+                    tv_missionType.text = "销售装箱任务"
+                    missionType = 54
+                }
             }
             if(missionType == 51) { // 拣货任务可以多个任务单一起拣货
                 btn_confirm.visibility = View.VISIBLE
@@ -337,6 +342,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         popV.findViewById<View>(R.id.tv6).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv7).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv8).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv9).setOnClickListener(click)
     }
 
     fun initLoadDatas() {
@@ -357,6 +363,8 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                 .add("receiveUserId", user!!.id.toString())
                 .add("limit", limit.toString())
                 .add("pageSize", "30")
+                .add("columnName", "checkTime") // 根据审核时间倒序
+                .add("sortWay", "DESC")
                 .build()
         showLoadDialog("加载中...", false)
         val mUrl = getURL("missionBill/findListByParam")

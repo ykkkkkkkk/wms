@@ -161,6 +161,7 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
         icStockBill.qualifiedStockId = m.qualifiedStockId       // 合格仓库id
         icStockBill.unQualifiedStockId = m.unQualifiedStockId       // 不合格仓库id
         icStockBill.missionBillId = m.missionBillId
+        icStockBill.strMissionBillId = m.strMissionBillId
 
         icStockBill.supplier = m.supplier
         icStockBill.qualifiedStock = m.qualifiedStock

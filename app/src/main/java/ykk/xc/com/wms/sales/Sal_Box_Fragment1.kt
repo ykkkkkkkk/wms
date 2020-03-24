@@ -1,4 +1,4 @@
-package ykk.xc.com.wms.produce
+package ykk.xc.com.wms.sales
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -15,17 +15,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.prod_box_fragment1.*
+import kotlinx.android.synthetic.main.sal_box_fragment1.*
 import okhttp3.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.basics.BatchAndNumInputDialog
 import ykk.xc.com.wms.basics.Box_DialogActivity
+import ykk.xc.com.wms.basics.ExpressCompany_DialogActivity
 import ykk.xc.com.wms.bean.*
+import ykk.xc.com.wms.bean.k3Bean.ExpressCompany
 import ykk.xc.com.wms.bean.k3Bean.ICItem
-import ykk.xc.com.wms.bean.prod.ProdOrder
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
-import ykk.xc.com.wms.produce.adapter.Prod_Box_Fragment1_Adapter
+import ykk.xc.com.wms.sales.adapter.Sal_Box_Fragment1_Adapter
 import ykk.xc.com.wms.util.BigdecimalUtil
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
@@ -37,14 +38,15 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：生产装箱
+ * 描述：销售装箱
  * 作者：ykk
  */
-class Prod_Box_Fragment1 : BaseFragment() {
+class Sal_Box_Fragment1 : BaseFragment() {
 
     companion object {
         private val SEL_BOX = 60
         private val SEL_MTL = 61
+        private val SEL_EXPRESS = 62
         private val SUCC1 = 200
         private val UNSUCC1 = 500
         private val SAVE = 201
@@ -53,6 +55,8 @@ class Prod_Box_Fragment1 : BaseFragment() {
         private val UNDELETE = 502
         private val BOX_STATUS = 203
         private val UNBOX_STATUS = 503
+        private val FIND_SOURCE = 204
+        private val UNFIND_SOURCE = 504
 
         private val SETFOCUS = 1
         private val SAOMA = 2
@@ -65,13 +69,13 @@ class Prod_Box_Fragment1 : BaseFragment() {
     private val context = this
     private var okHttpClient: OkHttpClient? = null
     private var checkDatas = ArrayList<MaterialBinningRecord>()
-    private var mAdapter: Prod_Box_Fragment1_Adapter? = null
+    private var mAdapter: Sal_Box_Fragment1_Adapter? = null
     private var mContext: Activity? = null
     private var user: User? = null
     private var boxBarCode:BoxBarCode? = null
     private var boxBarCode2:BoxBarCode? = null
     private val df = DecimalFormat("#.######")
-    private var parent: Prod_Box_MainActivity? = null
+    private var parent: Sal_Box_MainActivity? = null
     private var isTextChange: Boolean = false // 是否进入TextChange事件
     private var timesTamp:String? = null // 时间戳
     private var smqFlag = '3' // 扫描类型1：箱子扫描，2：上级箱子扫描，3：物料扫描
@@ -80,12 +84,16 @@ class Prod_Box_Fragment1 : BaseFragment() {
     private var autoSave = false // 点击封箱自动保存
     private var autoSaveAferBarcode:String? = null
     private var curBoxStatus = 0   // 记录当前扫描箱码的状态
-    private var bt :BarCodeTable? = null  // 记录当前物料扫描返回的对象
+    private var listIcItem :List<ICItem>? = null  // 记录当前物料扫描返回的对象
+    private var icstockBillId = 0   // 销售装箱传来的值
+    private var isExpand = false    // 是否全屏查看
+    private var expressCompany:ExpressCompany? = null // 快递公司
+    private var missionBillId = 0   // 上个页面任务单id
 
     // 消息处理
     private val mHandler = MyHandler(this)
-    private class MyHandler(activity: Prod_Box_Fragment1) : Handler() {
-        private val mActivity: WeakReference<Prod_Box_Fragment1>
+    private class MyHandler(activity: Sal_Box_Fragment1) : Handler() {
+        private val mActivity: WeakReference<Sal_Box_Fragment1>
 
         init {
             mActivity = WeakReference(activity)
@@ -130,22 +138,24 @@ class Prod_Box_Fragment1 : BaseFragment() {
                                 m.getBoxBarcode2(m.boxBarCode2!!)
                             }
                             '3'-> { // 物料
-                                m.bt = JsonUtil.strToObject(msgObj, BarCodeTable::class.java)
-                                val prodOrder = JsonUtil.stringToObject(m.bt!!.relationObj, ProdOrder::class.java)
+                                m.listIcItem = JsonUtil.strToList(msgObj, ICItem::class.java)
                                 // 启用批次号就弹出输入批次
-                                if(prodOrder.icItem.batchManager.equals("Y")) {
-                                    if (m.checkDatas.size > 0 && prodOrder.workShopId != m.checkDatas[0].fdeptId) {
-                                        Comm.showWarnDialog(m.mContext, "请扫描相同（生产车间）的生产任务单条码！")
-                                        return
+                                if(m.listIcItem!!.size == 1 && m.listIcItem!![0].batchManager.equals("Y")) {
+                                    var fqty = 0.0
+                                    for ((index, it) in m.checkDatas.withIndex()) {
+                                        if(m.listIcItem!![0].fitemid == it.fitemId) {
+                                            fqty = it.fsourceQty
+                                            break
+                                        }
                                     }
                                     val bundle = Bundle()
-                                    bundle.putString("mtlName", m.bt!!.icItemName)
-                                    bundle.putString("batchCode", m.bt!!.batchCode)
-                                    bundle.putDouble("fqty", prodOrder.useableQty)
+                                    bundle.putString("mtlName", m.listIcItem!![0].fname)
+                                    bundle.putString("batchCode", m.listIcItem!![0].batchCode)
+                                    bundle.putDouble("fqty", fqty)
                                     m.showForResult(BatchAndNumInputDialog::class.java, RESULT_BATCH_NUM, bundle)
 
                                 } else {
-                                    m.getMaterial()
+                                    m.getMaterial(m.listIcItem!!)
                                 }
                             }
                         }
@@ -156,6 +166,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     SAVE -> { // 保存成功 进入
+                        m.missionBillId = 0
                         m.autoSaveAferBarcode = JsonUtil.strToString(msgObj)
                         if(m.autoSave) {
                             m.run_modifyStatus(m.modifyBoxStatus.toString())
@@ -196,6 +207,19 @@ class Prod_Box_Fragment1 : BaseFragment() {
                     UNBOX_STATUS -> { // 开箱和封箱  失败
                         Comm.showWarnDialog(m.mContext,"操作出错！")
                     }
+                    FIND_SOURCE ->{ // 查询源单 返回
+                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry::class.java)
+                        list.forEach {
+                            m.addRow(it)
+                        }
+                        m.mAdapter!!.notifyDataSetChanged()
+                    }
+                    UNFIND_SOURCE ->{ // 查询源单失败！ 返回
+                        m.toasts("该页面有错误！2秒后自动关闭...")
+                        m.mHandler.postDelayed(Runnable {
+                            m.mContext!!.finish()
+                        },2000)
+                    }
                     SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
                         m.setFocusable(m.et_getFocus)
                         when(m.smqFlag) {
@@ -235,22 +259,22 @@ class Prod_Box_Fragment1 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.prod_box_fragment1, container, false)
+        return inflater.inflate(R.layout.sal_box_fragment1, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Prod_Box_MainActivity
+        parent = mContext as Sal_Box_MainActivity
 
         recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = Prod_Box_Fragment1_Adapter(mContext!!, checkDatas)
+        mAdapter = Sal_Box_Fragment1_Adapter(mContext!!, checkDatas)
         recyclerView.adapter = mAdapter
         // 设值listview空间失去焦点
         recyclerView.isFocusable = false
 
         // 行事件
-        mAdapter!!.setCallBack(object : Prod_Box_Fragment1_Adapter.MyCallBack {
+        mAdapter!!.setCallBack(object : Sal_Box_Fragment1_Adapter.MyCallBack {
             override fun onClickNum(entity: MaterialBinningRecord, position: Int) {
                 // 已出入库，不能修改数据
                 if((entity.boxBarCode != null && entity.boxBarCode.status == 2) || (boxBarCode != null && entity.boxBarCodeId != boxBarCode!!.id) ) return
@@ -300,6 +324,27 @@ class Prod_Box_Fragment1 : BaseFragment() {
         hideSoftInputMode(mContext, et_boxCode)
         hideSoftInputMode(mContext, et_boxCode2)
         hideSoftInputMode(mContext, et_mtlCode)
+        hideSoftInputMode(mContext, et_expressCode)
+        bundle()
+    }
+
+    private fun bundle() {
+        val bundle = mContext!!.intent.extras
+        if(bundle != null) {
+            // 任务单点击过来的
+            if(bundle.containsKey("missionBill")) {
+                val missionBill = bundle.getSerializable("missionBill") as MissionBill
+                missionBillId = missionBill.id
+                icstockBillId = missionBill.icstockBillId
+                run_findICStockBillEntryList()
+
+            } else if(bundle.containsKey("boxBarcode")) { // 查询过来的
+                val boxBarcode = bundle.getString("boxBarcode")
+                mHandler.postDelayed(Runnable {
+                    setTexts(et_boxCode, boxBarcode)
+                },200)
+            }
+        }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -309,8 +354,8 @@ class Prod_Box_Fragment1 : BaseFragment() {
         }
     }
 
-    @OnClick(R.id.tv_box, R.id.btn_scan, R.id.btn_scan2, R.id.btn_scanMtl, R.id.btn_save, R.id.btn_clone,
-             R.id.tv_realWeight, R.id.tv_realVolume, R.id.btn_openBox, R.id.btn_closeBox, R.id.btn_print)
+    @OnClick(R.id.tv_box, R.id.btn_scan, R.id.btn_scan2, R.id.btn_scanMtl, R.id.btn_save, R.id.btn_clone, R.id.btn_expand,
+             R.id.tv_realWeight, R.id.tv_realVolume, R.id.btn_openBox, R.id.btn_closeBox, R.id.btn_print, R.id.tv_expressCompany)
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.tv_box -> {
@@ -328,6 +373,26 @@ class Prod_Box_Fragment1 : BaseFragment() {
                 smqFlag = '3'
                 showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
             }
+            R.id.btn_expand -> {
+                var visibilityId = 0
+                if(isExpand) {
+                    isExpand = false
+                    visibilityId = View.VISIBLE
+                } else {
+                    isExpand = true
+                    visibilityId = View.GONE
+                }
+                lin_box.visibility = View.GONE
+                lin_curBox.visibility = visibilityId
+                lin_curBox2.visibility = visibilityId
+                lin_parentBox.visibility = visibilityId
+                lin_parentBox2.visibility = visibilityId
+                lin_express.visibility = visibilityId
+                lin_weight.visibility = visibilityId
+            }
+            R.id.tv_expressCompany -> { // 快递公司
+                showForResult(ExpressCompany_DialogActivity::class.java, SEL_EXPRESS, null)
+            }
             R.id.tv_realWeight -> { // 重量
                 showInputDialog("重量", getValues(tv_realWeight), "0.0", RESULT_WEIGHT)
             }
@@ -337,6 +402,11 @@ class Prod_Box_Fragment1 : BaseFragment() {
             R.id.btn_save -> { // 保存
                 if(!checkSave()) return
                 // 保存的时候把实际体重，体积记录，新生成箱子用
+                checkDatas.forEach {
+                    it.expressCompanyId = expressCompany!!.fitemId
+                    it.expressCompanyName = expressCompany!!.fname
+                    it.expressNo = getValues(et_expressCode).trim()
+                }
                 run_save()
             }
             R.id.btn_openBox -> { // 开箱
@@ -399,6 +469,20 @@ class Prod_Box_Fragment1 : BaseFragment() {
             Comm.showWarnDialog(mContext,"请扫描物料条码！")
             return false
         }
+        checkDatas.forEachIndexed { index, it ->
+            if(it.fqty == 0.0) {
+                Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，请扫描或输入数量！")
+                return false
+            }
+            if(it.fqty < it.fsourceQty) {
+                Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，数量未装完！")
+                return false
+            }
+            if(it.fqty > it.fsourceQty) {
+                Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，装箱数不能大于发货数！")
+                return false
+            }
+        }
         if(checkDatas[0].boxId == 0) {
             lin_box.visibility = View.VISIBLE
             Comm.showWarnDialog(mContext, "请选择包装箱！")
@@ -408,7 +492,15 @@ class Prod_Box_Fragment1 : BaseFragment() {
             Comm.showWarnDialog(mContext, "上级箱码、箱码不能相同！")
             return false
         }
-        return true;
+        if(getValues(tv_expressCompany).length == 0) {
+            Comm.showWarnDialog(mContext,"请输入货运单位！")
+            return false
+        }
+        if(getValues(et_expressCode).trim().length == 0) {
+            Comm.showWarnDialog(mContext,"请扫描或长按快递单号，进行输入！")
+            return false
+        }
+        return true
     }
 
     /**
@@ -523,6 +615,13 @@ class Prod_Box_Fragment1 : BaseFragment() {
                 }
             }
         }
+
+        // 快递单号---长按输入条码
+        et_expressCode!!.setOnLongClickListener {
+            smqFlag = '4'
+            showInputDialog("输入快递单", getValues(et_mtlCode), "none", WRITE_CODE)
+            true
+        }
     }
 
     /**
@@ -542,7 +641,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
         tv_boxSize2.text = ""
         tv_realWeight.text = ""
         tv_realVolume.text = ""
-        tv_deptName.text = ""
+        tv_custName.text = ""
 
         modifyBoxStatus = 1
         boxBarCode = null
@@ -577,12 +676,14 @@ class Prod_Box_Fragment1 : BaseFragment() {
             }
         }
         if(m.listMbr != null && m.listMbr.size > 0) {
-            tv_deptName.text = m.listMbr[0].dept.departmentName
+            tv_custName.text = m.listMbr[0].cust.fname
             checkDatas.addAll(m.listMbr)
             checkDatas.forEachIndexed { index, it ->
                 it.rowNo = (index+1) // 自动算出行号
                 it.createUserName = user!!.username
             }
+            tv_expressCompany.text = m.listMbr[0].expressCompanyName
+            et_expressCode.setText(m.listMbr[0].expressNo)
             mAdapter!!.notifyDataSetChanged()
         }
         if(m.status != 2) {
@@ -693,13 +794,17 @@ class Prod_Box_Fragment1 : BaseFragment() {
     /**
      *  扫码之后    物料启用序列号
      */
-    fun setSnCode(pos : Int, snCode : String) {
+    fun setSnCode(pos : Int, snCode : String, fqty : Double) {
+        if(checkDatas[pos].fqty >= checkDatas[pos].fsourceQty) {
+            Comm.showWarnDialog(mContext,"第（"+(pos+1)+"）行数量已装完！")
+            return
+        }
         val entryBarcode = MaterialBinningRecord_Barcode()
         entryBarcode.parentId = 0
         entryBarcode.barcode = getValues(et_mtlCode)
         entryBarcode.batchCode = ""
         entryBarcode.snCode = snCode
-        entryBarcode.fqty = 1.0
+        entryBarcode.fqty = fqty
         entryBarcode.isUniqueness = 'Y'
         entryBarcode.createUserName = user!!.username
 
@@ -712,6 +817,10 @@ class Prod_Box_Fragment1 : BaseFragment() {
      *  扫码之后    物料未启用
      */
     fun unSetBatchOrSnCode(pos : Int, fqty : Double) {
+        if(checkDatas[pos].fqty >= checkDatas[pos].fsourceQty) {
+            Comm.showWarnDialog(mContext,"第（"+(pos+1)+"）行数量已装完！")
+            return
+        }
         val entryBarcode = MaterialBinningRecord_Barcode()
         entryBarcode.parentId = 0
         entryBarcode.barcode = getValues(et_mtlCode)
@@ -729,47 +838,52 @@ class Prod_Box_Fragment1 : BaseFragment() {
     /**
      *  物料扫码后处理
      */
-    fun getMaterial() {
-        val prodOrder = JsonUtil.stringToObject(bt!!.relationObj, ProdOrder::class.java)
-        if(checkDatas.size > 0) {
-            checkDatas.forEach {
-                if(prodOrder.workShopId != it.fdeptId) {
-                    Comm.showWarnDialog(mContext,"请扫描相同（生产车间）的生产任务单条码！")
-                    return
-                }
+    fun getMaterial(listICItem: List<ICItem>) {
+        checkDatas.forEachIndexed { index, it ->
 //              if(it.icItem.batchManager.equals("Y") || it.icItem.snManager.equals("Y")) {
-                if(it.icItem.snManager.equals("Y")) {
-                    for (it2 in it.mbrBarcodes) {
-                        if (getValues(et_mtlCode) == it2.barcode) {
-                            Comm.showWarnDialog(mContext, "条码已使用！")
-                            return
-                        }
+            if(it.icItem.snManager.equals("Y")) {
+                for (it2 in it.mbrBarcodes) {
+                    if (getValues(et_mtlCode) == it2.barcode) {
+                        Comm.showWarnDialog(mContext, "条码已使用！")
+                        return
                     }
                 }
             }
-            var isBool = false
-            // 判断相同的物料
-            for ((index,it) in checkDatas.withIndex()) {
-                if (prodOrder.prodId == it.fsourceInterId) {
-                    isBool = true
-                    if (it.icItem.batchManager.equals("Y")) { // 启用批次号
-                        setBatchCode(index, bt!!.batchCode, bt!!.barcodeQty)
+        }
+        val mapICItem = HashMap<Int, ICItem>()
+        listICItem.forEach {
+            if(!mapICItem.containsKey(it.fitemid)) {
+                mapICItem.put(it.fitemid, it)
+            } else {
+                val icItem = mapICItem.get(it.fitemid)
+                val addVal = BigdecimalUtil.add(icItem!!.realQty, it.realQty)
+                icItem.realQty = addVal
+                mapICItem.put(it.fitemid, icItem)
+            }
+        }
+        var isBool = false
+        // 判断相同的物料
+        for ((index,it) in checkDatas.withIndex()) {
+            if (mapICItem.containsKey(it.fitemId)) {
+                isBool = true
+                if (it.icItem.batchManager.equals("Y")) { // 启用批次号
+                    setBatchCode(index, mapICItem.get(it.fitemId)!!.batchCode, mapICItem.get(it.fitemId)!!.realQty)
 
-                    } else if (it.icItem.snManager.equals("Y")) { // 启用序列号
-                        setSnCode(index, bt!!.snCode)
+                } else if (it.icItem.snManager.equals("Y")) { // 启用序列号
+                    val fqty = if(mapICItem.get(it.fitemId)!!.realQty > 1) mapICItem.get(it.fitemId)!!.realQty else 1.0
+                    setSnCode(index, mapICItem.get(it.fitemId)!!.snCode, fqty)
 
-                    } else { // 未启用
-                        var fqty = if (it.useableQty > 0) it.useableQty else 1.0
-                        unSetBatchOrSnCode(index, fqty)
-                    }
-                    break
+                } else { // 未启用
+                    var fqty = if (it.useableQty > 0) mapICItem.get(it.fitemId)!!.realQty else 1.0
+                    unSetBatchOrSnCode(index, fqty)
                 }
+                break
             }
-            if(!isBool) { // 添加新行
-                addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
-            }
-        } else { // 添加新行
-            addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
+        }
+        if(!isBool) { // 不存在，就提示
+            Comm.showWarnDialog(mContext,"扫描的条码不匹配！")
+            return
+//                addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
         }
         mAdapter!!.notifyDataSetChanged()
     }
@@ -777,26 +891,28 @@ class Prod_Box_Fragment1 : BaseFragment() {
     /**
      * 新增行
      */
-    private fun addRow(batchCode:String, snCode:String, barcodeQty:Double, prodOrder:ProdOrder) {
+    private fun addRow(icStockBillEntry: ICStockBillEntry) {
         val mbr = MaterialBinningRecord()
-        mbr.type = '1'
+        mbr.type = '2'
         mbr.packType = 'A'
         mbr.boxId = if(boxBarCode != null) boxBarCode!!.box.id else 0
         mbr.boxBarCodeId = if(boxBarCode != null) boxBarCode!!.id else 0
         mbr.parentBoxBarCodeId = if(boxBarCode2 != null) boxBarCode2!!.id else 0
-        mbr.fitemId = prodOrder.icItemId
-        mbr.fsourceInterId = prodOrder.prodId
-        mbr.fsourceEntryId = prodOrder.prodId
-        mbr.fsourceNo = prodOrder.prodNo
-        mbr.fsourceQty = prodOrder.fqty
-        mbr.fsourceHightLimitQty = prodOrder.fauxInHighLimitQty
+        mbr.fitemId = icStockBillEntry.fitemId
+        mbr.fsourceInterId = icStockBillEntry.fsourceInterId
+        mbr.fsourceEntryId = icStockBillEntry.fsourceEntryId
+        mbr.fsourceNo = icStockBillEntry.fsourceBillNo
+        mbr.fsourceQty = icStockBillEntry.fqty
+        mbr.fsourceHightLimitQty = icStockBillEntry.fqty
         mbr.createUserId = user!!.id
         mbr.createUserName = user!!.username
-        mbr.icItem = prodOrder.icItem
+        mbr.icItem = icStockBillEntry.icItem
         mbr.boxBarCode = boxBarCode
-        mbr.fdeptId = prodOrder.workShopId
+        mbr.fdeptId = icStockBillEntry.icstockBill.fdeptId
+        mbr.fcustId = icStockBillEntry.icstockBill.fcustId
+        mbr.icstockBillId = icstockBillId
 
-        mbr.useableQty = prodOrder.useableQty
+        mbr.useableQty = icStockBillEntry.fqty
         if(checkDatas.size == 0) {
             mbr.rowNo = 1
         } else {
@@ -805,17 +921,17 @@ class Prod_Box_Fragment1 : BaseFragment() {
         checkDatas.add(mbr)
         val pos = checkDatas.size-1
 
-        if (prodOrder.icItem.batchManager.equals("Y")) { // 启用批次号
-            setBatchCode(pos, batchCode, barcodeQty)
-
-        } else if (prodOrder.icItem.snManager.equals("Y")) { // 启用序列号
-            setSnCode(pos, snCode)
-
-        } else { // 未启用
-            var fqty = if (barcodeQty > 0) barcodeQty else 1.0
-            unSetBatchOrSnCode(pos, fqty)
-        }
-        tv_deptName.text = prodOrder.deptName
+//        if (icStockBillEntry.icItem.batchManager.equals("Y")) { // 启用批次号
+//            setBatchCode(pos, batchCode, barcodeQty)
+//
+//        } else if (icStockBillEntry.icItem.snManager.equals("Y")) { // 启用序列号
+//            setSnCode(pos, snCode)
+//
+//        } else { // 未启用
+//            var fqty = if (barcodeQty > 0) barcodeQty else 1.0
+//            unSetBatchOrSnCode(pos, fqty)
+//        }
+        tv_custName.text = icStockBillEntry.icstockBill.cust.fname
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -873,6 +989,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
                             '1' -> setTexts(et_boxCode, value.toUpperCase())
                             '2' -> setTexts(et_boxCode2, value.toUpperCase())
                             '3' -> setTexts(et_mtlCode, value.toUpperCase())
+                            '4' -> setTexts(et_expressCode, value)
                         }
                     }
                 }
@@ -905,10 +1022,16 @@ class Prod_Box_Fragment1 : BaseFragment() {
                     if (bundle != null) {
                         val batchCode = bundle.getString("batchCode")
                         val fqty = bundle.getDouble("fqty")
-                        bt!!.batchCode = batchCode
-                        bt!!.barcodeQty = fqty
-                        getMaterial()
+//                        bt!!.batchCode = batchCode
+                        listIcItem!![0].realQty = fqty
+                        getMaterial(listIcItem!!)
                     }
+                }
+            }
+            SEL_EXPRESS -> {//查询快递公司	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    expressCompany = data!!.getSerializableExtra("obj") as ExpressCompany
+                    tv_expressCompany.text = expressCompany!!.fname
                 }
             }
         }
@@ -934,22 +1057,21 @@ class Prod_Box_Fragment1 : BaseFragment() {
         showLoadDialog("加载中...", false)
         var mUrl:String? = null
         var barcode:String? = null
-        var type:String? = null
+        var type = ""
         when(smqFlag) {
             '1' -> { // 箱码
                 mUrl = getURL("boxBarCode/findBarcode")
                 barcode = getValues(et_boxCode)
-                type = "1" // 生产装箱
+                type = "2" // 销售装箱
             }
             '2' -> { // 上级箱码
                 mUrl = getURL("boxBarCode/findBarcode_parent")
                 barcode = getValues(et_boxCode2)
-                type = ""
+                type = "2" // 销售装箱
             }
             '3' -> { // 物料
-                mUrl = getURL("prodOrder/findBarcodeByBinning")
+                mUrl = getURL("icItem/findBarcodeBySalBox")
                 barcode = getValues(et_mtlCode)
-                type = ""
             }
         }
         val formBody = FormBody.Builder()
@@ -996,9 +1118,9 @@ class Prod_Box_Fragment1 : BaseFragment() {
                 .add("strJson", mJson)
                 .add("realWeight", getValues(tv_realWeight))
                 .add("realVolume", getValues(tv_realVolume))
-                .add("type", "1") // 生产装箱
-                .add("createParentBoxCode", if(cb_autoCreateCode.isChecked && boxBarCode != null) "1" else "") // 生产装箱
-                .add("checkOverload", "1") // 检查是否超收
+                .add("type", "2") // 销售装箱
+                .add("createParentBoxCode", if(cb_autoCreateCode.isChecked && boxBarCode != null) "2" else "") // 销售装箱
+                .add("missionBillId", missionBillId.toString()) // 任务单id是保存了之后，修改任务单状态
                 .build()
 
         val request = Request.Builder()
@@ -1102,6 +1224,44 @@ class Prod_Box_Fragment1 : BaseFragment() {
                     return
                 }
                 val msg = mHandler.obtainMessage(BOX_STATUS, result)
+                LogUtil.e("run_modifyStatus --> onResponse", result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 查询复核的数据
+     */
+    private fun run_findICStockBillEntryList() {
+        showLoadDialog("保存中...", false)
+        var mUrl = getURL("stockBill_WMS/findEntryListAndICStockBill")
+        val formBody = FormBody.Builder()
+                .add("icstockBillId", icstockBillId!!.toString())
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNFIND_SOURCE)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNFIND_SOURCE, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(FIND_SOURCE, result)
                 LogUtil.e("run_modifyStatus --> onResponse", result)
                 mHandler.sendMessage(msg)
             }

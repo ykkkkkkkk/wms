@@ -129,4 +129,19 @@
         android:layout_height="@dimen/_1dp"
         android:background="@color/white" />
 
+    <TextView
+        android:id="@+id/tv9"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="@drawable/btn_blue2_selector"
+        android:gravity="center"
+        android:text="销售装箱任务"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:background="@color/white" />
+
 </LinearLayout>

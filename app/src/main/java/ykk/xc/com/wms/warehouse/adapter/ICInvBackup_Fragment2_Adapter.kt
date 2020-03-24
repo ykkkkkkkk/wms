@@ -44,7 +44,7 @@ class ICInvBackup_Fragment2_Adapter(private val context: Activity, datas: List<I
         tv_row.text = (pos + 1).toString()
         tv_mtlName.text = entity.fname
         tv_mtlNumber.text = Html.fromHtml("物料代码:&nbsp;<font color='#6a5acd'>"+entity.fnumber+"</font>")
-        tv_batchNo.text = Html.fromHtml("批次:&nbsp;<font color='#6a5acd'>"+Comm.isNULLS(entity.batchNo)+"</font>")
+        tv_batchNo.text = Html.fromHtml("批次:&nbsp;<font color='#6a5acd'>"+Comm.isNULLS(entity.batchCode)+"</font>")
         tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+Comm.isNULLS(entity.fmodel)+"</font>")
 //        tv_num!!.setText(Html.fromHtml("<small><font color='#777777'>已盘</font>" + df.format(entity.fauxCheckQty) + "</small><br><font color='#009900'>" + df.format(entity.realQty) + "</font>"))
         tv_unitName.text = entity.unit.unitName

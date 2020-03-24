@@ -783,6 +783,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
 //            val showInfo:String = "<font color='#666666'>批次号：</font>" + icEntry.smBatchCode
 //            showInputDialog("数量", showInfo, "", "0.0", SM_RESULT_NUM)
             val bundle = Bundle()
+            bundle.putString("mtlName", icEntry.mtlName)
             bundle.putString("batchCode", if(isNULLS(icEntry.smBatchCode).length == 0) getValues(tv_batchNo) else icEntry.smBatchCode)
             bundle.putDouble("fqty", 0.0)
             showForResult(BatchAndNumInputDialog::class.java, SM_RESULT_NUM, bundle)

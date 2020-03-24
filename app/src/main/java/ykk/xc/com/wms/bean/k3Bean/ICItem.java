@@ -128,7 +128,8 @@ public class ICItem implements Serializable{
 	private double inventoryQty; // 即时库存
 	private double realQty; //
 	private double weight; // 重量
-	private String batchNo; // 批次号
+	private String batchCode; // 批次号
+	private String snCode;	 // 序列号
 	private boolean check; // 是否选中
 
 	public ICItem() {
@@ -519,20 +520,28 @@ public class ICItem implements Serializable{
 		this.realQty = realQty;
 	}
 
-	public String getBatchNo() {
-		return batchNo;
-	}
-
-	public void setBatchNo(String batchNo) {
-		this.batchNo = batchNo;
-	}
-
 	public double getWeight() {
 		return weight;
 	}
 
 	public void setWeight(double weight) {
 		this.weight = weight;
+	}
+
+	public String getBatchCode() {
+		return batchCode;
+	}
+
+	public void setBatchCode(String batchCode) {
+		this.batchCode = batchCode;
+	}
+
+	public String getSnCode() {
+		return snCode;
+	}
+
+	public void setSnCode(String snCode) {
+		this.snCode = snCode;
 	}
 
 }

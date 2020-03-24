@@ -43,7 +43,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
     var fragment10:OutInStock_Search_Fragment10_XSJH? = null
     var fragment11:OutInStock_Search_Fragment11_CKZJ? = null
     var fragment12:OutInStock_Search_Fragment12_CGFH? = null
-    var fragment13:OutInStock_Search_Fragment10_XSJH? = null
+    var fragment13:OutInStock_Search_Fragment13_XSZX? = null
 
     override fun setLayoutResID(): Int {
         return R.layout.ware_outin_stock_search_main;
@@ -104,7 +104,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         fragment10 = OutInStock_Search_Fragment10_XSJH()
         fragment11 = OutInStock_Search_Fragment11_CKZJ()
         fragment12 = OutInStock_Search_Fragment12_CGFH()
-        fragment13 = OutInStock_Search_Fragment10_XSJH()
+        fragment13 = OutInStock_Search_Fragment13_XSZX()
 
         listFragment.add(fragment1!!)
         listFragment.add(fragment2!!)

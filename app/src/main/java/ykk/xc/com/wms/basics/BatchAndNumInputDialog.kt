@@ -65,8 +65,10 @@ class BatchAndNumInputDialog : BaseDialogActivity() {
     override fun initData() {
         val bundle = context.intent.extras
         if (bundle != null) {
+            val mtlName = bundle.getString("mtlName")
             val batchCode = bundle.getString("batchCode")
             val fqty = bundle.getDouble("fqty")
+            tv_mtlName.text = mtlName
             if(isNULLS(batchCode).length > 0) {
                 et_batchCode.setText(batchCode)
                 setEnables(et_batchCode, R.drawable.back_style_gray3b, false)
