@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.ware_outin_stock_search_fragment2__other_out_stock.*
+import kotlinx.android.synthetic.main.ware_outin_stock_search_main.*
 import okhttp3.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.ICStockBill
@@ -43,6 +44,8 @@ class OutInStock_Search_Fragment6_PurReceiveInStock : BaseFragment() {
         private val UNDELETE = 501
         private val UPLOAD = 202
         private val UNUPLOAD = 502
+
+        private val VISIBLE = 1
     }
     private val context = this
     private var parent: OutInStock_Search_MainActivity? = null
@@ -111,6 +114,7 @@ class OutInStock_Search_Fragment6_PurReceiveInStock : BaseFragment() {
                         if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
+                    VISIBLE -> m.parent!!.btn_batchUpload.visibility = View.VISIBLE
                 }
             }
         }
@@ -181,8 +185,13 @@ class OutInStock_Search_Fragment6_PurReceiveInStock : BaseFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser && isInit && !isLoadData) {
-            findFun()
+        if(isVisibleToUser) {
+            // 显示上传按钮
+            // 显示上传按钮
+            mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
+            if( isInit && !isLoadData) {
+                findFun()
+            }
         }
     }
 

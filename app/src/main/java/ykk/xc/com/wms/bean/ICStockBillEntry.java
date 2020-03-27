@@ -661,4 +661,5 @@ public class ICStockBillEntry implements Serializable {
 	public void setBoxBarCode(BoxBarCode boxBarCode) {
 		this.boxBarCode = boxBarCode;
 	}
+
 }

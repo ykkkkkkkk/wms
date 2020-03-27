@@ -6,9 +6,32 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_boxName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:gravity="center"
+        android:text="箱子："
+        android:textColor="@color/c_666666"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_boxSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_toRightOf="@+id/tv_boxName"
+        android:layout_marginRight="@dimen/_6dp"
+        android:gravity="center"
+        android:text="规格："
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+    <TextView
         android:id="@+id/tv_boxBarcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_boxSize"
         android:layout_marginLeft="@dimen/_6dp"
         android:gravity="center"
         android:text="箱码："
@@ -19,9 +42,10 @@
         android:id="@+id/tv_fdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_boxBarcode"
         android:layout_marginBottom="@dimen/_5dp"
-        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_marginRight="@dimen/_6dp"
+        android:layout_below="@+id/tv_boxSize"
+        android:layout_alignParentRight="true"
         android:maxLength="19"
         android:text="操作日期："
         android:textColor="@color/black"
@@ -35,16 +59,15 @@
         android:layout_marginBottom="@dimen/_5dp"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_marginRight="@dimen/_6dp"
-        android:layout_toRightOf="@+id/tv_fdate"
         android:text="客户："
-        android:textColor="@color/c_FF4400"
+        android:textColor="@color/c_666666"
         android:textSize="12sp" />
 
     <LinearLayout
         android:id="@+id/lin_button"
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:layout_below="@+id/tv_fdate"
+        android:layout_below="@+id/tv_custName"
         android:layout_marginBottom="@dimen/_3dp"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_marginRight="@dimen/_6dp"

@@ -82,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:hint="请扫描物料条码"
+                android:hint="请扫描销售出库单条码"
                 android:inputType="none"
                 android:paddingLeft="@dimen/_3dp"
                 android:textColor="@color/black"

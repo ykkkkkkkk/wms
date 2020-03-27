@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.ware_outin_stock_search_fragment1__other_in_stock.*
+import kotlinx.android.synthetic.main.ware_outin_stock_search_main.*
 import okhttp3.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.ICStockBill
@@ -36,15 +37,19 @@ import java.util.concurrent.TimeUnit
  */
 class OutInStock_Search_Fragment8_ProdTransfer : BaseFragment() {
 
+    companion object {
+        private val SUCC1 = 200
+        private val UNSUCC1 = 500
+        private val DELETE = 201
+        private val UNDELETE = 501
+        private val UPLOAD = 202
+        private val UNUPLOAD = 502
+
+        private val VISIBLE = 1
+    }
+
     private val context = this
     private var parent: OutInStock_Search_MainActivity? = null
-    private val SUCC1 = 200
-    private val UNSUCC1 = 500
-    private val DELETE = 201
-    private val UNDELETE = 501
-    private val UPLOAD = 202
-    private val UNUPLOAD = 502
-
     private val checkDatas = ArrayList<ICStockBill>()
     private var okHttpClient: OkHttpClient? = null
     private var mAdapter: OutInStockSearchFragment8_ProdTransfer_Adapter? = null
@@ -77,26 +82,26 @@ class OutInStock_Search_Fragment8_ProdTransfer : BaseFragment() {
                     msgObj = msg.obj as String
                 }
                 when (msg.what) {
-                    m.SUCC1 -> { // 查询单据 进入
+                    SUCC1 -> { // 查询单据 进入
                         m.checkDatas.clear()
                         val list = JsonUtil.strToList(msgObj, ICStockBill::class.java)
                         m.checkDatas.addAll(list)
 
                         m.mAdapter!!.notifyDataSetChanged()
                     }
-                    m.UNSUCC1 -> { // 查询单据  失败
+                    UNSUCC1 -> { // 查询单据  失败
                         m.checkDatas.clear()
                         m.mAdapter!!.notifyDataSetChanged()
                         m.toasts("很抱歉，没有找到数据！")
                     }
-                    m.DELETE -> { // 删除单据 进入
+                    DELETE -> { // 删除单据 进入
                         m.curPos = -1
                         m.run_findList()
                     }
-                    m.UNDELETE -> { // 删除单据  失败
+                    UNDELETE -> { // 删除单据  失败
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
-                    m.UPLOAD -> { // 上传单据 进入
+                    UPLOAD -> { // 上传单据 进入
                         val retMsg = JsonUtil.strToString(msgObj)
 //                        if(retMsg.length > 0) {
 //                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
@@ -105,11 +110,12 @@ class OutInStock_Search_Fragment8_ProdTransfer : BaseFragment() {
 //                        }
                         m.run_findList()
                     }
-                    m.UNUPLOAD -> { // 上传单据  失败
+                    UNUPLOAD -> { // 上传单据  失败
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
+                    VISIBLE -> m.parent!!.btn_batchUpload.visibility = View.VISIBLE
                 }
             }
         }
@@ -180,8 +186,12 @@ class OutInStock_Search_Fragment8_ProdTransfer : BaseFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser && isInit && !isLoadData) {
-            findFun()
+        if(isVisibleToUser) {
+            // 显示上传按钮
+            mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
+            if( isInit && !isLoadData) {
+                findFun()
+            }
         }
     }
 

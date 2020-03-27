@@ -20,31 +20,12 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="@dimen/_60dp"
-                android:layout_height="@dimen/_60dp"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/aa_ico3a_1"
-                android:visibility="gone" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imgView1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_3dp"
-                android:text="销售订单"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_18sp"
-                android:visibility="gone" />
-
-            <ImageView
                 android:id="@+id/imgView1"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico3a_2" />
+                android:src="@drawable/upload" />
 
             <TextView
                 android:id="@+id/tvMenu1"
@@ -53,7 +34,7 @@
                 android:layout_below="@+id/imgView1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="销售出库"
+                android:text="待上传"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -73,7 +54,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/upload" />
+                android:src="@drawable/aa_ico3a_1" />
 
             <TextView
                 android:id="@+id/tvMenu2"
@@ -82,7 +63,7 @@
                 android:layout_below="@+id/imgView2"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="待上传"
+                android:text="业助回签"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -113,7 +94,7 @@
                 android:layout_below="@+id/imgView3"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="业助回签"
+                android:text="财务回签"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -136,7 +117,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <ImageView
                 android:id="@+id/imgView4"

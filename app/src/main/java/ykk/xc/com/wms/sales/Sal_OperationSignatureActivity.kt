@@ -9,7 +9,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.sal_finance_signaure.*
+import kotlinx.android.synthetic.main.sal_operation_signaure.*
 import okhttp3.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.comm.BaseActivity
@@ -69,12 +69,12 @@ class Sal_OperationSignatureActivity : BaseActivity() {
                     }
                     UNSUCC1 -> { // 扫码失败
                         errMsg = JsonUtil.strToString(msgObj)
-                        if (m.isNULLS(errMsg).length == 0) errMsg = "很抱歉，没有找到数据！"
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器忙，请稍后再试！"
                         Comm.showWarnDialog(m.context, errMsg)
                     }
                     SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
                         m.setFocusable(m.et_getFocus)
-                         m.setFocusable(m.et_mtlCode)
+                        m.setFocusable(m.et_mtlCode)
                     }
                     SAOMA -> { // 扫码之后
                         // 执行查询方法
@@ -159,6 +159,15 @@ class Sal_OperationSignatureActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.extras
+                    if (bundle != null) {
+                        val code = bundle.getString(BaseFragment.DECODED_CONTENT_KEY, "")
+                        setTexts(et_mtlCode, code)
+                    }
+                }
+            }
             WRITE_CODE -> {// 输入条码  返回
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data!!.extras
@@ -169,12 +178,14 @@ class Sal_OperationSignatureActivity : BaseActivity() {
                 }
             }
         }
+        mHandler.sendEmptyMessageDelayed(SETFOCUS,200)
     }
 
     /**
      * 回签
      */
     private fun run_modifySignatureFlag() {
+        isTextChange = false
         showLoadDialog("保存中...", false)
         var mUrl = getURL("stockBill/modifySignatureFlag")
         val formBody = FormBody.Builder()

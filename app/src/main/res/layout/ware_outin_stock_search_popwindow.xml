@@ -2,22 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_marginBottom="@dimen/_46dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_2dp"
-                android:background="@color/white" />
 
             <TextView
                 android:id="@+id/tv1"
@@ -25,184 +22,138 @@
                 android:layout_height="38dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
+                android:layout_marginTop="@dimen/_1dp"
                 android:text="其他入库单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_2dp"
-                android:background="@color/white" />
 
             <TextView
                 android:id="@+id/tv2"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="其他出库单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_2dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv3"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="采购入库单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_2dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv4"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="销售出库单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_2dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv5"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="产品入库单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv6"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="外购入库单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv7"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="仓库收料单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
 
             <TextView
                 android:id="@+id/tv8"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="生产调拨单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv9"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="生产入库调拨单列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv10"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="销售拣货列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv11"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="出库质检列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv12"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="仓库复核列表"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/tv13"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
+                android:layout_marginTop="@dimen/_1dp"
                 android:background="@drawable/btn_blue2_selector"
                 android:gravity="center"
                 android:text="销售装箱列表"

@@ -766,10 +766,12 @@ class Prod_Box_Fragment1 : BaseFragment() {
                 }
             }
             if(!isBool) { // 添加新行
-                addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
+                var fqty = if (prodOrder.useableQty > 0) prodOrder.useableQty else 1.0
+                addRow(bt!!.batchCode, bt!!.snCode, fqty, prodOrder)
             }
         } else { // 添加新行
-            addRow(bt!!.batchCode, bt!!.snCode, bt!!.barcodeQty, prodOrder)
+            var fqty = if (prodOrder.useableQty > 0) prodOrder.useableQty else 1.0
+            addRow(bt!!.batchCode, bt!!.snCode, fqty, prodOrder)
         }
         mAdapter!!.notifyDataSetChanged()
     }

@@ -62,7 +62,10 @@ public class ICStockBill implements Serializable {
 
 	// 临时字段，不存表
 	private String summary; 			// 主表摘要
-
+	private String expressNo;	// 快递单号
+	private int expressCompanyId; // 快递公司
+	private double realWeight;	// 实际称重数
+	private String realVolume;	// 实际体积
 
 	public ICStockBill() {
 		super();
@@ -428,4 +431,35 @@ public class ICStockBill implements Serializable {
 		this.strMissionBillId = strMissionBillId;
 	}
 
+	public String getExpressNo() {
+		return expressNo;
+	}
+
+	public void setExpressNo(String expressNo) {
+		this.expressNo = expressNo;
+	}
+
+	public int getExpressCompanyId() {
+		return expressCompanyId;
+	}
+
+	public void setExpressCompanyId(int expressCompanyId) {
+		this.expressCompanyId = expressCompanyId;
+	}
+
+	public String getRealVolume() {
+		return realVolume;
+	}
+
+	public void setRealVolume(String realVolume) {
+		this.realVolume = realVolume;
+	}
+
+	public double getRealWeight() {
+		return realWeight;
+	}
+
+	public void setRealWeight(double realWeight) {
+		this.realWeight = realWeight;
+	}
 }

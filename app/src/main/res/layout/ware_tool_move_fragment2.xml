@@ -79,7 +79,7 @@
                     android:layout_height="match_parent"
                     android:ems="2"
                     android:gravity="center"
-                    android:text="移出位置"
+                    android:text="工装模具"
                     android:textColor="#000000"
                     android:textSize="12sp" />
 
@@ -103,7 +103,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@color/transparent"
-                        android:hint="扫描物料条码"
+                        android:hint="扫描模具条码"
                         android:inputType="none"
                         android:paddingLeft="@dimen/_2dp"
                         android:textColor="@color/black"

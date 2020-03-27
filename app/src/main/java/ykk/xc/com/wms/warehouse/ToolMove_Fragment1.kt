@@ -190,6 +190,8 @@ class ToolMove_Fragment1 : BaseFragment() {
                     Comm.showWarnDialog(mContext,"请扫描位置条码或选择！")
                     return
                 }
+                record.useBegDate = Comm.getSysDate(0)
+                record.useEndDate = Comm.getSysDate(0)
                 val strJson = JsonUtil.objectToString(record)
                 run_save(strJson);
             }
@@ -388,7 +390,7 @@ class ToolMove_Fragment1 : BaseFragment() {
         record.useContainerId = m.id
         record.returnContainerId = m.id
 
-        if(stock != null) {
+        if(m.stock != null) {
             // 自动跳到物料焦点
             smqType = 2
             mHandler.sendEmptyMessage(SETFOCUS)

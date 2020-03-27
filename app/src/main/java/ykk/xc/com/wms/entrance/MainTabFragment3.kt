@@ -27,19 +27,19 @@ class MainTabFragment3 : BaseFragment() {
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.relative1 -> {// 销售出库
-                show(Sal_OutStockMainActivity::class.java, null)
-            }
-            R.id.relative2 -> {// （生产）销售出库
                 val bundle = Bundle()
-                bundle.putInt("pageId", 4)
+                bundle.putInt("pageId", 11)
                 bundle.putString("billType", "CGFH")
                 show(OutInStock_Search_MainActivity::class.java, bundle)
+//                show(Sal_OutStockMainActivity::class.java, null)
             }
-            R.id.relative3 -> {// （电商）销售退货
+            R.id.relative2 -> {// 业助回签
                 show(Sal_OperationSignatureActivity::class.java, null)
             }
-            R.id.relative4 -> {// （内销）销售退货
+            R.id.relative3 -> {// 财务回签
                 show(Sal_FinanceSignatureActivity::class.java, null)
+            }
+            R.id.relative4 -> {// （内销）销售退货
             }
             R.id.relative5 // 电商退生产
             -> {

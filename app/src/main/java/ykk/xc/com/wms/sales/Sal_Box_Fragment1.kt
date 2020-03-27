@@ -57,6 +57,8 @@ class Sal_Box_Fragment1 : BaseFragment() {
         private val UNBOX_STATUS = 503
         private val FIND_SOURCE = 204
         private val UNFIND_SOURCE = 504
+        private val UPLOAD = 205
+        private val UNUPLOAD = 505
 
         private val SETFOCUS = 1
         private val SAOMA = 2
@@ -220,6 +222,16 @@ class Sal_Box_Fragment1 : BaseFragment() {
                             m.mContext!!.finish()
                         },2000)
                     }
+                    UPLOAD -> { // 上传单据 进入
+                        m.lin_button.visibility = View.GONE
+                        m.toasts("上传成功")
+//                        m.parent!!.finish()
+                    }
+                    UNUPLOAD -> { // 上传单据  失败
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
+                    }
                     SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
                         m.setFocusable(m.et_getFocus)
                         when(m.smqFlag) {
@@ -355,7 +367,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
     }
 
     @OnClick(R.id.tv_box, R.id.btn_scan, R.id.btn_scan2, R.id.btn_scanMtl, R.id.btn_save, R.id.btn_clone, R.id.btn_expand,
-             R.id.tv_realWeight, R.id.tv_realVolume, R.id.btn_openBox, R.id.btn_closeBox, R.id.btn_print, R.id.tv_expressCompany)
+             R.id.tv_realWeight, R.id.tv_realVolume, R.id.btn_openBox, R.id.btn_closeBox, R.id.btn_upload, R.id.tv_expressCompany)
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.tv_box -> {
@@ -426,22 +438,8 @@ class Sal_Box_Fragment1 : BaseFragment() {
                 }
                 run_save()
             }
-            R.id.btn_print -> { // 打印
-                if (boxBarCode == null) {
-                    Comm.showWarnDialog(mContext, "请先扫描箱码！")
-                    return
-                }
-                if (checkDatas == null || checkDatas.size == 0) {
-                    Comm.showWarnDialog(mContext, "箱子里还没有物料不能打印！")
-                    return
-                }
-                checkDatas.forEach {
-                    if(it.id == 0) {
-                        Comm.showWarnDialog(mContext,"请先保存当前数据！")
-                        return
-                    }
-                }
-                parent!!.setFragment1Print(checkDatas)
+            R.id.btn_upload -> { // 上传
+                run_uploadToK3_XSZX()
             }
             R.id.btn_clone -> { // 重置
                 if (checkSaveHint()) {
@@ -511,6 +509,24 @@ class Sal_Box_Fragment1 : BaseFragment() {
             return true
         }
         return false
+    }
+
+    fun print() {
+        if (boxBarCode == null) {
+            Comm.showWarnDialog(mContext, "请先扫描箱码！")
+            return
+        }
+        if (checkDatas == null || checkDatas.size == 0) {
+            Comm.showWarnDialog(mContext, "箱子里还没有物料不能打印！")
+            return
+        }
+        checkDatas.forEach {
+            if(it.id == 0) {
+                Comm.showWarnDialog(mContext,"请先保存当前数据！")
+                return
+            }
+        }
+        parent!!.setFragment1Print(checkDatas)
     }
 
     override fun setListener() {
@@ -690,6 +706,8 @@ class Sal_Box_Fragment1 : BaseFragment() {
             smqFlag = '3'
             mHandler.sendEmptyMessageDelayed(SETFOCUS,200)
         }
+        tv_realWeight.text = df.format(m.realWeight)
+        tv_realVolume.text = m.realVolume
         getBoxBarcode_status(m.status, false)
     }
 
@@ -703,7 +721,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
             btn_openBox.visibility = View.VISIBLE
             btn_closeBox.visibility = View.GONE
             btn_save.visibility = View.GONE
-            btn_print.visibility = View.VISIBLE
+            btn_upload.visibility = View.VISIBLE
             cb_autoCreateCode.isEnabled = false
             cb_autoCreateCode.isChecked = false
             lin_focusBox2.setBackgroundResource(R.drawable.back_style_gray3)
@@ -720,7 +738,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
                         btn_openBox.visibility = View.GONE
                         btn_closeBox.visibility = View.GONE
                         btn_save.visibility = View.VISIBLE
-                        btn_print.visibility = View.GONE
+                        btn_upload.visibility = View.GONE
                         cb_autoCreateCode.isEnabled = true
                         cb_autoCreateCode.isChecked = false
 
@@ -740,7 +758,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
             btn_openBox.visibility = View.GONE
             btn_closeBox.visibility = View.VISIBLE
             btn_save.visibility = View.VISIBLE
-            btn_print.visibility = View.GONE
+            btn_upload.visibility = View.GONE
             cb_autoCreateCode.isEnabled = true
             cb_autoCreateCode.isChecked = false
             lin_focusBox2.setBackgroundResource(R.drawable.back_style_gray4)
@@ -1263,6 +1281,49 @@ class Sal_Box_Fragment1 : BaseFragment() {
                 }
                 val msg = mHandler.obtainMessage(FIND_SOURCE, result)
                 LogUtil.e("run_modifyStatus --> onResponse", result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 上传
+     */
+    private fun run_uploadToK3_XSZX() {
+        val strBoxBarCode = JsonUtil.objectToString(boxBarCode)
+        showLoadDialog("上传中...", false)
+        val mUrl = getURL("stockBill_WMS/uploadToK3_XSZX")
+        val formBody = FormBody.Builder()
+                .add("strBoxBarCode", strBoxBarCode)
+                .add("expressCompanyId", checkDatas[0].expressCompanyId.toString()) // 快递公司
+                .add("expressNo", getValues(et_expressCode)) // 快递单号
+                .add("realWeight", getValues(tv_realWeight)) // 重量
+                .add("realVolume", getValues(tv_realVolume)) // 体积
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNUPLOAD)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                LogUtil.e("run_uploadToK3_XSZX --> onResponse", result)
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNUPLOAD, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(UPLOAD, result)
                 mHandler.sendMessage(msg)
             }
         })

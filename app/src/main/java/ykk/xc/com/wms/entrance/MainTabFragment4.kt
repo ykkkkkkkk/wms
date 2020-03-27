@@ -25,20 +25,29 @@ class MainTabFragment4 : BaseFragment() {
     fun onViewClicked(view: View) {
         val bundle: Bundle? = null
         when (view.id) {
-            R.id.relative1 // 其他入库
-            -> show(OtherInStock_MainActivity::class.java, null)
-            R.id.relative2 // 其他出库
-            -> show(OtherOutStock_MainActivity::class.java, null)
-            R.id.relative3 // 调拨
-            -> show(StockTransferMainActivity::class.java, null)
-            R.id.relative4 // 盘点
-            -> show(ICInvBackup_MainActivity::class.java, null)
-            R.id.relative5 // 复盘
-            -> show(ICInvBackup_Repeat_MainActivity::class.java, null)
-            R.id.relative6 // 工具移库
-            -> show(ToolMove_MainActivity::class.java, null)
-            R.id.relative7 // 库存查询
-            -> {
+            R.id.relative1 -> {// 其他入库
+//            -> show(OtherInStock_MainActivity::class.java, null)
+                show(ICInvBackup_MainActivity::class.java, null)
+            }
+            R.id.relative2 -> {// 其他出库
+//            -> show(OtherOutStock_MainActivity::class.java, null)
+                show(ICInvBackup_Repeat_MainActivity::class.java, null)
+            }
+            R.id.relative3 -> {// 调拨
+//            -> show(StockTransferMainActivity::class.java, null)
+                show(ToolMove_MainActivity::class.java, null)
+            }
+            R.id.relative4 -> { // 盘点
+//                show(ICInvBackup_MainActivity::class.java, null)
+            }
+            R.id.relative5 -> {// 复盘
+//                show(ICInvBackup_Repeat_MainActivity::class.java, null)
+            }
+            R.id.relative6 -> { // 工具移库
+//                show(ToolMove_MainActivity::class.java, null)
+            }
+            R.id.relative7 -> {// 库存查询
+
             }
         }//                bundle = new Bundle();
         //                show(OtherInStock_MainActivity.class, bundle);

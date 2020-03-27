@@ -69,7 +69,7 @@ class Sal_FinanceSignatureActivity : BaseActivity() {
                     }
                     UNSUCC1 -> { // 扫码失败
                         errMsg = JsonUtil.strToString(msgObj)
-                        if (m.isNULLS(errMsg).length == 0) errMsg = "很抱歉，没有找到数据！"
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器忙，请稍后再试！"
                         Comm.showWarnDialog(m.context, errMsg)
                     }
                     SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
@@ -86,7 +86,7 @@ class Sal_FinanceSignatureActivity : BaseActivity() {
     }
 
     override fun setLayoutResID(): Int {
-        return R.layout.sal_operation_signaure
+        return R.layout.sal_finance_signaure
     }
 
     override fun initData() {
@@ -159,6 +159,15 @@ class Sal_FinanceSignatureActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.extras
+                    if (bundle != null) {
+                        val code = bundle.getString(BaseFragment.DECODED_CONTENT_KEY, "")
+                        setTexts(et_mtlCode, code)
+                    }
+                }
+            }
             WRITE_CODE -> {// 输入条码  返回
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data!!.extras
@@ -169,12 +178,14 @@ class Sal_FinanceSignatureActivity : BaseActivity() {
                 }
             }
         }
+        mHandler.sendEmptyMessageDelayed(SETFOCUS,200)
     }
 
     /**
      * 回签
      */
     private fun run_modifySignatureFlag() {
+        isTextChange = false
         showLoadDialog("保存中...", false)
         var mUrl = getURL("stockBill/modifySignatureFlag")
         val formBody = FormBody.Builder()

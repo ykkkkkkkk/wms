@@ -56,42 +56,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
 //        bundle2.putSerializable("customer", customer);
 //        fragment1.setArguments(bundle2); // 传参数
 //        fragment2.setArguments(bundle2); // 传参数
-//        Pur_ScInFragment1 fragment1 = new Pur_ScInFragment1();
-//        Sal_OutFragment2 fragment2 = new Sal_OutFragment2();
-//        Sal_OutFragment3 fragment3 = new Sal_OutFragment3();
-//        when(pageId) {
-//            0 -> {
-//                fragment1 = OutInStock_Search_Fragment1_OtherInStock()
-//                listFragment.add(fragment1!!)
-//            }
-//            1 -> {
-//                fragment2 = OutInStock_Search_Fragment2_OtherOutStock()
-//                listFragment.add(fragment2!!)
-//            }
-//            2 -> {
-//                fragment3 = OutInStock_Search_Fragment3_PurInStock()
-//                listFragment.add(fragment3!!)
-//            }
-//            3 -> {
-//                fragment4 = OutInStock_Search_Fragment4_SalOutStock()
-//                listFragment.add(fragment4!!)
-//            }
-//            4 -> {
-//                fragment5 = OutInStock_Search_Fragment5_ProdInStock()
-//                listFragment.add(fragment5!!)
-//            }
-//            5 -> {
-//                fragment6 = OutInStock_Search_Fragment6_PurReceiveInStock()
-//                listFragment.add(fragment6!!)
-//            }
-//            6 -> {
-//                fragment7 = OutInStock_Search_Fragment7_PurReceiveQC()
-//                listFragment.add(fragment7!!)
-//            }
-//
-//            fragment1 = OutInStock_Search_Fragment1_OtherInStock()
-//                    listFragment.add(fragment1!!)
-//        }
+
         fragment1 = OutInStock_Search_Fragment1_OtherInStock()
         fragment2 = OutInStock_Search_Fragment2_OtherOutStock()
         fragment3 = OutInStock_Search_Fragment3_PurInStock()
@@ -119,6 +84,32 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         listFragment.add(fragment11!!)
         listFragment.add(fragment12!!)
         listFragment.add(fragment13!!)
+
+
+//        if(billType.equals("CGSHRK")) { // 采购
+//            fragment6 = OutInStock_Search_Fragment6_PurReceiveInStock()
+//            fragment7 = OutInStock_Search_Fragment7_PurReceiveQC()
+//            listFragment.add(fragment6!!)
+//            listFragment.add(fragment7!!)
+//
+//        } else if(billType.equals("SCRK")) { // 生产
+//            fragment5 = OutInStock_Search_Fragment5_ProdInStock()
+//            fragment8 = OutInStock_Search_Fragment8_ProdTransfer()
+//            fragment9 = OutInStock_Search_Fragment9_ProdInStockTransfer()
+//            listFragment.add(fragment5!!)
+//            listFragment.add(fragment8!!)
+//            listFragment.add(fragment9!!)
+//
+//        } else if(billType.equals("CGFH")) { // 销售
+//            fragment10 = OutInStock_Search_Fragment10_XSJH()
+//            fragment11 = OutInStock_Search_Fragment11_CKZJ()
+//            fragment12 = OutInStock_Search_Fragment12_CGFH()
+//            fragment13 = OutInStock_Search_Fragment13_XSZX()
+//            listFragment.add(fragment10!!)
+//            listFragment.add(fragment11!!)
+//            listFragment.add(fragment12!!)
+//            listFragment.add(fragment13!!)
+//        }
 
         viewPager.setScanScroll(false); // 禁止左右滑动
         //ViewPager设置适配器
@@ -235,6 +226,36 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         popWindow!!.setBackgroundDrawable(BitmapDrawable())
         popWindow!!.isOutsideTouchable = true
         popWindow!!.isFocusable = true
+
+        popV.findViewById<View>(R.id.tv1).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv2).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv3).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv4).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv5).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv6).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv7).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv8).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv9).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv10).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv11).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv12).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv13).visibility = View.GONE
+
+        if(billType.equals("CGSHRK")) { // 采购
+            popV.findViewById<View>(R.id.tv6).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv7).visibility = View.VISIBLE
+
+        } else if(billType.equals("SCRK")) { // 生产
+            popV.findViewById<View>(R.id.tv5).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv8).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv9).visibility = View.VISIBLE
+
+        } else if(billType.equals("CGFH")) { // 销售
+            popV.findViewById<View>(R.id.tv10).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv11).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv12).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv13).visibility = View.VISIBLE
+        }
 
         // 点击其他地方消失
         val click = View.OnClickListener { v ->

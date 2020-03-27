@@ -110,18 +110,26 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
                                 m.getStockGroup(msgObj)
                             }
                             '2'-> { // 物料
-                                val icEntry = JsonUtil.strToObject(msgObj, ICStockBillEntry::class.java)
-                                if(m.getValues(m.tv_mtlName).length > 0 && m.smICStockBillEntry != null && m.smICStockBillEntry!!.id != icEntry.id) {
-                                    // 上次扫的和这次的不同，就自动保存
-                                    if(!m.checkSave()) return
-                                    m.icStockBillEntry.icstockBillId = m.parent!!.fragment1.icStockBill.id
+                                val result = JsonUtil.strToString(msgObj)
+                                if(result.equals("refresh")) { // 这是扫了箱码返回的成功状态
+                                    m.toasts("保存成功✔")
+                                    EventBus.getDefault().post(EventBusEntity(21)) // 发送指令到fragment3，告其刷新
 
-                                    m.autoICStockBillEntry = icEntry // 加到自动保存对象
-                                    m.run_save(null)
+                                } else {
+
+                                    val icEntry = JsonUtil.strToObject(msgObj, ICStockBillEntry::class.java)
+                                    if (m.getValues(m.tv_mtlName).length > 0 && m.smICStockBillEntry != null && m.smICStockBillEntry!!.id != icEntry.id) {
+                                        // 上次扫的和这次的不同，就自动保存
+                                        if (!m.checkSave()) return
+                                        m.icStockBillEntry.icstockBillId = m.parent!!.fragment1.icStockBill.id
+
+                                        m.autoICStockBillEntry = icEntry // 加到自动保存对象
+                                        m.run_save(null)
 //                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
-                                    return
+                                        return
+                                    }
+                                    m.getMaterial(icEntry)
                                 }
-                                m.getMaterial(icEntry)
                             }
                         }
                     }
@@ -177,10 +185,11 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
                         when(m.smqFlag) {
                             '2' -> {
 //                                if(m.getValues(m.tv_mtlName).length > 0) {
-//                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
-//                                    m.isTextChange = false
-//                                    return
-//                                }
+                                if(m.getValues(m.et_code)[0] == '9' && m.getValues(m.tv_mtlName).length > 0) { // 如果扫描的是箱码，就提示先保存
+                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
+                                    m.isTextChange = false
+                                    return
+                                }
                             }
                         }
                         // 执行查询方法
@@ -1040,6 +1049,7 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
         var barcode:String? = null
         var icstockBillId = ""
         var billType = "" // 单据类型
+        var isSmBoxBarcode = "" // 是否可以扫描箱码
         when(smqFlag) {
             '1' -> {
                 mUrl = getURL("stockPosition/findBarcodeGroup")
@@ -1050,12 +1060,14 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
                 barcode = getValues(et_code)
                 icstockBillId = parent!!.fragment1.icStockBill.id.toString()
                 billType = parent!!.fragment1.icStockBill.billType
+                isSmBoxBarcode = "1"
             }
         }
         val formBody = FormBody.Builder()
                 .add("barcode", barcode)
                 .add("icstockBillId", icstockBillId)
                 .add("billType", billType)
+                .add("isSmBoxBarcode", isSmBoxBarcode)
                 .build()
 
         val request = Request.Builder()

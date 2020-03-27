@@ -162,6 +162,7 @@ class Sal_Box_MainActivity : BaseActivity() {
                 }
             }
             R.id.btn_print -> { // 打印
+                fragment1.print()
 //                show(PrintMainActivity::class.java, null)
             }
             R.id.lin_tab1 -> {

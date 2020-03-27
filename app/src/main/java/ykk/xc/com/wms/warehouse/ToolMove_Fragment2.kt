@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：其他出库
+ * 描述：模具借用
  * 作者：ykk
  */
 class ToolMove_Fragment2 : BaseFragment() {
@@ -40,7 +40,7 @@ class ToolMove_Fragment2 : BaseFragment() {
         private val SEL_STOCK = 11
         private val SEL_CONTAINER = 12
         private val RESULT_PURPOSE = 13
-        private val SEL_EMP = 13
+        private val SEL_EMP = 14
         private val SUCC1 = 200
         private val UNSUCC1 = 500
         private val SAVE = 202
@@ -148,6 +148,7 @@ class ToolMove_Fragment2 : BaseFragment() {
         getUserInfo()
         hideSoftInputMode(mContext, et_positionCode)
         hideSoftInputMode(mContext, et_positionCode2)
+        hideSoftInputMode(mContext, et_positionCode3)
 
         record.sourceType = '2' // 来源数据类型	1：容器，2：工装模具
         record.useType = 'L' // 使用类型	L：领用，H：归还
@@ -224,6 +225,7 @@ class ToolMove_Fragment2 : BaseFragment() {
                 }
                 record.useBegDate = getValues(tv_useBegDate)
                 record.useEndDate = getValues(tv_useEndDate)
+                record.sourceNo = getValues(et_positionCode3)
                 val strJson = JsonUtil.objectToString(record)
                 run_save(strJson);
             }
@@ -470,7 +472,7 @@ class ToolMove_Fragment2 : BaseFragment() {
         }
         tv_mouldName.text = Html.fromHtml("模具：<font color='#FF4400'>"+m.fname+"</font>")
 
-        if(stock != null) {
+        if(m.stock != null) {
             // 自动跳到物料焦点
             smqType = 2
             mHandler.sendEmptyMessage(SETFOCUS)

@@ -28,8 +28,9 @@ public class BoxBarCode implements Serializable {
 	private int printNumber;
 	private double realWeight;	// 实际重量（千克）
 	private String realVolume;	// 实际体积
-	private int isInStock;	// 是否入库
-	private int isOutStock;	// 是否出库
+	private int isInStock;	// 是否入库 1代表是，0代表否
+	private int isOutStock;	// 是否出库 1代表是，0代表否
+	private int isPickGoods; // 是否拣货 1代表是，0代表否
 
 	// 临时数据, 不存表
 	List<MaterialBinningRecord> listMbr; // 物料装箱记录
@@ -149,5 +150,13 @@ public class BoxBarCode implements Serializable {
 
 	public void setCheck(boolean check) {
 		this.check = check;
+	}
+
+	public int getIsPickGoods() {
+		return isPickGoods;
+	}
+
+	public void setIsPickGoods(int isPickGoods) {
+		this.isPickGoods = isPickGoods;
 	}
 }
