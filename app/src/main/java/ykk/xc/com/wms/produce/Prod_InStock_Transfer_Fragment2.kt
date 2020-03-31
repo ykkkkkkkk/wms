@@ -117,17 +117,25 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                                 m.getStockGroup(msgObj)
                             }
                             '2'-> { // 物料
-                                val icEntry = JsonUtil.strToObject(msgObj, ICStockBillEntry::class.java)
-                                if(m.getValues(m.tv_mtlName).length > 0 && m.smICStockBillEntry != null && m.smICStockBillEntry!!.id != icEntry.id) {
-                                    if(!m.checkSave()) return
-                                    m.icStockBillEntry.icstockBillId = m.parent!!.fragment1.icStockBill.id
+                                val result = JsonUtil.strToString(msgObj)
+                                if(msgObj!!.indexOf("ykk_string") > -1 && result.equals("refresh")) { // 这是扫了箱码返回的成功状态
+                                    m.toasts("保存成功✔")
+                                    EventBus.getDefault().post(EventBusEntity(21)) // 发送指令到fragment3，告其刷新
 
-                                    m.autoICStockBillEntry = icEntry // 加到自动保存对象
-                                    m.run_save(null)
+                                } else {
+
+                                    val icEntry = JsonUtil.strToObject(msgObj, ICStockBillEntry::class.java)
+                                    if (m.getValues(m.tv_mtlName).length > 0 && m.smICStockBillEntry != null && m.smICStockBillEntry!!.id != icEntry.id) {
+                                        if (!m.checkSave()) return
+                                        m.icStockBillEntry.icstockBillId = m.parent!!.fragment1.icStockBill.id
+
+                                        m.autoICStockBillEntry = icEntry // 加到自动保存对象
+                                        m.run_save(null)
 //                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
-                                    return
+                                        return
+                                    }
+                                    m.getMaterial(icEntry)
                                 }
-                                m.getMaterial(icEntry)
                             }
                         }
                     }
@@ -184,10 +192,16 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                         when(m.smqFlag) {
                             '2' -> {
 //                                if(m.getValues(m.tv_mtlName).length > 0) {
-//                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
-//                                    m.isTextChange = false
-//                                    return
-//                                }
+                                if(m.getValues(m.et_code)[0] == '9' && m.getValues(m.tv_mtlName).length > 0 ) { // 如果扫描的是箱码，就提示先保存
+                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
+                                    m.isTextChange = false
+                                    return
+                                }
+                                if(m.getValues(m.et_code)[0] == '9' && m.stock == null ) { // 如果扫描的是箱码，未选择位置，就提示
+                                    Comm.showWarnDialog(m.mContext,"请先扫描或选择位置！")
+                                    m.isTextChange = false
+                                    return
+                                }
                             }
                         }
                         // 执行查询方法
@@ -1254,20 +1268,17 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
         showLoadDialog("加载中...", false)
         var mUrl:String? = null
         var barcode:String? = null
-        var icstockBillId:String? = null
-        var moreStock:String? = null // 多仓库查询
-        var billType:String? = null // 单据类型
-        var checkInventoryNow:String? = null // 是否检查库存
-        var sourceBarcode:String? = null // 条码来源
+        var icstockBillId = ""
+        var moreStock = "" // 多仓库查询
+        var billType:String = "" // 单据类型
+        var checkInventoryNow = "" // 是否检查库存
+        var sourceBarcode = "" // 条码来源
+        var isSmBoxBarcode = "" // 是否可以扫描箱码
+        var isProdInStockDB = "" // 更新箱码的是否生产入库调拨状态
         when(smqFlag) {
             '1' -> {
                 mUrl = getURL("stockPosition/findBarcodeGroup")
                 barcode = getValues(et_positionCode)
-                icstockBillId = ""
-                moreStock = ""
-                billType = ""
-                checkInventoryNow = ""
-                sourceBarcode = ""
             }
             '2' -> {
                 mUrl = getURL("stockBill_WMS/findBarcode_EntryItem")
@@ -1277,6 +1288,8 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                 billType = parent!!.fragment1.icStockBill.billType
                 checkInventoryNow = "1"
                 sourceBarcode = "1"
+                isSmBoxBarcode = "1"
+                isProdInStockDB = "1"
             }
         }
         val formBody = FormBody.Builder()
@@ -1286,6 +1299,8 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                 .add("billType", billType)
                 .add("checkInventoryNow", checkInventoryNow)
                 .add("sourceBarcode", sourceBarcode)
+                .add("isSmBoxBarcode", isSmBoxBarcode)
+                .add("isProdInStockDB", isProdInStockDB)
                 .build()
 
         val request = Request.Builder()

@@ -104,6 +104,9 @@ public class PPBomTransferEntry implements Serializable {
 	//投料调拨单主表单号，用于插入子表时，查询主表id值使用，不存表
 	private String masterBillNo;
 
+	/* 临时字段，不存表  */
+	private double useableQty; // 可用数
+
 	public PPBomTransferEntry() {
 		super();
 	}
@@ -386,6 +389,14 @@ public class PPBomTransferEntry implements Serializable {
 
 	public void setMasterBillNo(String masterBillNo) {
 		this.masterBillNo = masterBillNo;
+	}
+
+	public double getUseableQty() {
+		return useableQty;
+	}
+
+	public void setUseableQty(double useableQty) {
+		this.useableQty = useableQty;
 	}
 
 

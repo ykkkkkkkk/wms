@@ -134,7 +134,9 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
                         }
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
-                        m.toasts("该页面有错误！2秒后自动关闭...")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "该页面有错误！2秒后自动关闭..."
+                        m.toasts(errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)

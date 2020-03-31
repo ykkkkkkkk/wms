@@ -116,9 +116,10 @@ class Prod_Transfer_Fragment3 : BaseFragment() {
                         } else {
                             m.toasts("上传成功")
                         }
+                        m.parent!!.finish()
                         // 滑动第一个页面
-                        m.parent!!.viewPager!!.setCurrentItem(0, false)
-                        m.parent!!.fragment1.reset() // 重置
+//                        m.parent!!.viewPager!!.setCurrentItem(0, false)
+//                        m.parent!!.fragment1.reset() // 重置
                     }
                     UNUPLOAD -> { // 上传单据  失败
                         errMsg = JsonUtil.strToString(msgObj)

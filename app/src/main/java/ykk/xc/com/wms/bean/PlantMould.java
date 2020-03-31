@@ -22,19 +22,24 @@ public class PlantMould implements Serializable{
 	private int containerId;			// 默认的容器id
 	private double worth;				// 价值
 	private double period;				// 生命周期
-	private double usePeriod;           // 已使用生码周期
+	private double usePeriod;           // 已使用生命周期
 	private int unitId;					// 生命周期单位id
 	private String dutyMan;				// 责任人
 	private char useType;				// 使用类型	L：领用，H：归还，N：未领用
 	private char status;				// 状态 A：正常，B：损坏
 	private int createUserId;			// 创建人
 	private String createDate;			// 创建日期
+	private double fqty;				// 数量
+	private int fitemId;				// 物料id
+	private String mtlNumber;			// 物料代码
 
 	private Stock stock;
 	private StockArea stockArea;
 	private StorageRack storageRack;
 	private StockPosition stockPos;
 	private Container container;
+	private Unit unit;
+	private User user;
 
 	public PlantMould() {
 		super();
@@ -240,15 +245,44 @@ public class PlantMould implements Serializable{
 		this.usePeriod = usePeriod;
 	}
 
-	@Override
-	public String toString() {
-		return "PlantMould [id=" + id + ", fnumber=" + fnumber + ", fname=" + fname + ", barcode=" + barcode
-				+ ", purpose=" + purpose + ", useCount=" + useCount + ", stockId=" + stockId + ", stockAreaId="
-				+ stockAreaId + ", storageRackId=" + storageRackId + ", stockPosId=" + stockPosId + ", containerId="
-				+ containerId + ", worth=" + worth + ", period=" + period + ", usePeriod=" + usePeriod + ", unitId="
-				+ unitId + ", dutyMan=" + dutyMan + ", useType=" + useType + ", status=" + status + ", createUserId="
-				+ createUserId + ", createDate=" + createDate + ", stock=" + stock + ", stockArea=" + stockArea
-				+ ", storageRack=" + storageRack + ", stockPos=" + stockPos + ", container=" + container + "]";
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public double getFqty() {
+		return fqty;
+	}
+
+	public void setFqty(double fqty) {
+		this.fqty = fqty;
+	}
+
+	public int getFitemId() {
+		return fitemId;
+	}
+
+	public void setFitemId(int fitemId) {
+		this.fitemId = fitemId;
+	}
+
+	public String getMtlNumber() {
+		return mtlNumber;
+	}
+
+	public void setMtlNumber(String mtlNumber) {
+		this.mtlNumber = mtlNumber;
 	}
 
 }

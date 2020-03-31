@@ -91,6 +91,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
     private var isExpand = false    // 是否全屏查看
     private var expressCompany:ExpressCompany? = null // 快递公司
     private var missionBillId = 0   // 上个页面任务单id
+    private var expressNo = StringBuffer()
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -261,6 +262,18 @@ class Sal_Box_Fragment1 : BaseFragment() {
                                     return
                                 }
                             }
+                            '4'-> {
+                                val value = m.getValues(m.et_expressCode)
+                                if(m.cb_expressNo.isChecked) {
+                                    m.expressNo.append( (if(m.expressNo.length > 0) "，" else "") + value)
+                                } else {
+                                    m.expressNo.setLength(0)
+                                    m.expressNo.append(value)
+                                }
+                                m.setTexts(m.et_expressCode, m.expressNo.toString())
+                                m.isTextChange = false
+                                return
+                            }
                         }
                         // 执行查询方法
                         m.run_smDatas()
@@ -399,6 +412,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
                 lin_curBox2.visibility = visibilityId
                 lin_parentBox.visibility = visibilityId
                 lin_parentBox2.visibility = visibilityId
+                lin_expressCompany.visibility = visibilityId
                 lin_express.visibility = visibilityId
                 lin_weight.visibility = visibilityId
             }
@@ -632,10 +646,33 @@ class Sal_Box_Fragment1 : BaseFragment() {
             }
         }
 
+        // 快递单号---数据变化
+        et_expressCode!!.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                if (s.length == 0) return
+                if (!isTextChange) {
+                    isTextChange = true
+                    smqFlag = '4'
+                    mHandler.sendEmptyMessageDelayed(SAOMA, 300)
+                }
+            }
+        })
+        // 快递单号---焦点改变
+        et_expressCode.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            if(hasFocus) {
+                et_expressCode.setBackgroundResource(R.drawable.back_style_red_focus)
+            } else {
+                if (et_expressCode != null) {
+                    et_expressCode!!.setBackgroundResource(R.drawable.back_style_blue)
+                }
+            }
+        }
         // 快递单号---长按输入条码
         et_expressCode!!.setOnLongClickListener {
             smqFlag = '4'
-            showInputDialog("输入快递单", getValues(et_mtlCode), "none", WRITE_CODE)
+            showInputDialog("输入快递单", "", "none", WRITE_CODE)
             true
         }
     }
@@ -700,6 +737,8 @@ class Sal_Box_Fragment1 : BaseFragment() {
             }
             tv_expressCompany.text = m.listMbr[0].expressCompanyName
             et_expressCode.setText(m.listMbr[0].expressNo)
+            expressNo.setLength(0)
+            expressNo.append(m.listMbr[0].expressNo) // 每次都记录当前值
             mAdapter!!.notifyDataSetChanged()
         }
         if(m.status != 2) {

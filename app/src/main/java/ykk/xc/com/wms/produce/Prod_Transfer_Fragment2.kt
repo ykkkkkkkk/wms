@@ -361,7 +361,11 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             return false
         }
         if (icStockBillEntry.fqty == 0.0) {
-            Comm.showWarnDialog(mContext, "请输入数量！")
+            Comm.showWarnDialog(mContext, "请输入实发数！")
+            return false
+        }
+        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
+            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
             return false
         }
         if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y"))) {
@@ -1201,7 +1205,8 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             entry.funitId = it.unitId
             entry.fsourceInterId = it.ppBomTransferId
             entry.fsourceEntryId = it.id
-            entry.fsourceQty = it.mustQty
+//            entry.fsourceQty = it.mustQty
+            entry.fsourceQty = it.useableQty
             entry.qcPassQty = it.erpQty // 使用qcPassQty来保存投料调拨单的Erp申请数
             entry.fsourceTranType = 0
             entry.fsourceBillNo = it.ppBomTransfer.billNo

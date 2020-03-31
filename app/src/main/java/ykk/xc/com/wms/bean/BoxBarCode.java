@@ -31,6 +31,7 @@ public class BoxBarCode implements Serializable {
 	private int isInStock;	// 是否入库 1代表是，0代表否
 	private int isOutStock;	// 是否出库 1代表是，0代表否
 	private int isPickGoods; // 是否拣货 1代表是，0代表否
+	private int isProdInStockDB; // 是否生产调拨入库
 
 	// 临时数据, 不存表
 	List<MaterialBinningRecord> listMbr; // 物料装箱记录
@@ -158,5 +159,13 @@ public class BoxBarCode implements Serializable {
 
 	public void setIsPickGoods(int isPickGoods) {
 		this.isPickGoods = isPickGoods;
+	}
+
+	public int getIsProdInStockDB() {
+		return isProdInStockDB;
+	}
+
+	public void setIsProdInStockDB(int isProdInStockDB) {
+		this.isProdInStockDB = isProdInStockDB;
 	}
 }

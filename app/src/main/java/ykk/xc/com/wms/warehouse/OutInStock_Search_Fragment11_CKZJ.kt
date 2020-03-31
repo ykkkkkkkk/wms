@@ -18,7 +18,7 @@ import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
-import ykk.xc.com.wms.sales.Sal_PickGoods_MainActivity
+import ykk.xc.com.wms.sales.Sal_QcPass_MainActivity
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
@@ -137,7 +137,7 @@ class OutInStock_Search_Fragment11_CKZJ : BaseFragment() {
             override fun onSearch(entity: ICStockBill, position: Int) {
                 val bundle = Bundle()
                 bundle.putInt("id", entity.id)
-                show(Sal_PickGoods_MainActivity::class.java, bundle)
+                show(Sal_QcPass_MainActivity::class.java, bundle)
             }
 //            override fun onUpload(entity: ICStockBill, position: Int) {
 //                val list = ArrayList<ICStockBill>()

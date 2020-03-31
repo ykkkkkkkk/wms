@@ -18,11 +18,10 @@ import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
-import ykk.xc.com.wms.sales.Sal_PickGoods_MainActivity
+import ykk.xc.com.wms.sales.Sal_ReCheck_MainActivity
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
-import ykk.xc.com.wms.warehouse.adapter.OutInStockSearchFragment11_CKZJ_Adapter
 import ykk.xc.com.wms.warehouse.adapter.OutInStockSearchFragment12_CGFH_Adapter
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -138,7 +137,7 @@ class OutInStock_Search_Fragment12_CGFH : BaseFragment() {
             override fun onSearch(entity: ICStockBill, position: Int) {
                 val bundle = Bundle()
                 bundle.putInt("id", entity.id)
-                show(Sal_PickGoods_MainActivity::class.java, bundle)
+                show(Sal_ReCheck_MainActivity::class.java, bundle)
             }
 //            override fun onUpload(entity: ICStockBill, position: Int) {
 //                val list = ArrayList<ICStockBill>()

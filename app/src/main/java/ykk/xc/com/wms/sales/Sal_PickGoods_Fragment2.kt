@@ -111,7 +111,7 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
                             }
                             '2'-> { // 物料
                                 val result = JsonUtil.strToString(msgObj)
-                                if(result.equals("refresh")) { // 这是扫了箱码返回的成功状态
+                                if(msgObj!!.indexOf("ykk_string") > -1 && result.equals("refresh")) { // 这是扫了箱码返回的成功状态
                                     m.toasts("保存成功✔")
                                     EventBus.getDefault().post(EventBusEntity(21)) // 发送指令到fragment3，告其刷新
 
@@ -187,6 +187,11 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
 //                                if(m.getValues(m.tv_mtlName).length > 0) {
                                 if(m.getValues(m.et_code)[0] == '9' && m.getValues(m.tv_mtlName).length > 0) { // 如果扫描的是箱码，就提示先保存
                                     Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
+                                    m.isTextChange = false
+                                    return
+                                }
+                                if(m.getValues(m.et_code)[0] == '9' && m.stock == null ) { // 如果扫描的是箱码，未选择位置，就提示
+                                    Comm.showWarnDialog(m.mContext,"请先扫描或选择位置！")
                                     m.isTextChange = false
                                     return
                                 }
@@ -1050,6 +1055,8 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
         var icstockBillId = ""
         var billType = "" // 单据类型
         var isSmBoxBarcode = "" // 是否可以扫描箱码
+        var isPickGoods = "" // 更新箱码的是否销售拣货状态
+        var strStockGroup = "" // 保存仓库组id，用，号隔开(stockK3Id,stockId,stockAreaId,storageRackId,stockPosId)
         when(smqFlag) {
             '1' -> {
                 mUrl = getURL("stockPosition/findBarcodeGroup")
@@ -1061,6 +1068,9 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
                 icstockBillId = parent!!.fragment1.icStockBill.id.toString()
                 billType = parent!!.fragment1.icStockBill.billType
                 isSmBoxBarcode = "1"
+                isPickGoods = "1"
+                strStockGroup = stock!!.fitemId.toString() +","+ stock!!.id +","+ (if(stockArea != null) stockArea!!.id else 0) +","+
+                               (if(storageRack != null) storageRack!!.id else 0) +","+ (if(stockPos != null) stockPos!!.id else 0)
             }
         }
         val formBody = FormBody.Builder()
@@ -1068,6 +1078,8 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
                 .add("icstockBillId", icstockBillId)
                 .add("billType", billType)
                 .add("isSmBoxBarcode", isSmBoxBarcode)
+                .add("isPickGoods", isPickGoods)
+                .add("strStockGroup", strStockGroup)
                 .build()
 
         val request = Request.Builder()

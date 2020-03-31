@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.ab_unit_list.*
 import okhttp3.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.basics.adapter.Unit_DialogAdapter
-import ykk.xc.com.wms.bean.k3Bean.MeasureUnit
+import ykk.xc.com.wms.bean.Unit
 import ykk.xc.com.wms.comm.BaseDialogActivity
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
@@ -33,7 +33,7 @@ class Unit_DialogActivity : BaseDialogActivity(), XRecyclerView.LoadingListener 
         private val UNSUCC1 = 501
     }
     private val context = this
-    private val listDatas = ArrayList<MeasureUnit>()
+    private val listDatas = ArrayList<Unit>()
     private var mAdapter: Unit_DialogAdapter? = null
     private val okHttpClient = OkHttpClient()
     private var limit = 1
@@ -59,7 +59,7 @@ class Unit_DialogActivity : BaseDialogActivity(), XRecyclerView.LoadingListener 
                 when (msg.what) {
                     SUCC1 // 成功
                     -> {
-                        val list = JsonUtil.strToList2(msg.obj as String, MeasureUnit::class.java)
+                        val list = JsonUtil.strToList2(msg.obj as String, Unit::class.java)
                         m.listDatas.addAll(list!!)
                         m.mAdapter!!.notifyDataSetChanged()
 

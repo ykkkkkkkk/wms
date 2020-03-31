@@ -26,6 +26,7 @@ class ICInvBackup_MainActivity : BaseActivity() {
     var isChange: Boolean = false // 返回的时候是否需要判断数据是否保存了
     private val fragment1 = ICInvBackup_Fragment1()
     private val fragment2 = ICInvBackup_Fragment2()
+    private val fragment3 = ICInvBackup_Fragment3()
     private var pageId = 0
 
     override fun setLayoutResID(): Int {
@@ -45,7 +46,7 @@ class ICInvBackup_MainActivity : BaseActivity() {
 
         listFragment.add(fragment2)
         listFragment.add(fragment1)
-//        listFragment.add(fragment3);
+        listFragment.add(fragment3);
 //        viewPager.setScanScroll(false); // 禁止左右滑动
         //ViewPager设置适配器
         viewPager.setAdapter(BaseFragmentAdapter(supportFragmentManager, listFragment))
@@ -62,6 +63,7 @@ class ICInvBackup_MainActivity : BaseActivity() {
                 when (position) {
                     0 -> tabChange(viewRadio1!!, "无盘点方案", 0)
                     1 -> tabChange(viewRadio2!!, "有盘点方案", 1)
+                    2 -> tabChange(viewRadio3!!, "模具盘点", 2)
                 }
             }
 
@@ -78,7 +80,7 @@ class ICInvBackup_MainActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.btn_close, R.id.lin_tab1, R.id.lin_tab2, R.id.btn_search)
+    @OnClick(R.id.btn_close, R.id.lin_tab1, R.id.lin_tab2, R.id.lin_tab3, R.id.btn_search)
     fun onViewClicked(view: View) {
         // setCurrentItem第二个参数控制页面切换动画
         //  true:打开/false:关闭
@@ -108,6 +110,7 @@ class ICInvBackup_MainActivity : BaseActivity() {
                 when(pageId) {
                     0 -> show(ICInvBackup_Search_MainActivity::class.java, null)
                     1 -> fragment1.findFun()
+//                    2 -> show(ICInvBackup_Search_MainActivity::class.java, null)
                 }
             }
             R.id.lin_tab1 -> {
@@ -115,6 +118,9 @@ class ICInvBackup_MainActivity : BaseActivity() {
             }
             R.id.lin_tab2 -> {
                 tabChange(viewRadio2!!, "有盘点方案", 1)
+            }
+            R.id.lin_tab3 -> {
+                tabChange(viewRadio3!!, "模具盘点", 2)
             }
         }
     }

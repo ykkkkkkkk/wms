@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +27,9 @@ import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
+import ykk.xc.com.wms.util.zxing.android.CaptureActivity
 import java.io.IOException
+import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
@@ -38,10 +42,10 @@ import java.util.concurrent.TimeUnit
 class Sal_ReCheck_Fragment1 : BaseFragment() {
 
     companion object {
-        private val SEL_EMP1 = 12
-        private val SEL_EMP2 = 13
-        private val SEL_EMP3 = 14
-        private val SEL_EMP4 = 15
+        private val SEL_EMP1 = 62
+        private val SEL_EMP2 = 63
+        private val SEL_EMP3 = 64
+        private val SEL_EMP4 = 65
         private val SAVE = 201
         private val UNSAVE = 501
         private val FIND_SOURCE = 202
@@ -50,6 +54,10 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         private val UNMODIFY_STATUS = 503
         private val FIND_ICSTOCKBILL = 204
         private val UNFIND_ICSTOCKBILL = 504
+
+        private val SETFOCUS = 1
+        private val SAOMA = 2
+        private val WRITE_CODE = 3
     }
 
     private val context = this
@@ -64,6 +72,7 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     private var icStockBillId = 0 // 上个页面传来的id
     var icStockBillId2 = 0 // 上个页面传来的id
     var fsourceInterId = 0 // 上个页面传来的id
+    private var isTextChange: Boolean = false // 是否进入TextChange事件
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -135,6 +144,22 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                             m.mContext!!.finish()
                         },2000)
                     }
+                    SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
+                        m.setFocusable(m.et_getFocus)
+                        m.setFocusable(m.et_custOutSotckNo)
+                    }
+                    SAOMA -> { // 扫码之后
+                        var code = m.getValues(m.et_custOutSotckNo)
+                        if(code.indexOf("DN:") > -1) {
+                            m.setTexts(m.et_custOutSotckNo, code.substring(code.indexOf("DN:")+3, code.length-1))
+
+                        } else {
+                            m.et_custOutSotckNo.setText("")
+                            Comm.showWarnDialog(m.mContext, "扫描的二维码不正确，请检查！")
+                        }
+                        m.icStockBill.custOutStockNo = m.getValues(m.et_custOutSotckNo)
+                        m.isTextChange = false
+                    }
                 }
             }
         }
@@ -173,10 +198,24 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         icStockBill.missionBillId = m.missionBillId
         icStockBill.fcustId = m.fcustId
         icStockBill.deliverWay = m.deliverWay
+        icStockBill.custOutStockNo = m.custOutStockNo
+        icStockBill.custOutStockDate = m.custOutStockDate
 
         icStockBill.supplier = m.supplier
         icStockBill.qualifiedStock = m.qualifiedStock
         icStockBill.unQualifiedStock = m.unQualifiedStock
+
+        tv_custSel.text = m.cust.fname
+        // 发货方式( 发货运:990664），送货:990665 )
+        if(m.deliverWay == 990664) {
+            tv_deliveryWay.text = "发货运"
+        } else {
+            tv_deliveryWay.text = "送货"
+        }
+        isTextChange = true
+        setTexts(et_custOutSotckNo, isNULLS(m.custOutStockNo))
+        isTextChange = false
+        tv_custOutStockDate.text = isNULLS(m.custOutStockDate)
 
         tv_pdaNo.text = m.pdaNo
         tv_inDateSel.text = m.fdate
@@ -212,6 +251,8 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         getUserInfo()
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         tv_inDateSel.text = Comm.getSysDate(7)
+        hideSoftInputMode(mContext, et_custOutSotckNo)
+
         tv_operationManName.text = user!!.erpUserName
         tv_emp1Sel.text = user!!.empName
         tv_emp2Sel.text = user!!.empName
@@ -266,20 +307,28 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
+            mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
         }
     }
 
-    @OnClick(R.id.tv_inDateSel, R.id.btn_save, R.id.btn_clone)
+    @OnClick(R.id.tv_inDateSel, R.id.btn_save, R.id.btn_clone, R.id.btn_scan, R.id.tv_custOutStockDate)
     fun onViewClicked(view: View) {
         var bundle: Bundle? = null
         when (view.id) {
             R.id.tv_inDateSel -> { // 选择日期
                 Comm.showDateDialog(mContext, tv_inDateSel, 0)
             }
+            R.id.btn_scan -> { // 调用摄像头扫描（物料）
+                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
+            }
+            R.id.tv_custOutStockDate -> {
+                Comm.showDateDialog(mContext, view,0)
+            }
             R.id.btn_save -> { // 保存
                 if(!checkSave()) return
                 icStockBill.fdate = getValues(tv_inDateSel)
-                run_save();
+                icStockBill.custOutStockDate = if(getValues(tv_custOutStockDate).length == 0) null else getValues(tv_custOutStockDate)
+                run_save()
             }
             R.id.btn_clone -> { // 重置
                 if (parent!!.isChange) {
@@ -319,7 +368,31 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     }
 
     override fun setListener() {
+        val click = View.OnClickListener { v ->
+            setFocusable(et_getFocus)
+            when (v.id) {
+                R.id.et_custOutSotckNo -> setFocusable(et_custOutSotckNo)
+            }
+        }
+        et_custOutSotckNo!!.setOnClickListener(click)
 
+        // 客户出库单号---数据变化
+        et_custOutSotckNo!!.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                if (s.length == 0) return
+                if (!isTextChange) {
+                    isTextChange = true
+                    mHandler.sendEmptyMessageDelayed(SAOMA, 300)
+                }
+            }
+        })
+        // 客户出库单号---长按输入条码
+        et_custOutSotckNo!!.setOnLongClickListener {
+            showInputDialog("客户出库单号", isNULLS(icStockBill.custOutStockNo), "none", WRITE_CODE)
+            true
+        }
     }
 
     fun reset() {
@@ -327,6 +400,8 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         parent!!.viewPager.setScanScroll(false) // 禁止滑动
         tv_pdaNo.text = ""
         tv_inDateSel.text = Comm.getSysDate(7)
+        et_custOutSotckNo.setText("")
+        tv_custOutStockDate.text = ""
         icStockBill.id = 0
         icStockBill.fselTranType = 0
         icStockBill.pdaNo = ""
@@ -345,6 +420,8 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         icStockBill.roughWeight = 0.0
 //        icStockBill.weightUnitType = 1
         icStockBill.netWeight = 0.0
+        icStockBill.custOutStockNo = ""
+        icStockBill.custOutStockDate = ""
         icStockBill.stock = null
 
         icStockBillId = 0
@@ -386,6 +463,27 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                     tv_emp4Sel.text = emp!!.fname
                     icStockBill.ffmanagerId = emp.fitemId
                     icStockBill.yanshouMan = emp.fname
+                }
+            }
+            BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.extras
+                    if (bundle != null) {
+                        val code = bundle.getString(BaseFragment.DECODED_CONTENT_KEY, "")
+                        setTexts(et_custOutSotckNo, code)
+                    }
+                }
+            }
+            WRITE_CODE -> {// 输入条码  返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.extras
+                    if (bundle != null) {
+                        val value = bundle.getString("resultValue", "")
+                        isTextChange = true
+                        setTexts(et_custOutSotckNo, value)
+                        icStockBill.custOutStockNo = value
+                        isTextChange = false
+                    }
                 }
             }
         }

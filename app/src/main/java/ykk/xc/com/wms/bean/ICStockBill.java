@@ -49,6 +49,8 @@ public class ICStockBill implements Serializable {
 	private int fcustId;				// 客户id
 	private int deliverWay;				// 发货方式( 发货运:990664，送货:990665 )
 	private String strMissionBillId;	// 用于点击了多个任务单然后保存了这张单
+	private String custOutStockNo;		// 客户出库单号
+	private String custOutStockDate;	// 客户出库日期
 
 	// 临时字段，不存表
 	private boolean showButton; 		// 是否显示操作按钮
@@ -461,5 +463,21 @@ public class ICStockBill implements Serializable {
 
 	public void setRealWeight(double realWeight) {
 		this.realWeight = realWeight;
+	}
+
+	public String getCustOutStockNo() {
+		return custOutStockNo;
+	}
+
+	public void setCustOutStockNo(String custOutStockNo) {
+		this.custOutStockNo = custOutStockNo;
+	}
+
+	public String getCustOutStockDate() {
+		return custOutStockDate;
+	}
+
+	public void setCustOutStockDate(String custOutStockDate) {
+		this.custOutStockDate = custOutStockDate;
 	}
 }

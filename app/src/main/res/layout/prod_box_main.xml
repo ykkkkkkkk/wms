@@ -30,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_4dp"
             android:layout_marginRight="@dimen/_4dp"
+            android:visibility="invisible"
             android:background="@drawable/aa_ico5a_5b"
             android:textColor="#ffffff"
             android:textSize="14sp" />

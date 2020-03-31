@@ -6,21 +6,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.ware_icinvbackup_fragment2.*
+import kotlinx.android.synthetic.main.ware_icinvbackup_fragment3.*
 import okhttp3.*
 import ykk.xc.com.wms.R
-import ykk.xc.com.wms.basics.Container_DialogActivity
-import ykk.xc.com.wms.basics.Mtl_MoreDialogActivity
-import ykk.xc.com.wms.basics.Stock_GroupDialogActivity
+import ykk.xc.com.wms.basics.*
 import ykk.xc.com.wms.bean.*
-import ykk.xc.com.wms.bean.k3Bean.ICInvBackup
+import ykk.xc.com.wms.bean.Unit
 import ykk.xc.com.wms.bean.k3Bean.ICItem
 import ykk.xc.com.wms.bean.k3Bean.ICStockCheckProcess
 import ykk.xc.com.wms.comm.BaseFragment
@@ -28,25 +26,25 @@ import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.BigdecimalUtil
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
-import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import ykk.xc.com.wms.util.zxing.android.CaptureActivity
-import ykk.xc.com.wms.warehouse.adapter.ICInvBackup_Fragment2_Adapter
 import java.io.IOException
 import java.lang.ref.WeakReference
+import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：WMS 盘点（无盘点方案）
+ * 描述：WMS 盘点（工装模具盘点）
  * 作者：ykk
  */
-class ICInvBackup_Fragment2 : BaseFragment() {
+class ICInvBackup_Fragment3 : BaseFragment() {
 
     companion object {
-        private val SEL_STOCK = 10
-        private val SEL_MTL = 11
-        private val SEL_CONTAINER = 12
+        private val SEL_STOCK = 60
+        private val SEL_MTL = 61
+        private val SEL_CONTAINER = 62
+        private val SEL_UNIT = 63
 
         private val SUCC1 = 200
         private val UNSUCC1 = 500
@@ -58,16 +56,17 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         private val UNSAVE = 503
         private val SETFOCUS = 1
         private val RESULT_NUM = 2
-        private val RESULT_BATCH = 3
-        private val RESULT_WEIGHT = 4
-        private val RESULT_MINPACK = 5
-        private val SAOMA = 6
-        private val WRITE_CODE = 7
+        private val RESULT_WORTH = 3
+        private val RESULT_PERIOD = 4
+        private val RESULT_USEPERIOD = 5
+        private val RESULT_DUTYMAN = 6
+        private val RESULT_PURPOSE = 7
+
+        private val SAOMA = 11
+        private val WRITE_CODE = 12
     }
 
     private val context = this
-    private var mAdapter: ICInvBackup_Fragment2_Adapter? = null
-    private val checkDatas = ArrayList<ICItem>()
     private var okHttpClient: OkHttpClient? = null
     private var user: User? = null
     private var mContext: Activity? = null
@@ -82,12 +81,14 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     private var icStockCheckProcess: ICStockCheckProcess? = null
     private var curPos:Int = 0 // 当前行
     private var smqFlag = '1' // 使用扫码枪扫码（1：仓库位置扫码，2：容器扫码，3：物料扫码）
+    private var df = DecimalFormat("#.######")
+    private var plantMould = PlantMould()
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: ICInvBackup_Fragment2) : Handler() {
-        private val mActivity: WeakReference<ICInvBackup_Fragment2>
+    private class MyHandler(activity: ICInvBackup_Fragment3) : Handler() {
+        private val mActivity: WeakReference<ICInvBackup_Fragment3>
 
         init {
             mActivity = WeakReference(activity)
@@ -116,16 +117,11 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                             }
                             '3' -> { // 物料扫描
                                 val icItem = JsonUtil.strToObject(msgObj, ICItem::class.java)
-                                var listIcitem = ArrayList<ICItem>()
-                                listIcitem.add(icItem)
-                                m.tv_mtlName.text = icItem!!.fnumber
-
-                                m.getMtlAfter(listIcitem, 0)
+                                m.getMtl(icItem)
                             }
                         }
                     }
                     UNSUCC1 -> { // 扫码失败
-                        m.mAdapter!!.notifyDataSetChanged()
                         when(m.smqFlag) {
                             '1' -> { // 仓库位置扫描
 //                                m.tv_positionName.text = ""
@@ -143,13 +139,12 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     SUCC2 -> { // 历史查询 进入
-                        m.checkDatas.clear()
+//                        m.checkDatas.clear()
 //                        val icInvBackup = JsonUtil.strToList(msgObj, ICInvBackup::class.java)
 //                        m.checkDatas.addAll(icInvBackup)
 //                        m.mAdapter!!.notifyDataSetChanged()
                     }
                     UNSUCC2 -> { // 历史查询  失败
-                        m.mAdapter!!.notifyDataSetChanged()
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "很抱歉，没能找到数据！"
                         Comm.showWarnDialog(m.mContext, errMsg)
@@ -195,51 +190,13 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.ware_icinvbackup_fragment2, container, false)
+        return inflater.inflate(R.layout.ware_icinvbackup_fragment3, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
         parent = mContext as ICInvBackup_MainActivity
 
-        recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
-        recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = ICInvBackup_Fragment2_Adapter(mContext!!, checkDatas)
-        recyclerView.adapter = mAdapter
-        // 设值listview空间失去焦点
-        recyclerView.isFocusable = false
-
-        // 行事件
-        mAdapter!!.setCallBack(object : ICInvBackup_Fragment2_Adapter.MyCallBack {
-            override fun onClick_weight(entity: ICItem, position: Int) {
-                curPos = position
-                showInputDialog("重量", entity.weight.toString(), "0.0", RESULT_WEIGHT)
-            }
-
-            override fun onClick_num(entity: ICItem, position: Int) {
-                curPos = position
-                showInputDialog("数量", entity.realQty.toString(), "0.0", RESULT_NUM)
-            }
-
-            override fun onClick_minPackQty(entity: ICItem, position: Int) {
-                curPos = position
-                showInputDialog("最小包装数", entity.minPackQty.toString(), "0.0", RESULT_MINPACK)
-            }
-
-            override fun onClick_batch(entity: ICItem, position: Int) {
-                curPos = position
-                showInputDialog("批次号", Comm.isNULLS(entity.batchCode), "none", RESULT_BATCH)
-            }
-
-            override fun onDelete(entity: ICItem, position: Int) {
-                checkDatas.removeAt(position)
-                mAdapter!!.notifyDataSetChanged()
-            }
-        })
-
-        mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            checkSaveSon(smqFlag, pos)
-        }
     }
 
     override fun initData() {
@@ -255,6 +212,11 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         hideSoftInputMode(mContext, et_positionCode)
         hideSoftInputMode(mContext, et_code)
         hideSoftInputMode(mContext, et_containerCode)
+        tv_dutyMan.text = user!!.username
+        plantMould.fqty = 1.0
+        plantMould.status = 'A'
+        plantMould.dutyMan = user!!.username
+        plantMould.createUserId = user!!.id
 
         mHandler.sendEmptyMessageDelayed(SETFOCUS,200)
     }
@@ -267,8 +229,9 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     }
 
     @OnClick(R.id.btn_positionSel, R.id.btn_positionScan, R.id.btn_containerSel, R.id.btn_containerScan, R.id.btn_mtlSel, R.id.btn_scan,
-            R.id.tv_positionName, R.id.tv_containerName, R.id.tv_mtlName,
-            R.id.btn_save, R.id.btn_clone, R.id.btn_submit)
+            R.id.tv_positionName, R.id.tv_containerName, R.id.tv_mtlName, R.id.btn_save, R.id.btn_clone, R.id.btn_submit, R.id.tv_fqty,
+            R.id.tv_worth, R.id.tv_period, R.id.tv_usePeriod, R.id.tv_unitSel, R.id.tv_dutyMan, R.id.tv_purpose
+            )
     fun onViewClicked(view: View) {
         var bundle: Bundle? = null
         when (view.id) {
@@ -289,10 +252,8 @@ class ICInvBackup_Fragment2 : BaseFragment() {
             }
             R.id.btn_mtlSel -> { // 选择物料
                 smqFlag = '3'
-                bundle = Bundle()
                 if(!checkSaoMa()) return
-//                bundle.putInt("finterId", icStockCheckProcess!!.fid)
-                showForResult(Mtl_MoreDialogActivity::class.java, SEL_MTL, bundle)
+                showForResult(Mtl_DialogActivity::class.java, SEL_MTL, null)
             }
             R.id.btn_positionScan -> { // 调用摄像头扫描（仓库位置）
 //                if(!checkProject()) return
@@ -321,14 +282,31 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                 smqFlag = '3'
                 mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
             }
+            R.id.tv_fqty -> { // 数量
+                showInputDialog("数量", plantMould.fqty.toString(), "0", RESULT_NUM)
+            }
+            R.id.tv_worth -> { // 价值
+                showInputDialog("购进原值", plantMould.worth.toString(), "0.0", RESULT_WORTH)
+            }
+            R.id.tv_period -> { // 生命周期
+                showInputDialog("生命周期", plantMould.period.toString(), "0", RESULT_PERIOD)
+            }
+            R.id.tv_usePeriod -> { // 已使用生命周期
+                showInputDialog("已用周期", plantMould.usePeriod.toString(), "0", RESULT_USEPERIOD)
+            }
+            R.id.tv_unitSel ->{ // 周期单位
+                showForResult(Unit_DialogActivity::class.java, SEL_UNIT, null)
+            }
+            R.id.tv_dutyMan -> { // 责任人
+                showInputDialog("责任人", plantMould.dutyMan, "none", RESULT_DUTYMAN)
+            }
+            R.id.tv_purpose -> { // 用途
+                showInputDialog("用途", plantMould.purpose, "none", RESULT_PURPOSE)
+            }
             R.id.btn_save -> { // 保存
-                val list = checkSave();
-                if(list == null) return
-                if(checkDatas.size == 0) {
-                    Comm.showWarnDialog(mContext,"请选择物料或者扫码条码！")
-                    return
-                }
-                val strJson = JsonUtil.objectToString(list)
+                if(!checkSave()) return
+                plantMould.fqty = parseDouble(getValues(tv_fqty))
+                val strJson = JsonUtil.objectToString(plantMould)
                 run_save(strJson)
             }
             R.id.btn_submit -> { // 提交到k3
@@ -368,81 +346,28 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     /**
      * 检查方案是否有值
      */
-    fun checkSave() : List<ICInvBackup>? {
-        val list = ArrayList<ICInvBackup>()
-        checkDatas.forEachIndexed { index, icItem ->
-            if(icItem.stock == null) {
-                Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫描或者选择位置！")
-                // 位置自动获取焦点，直接扫描就能匹配数据
-                checkSaveSon('1', index)
-                recyclerView.post(Runnable { recyclerView.smoothScrollToPosition(index) })
-                return null
-            }
-            if(icItem.useContainer.equals("Y") && icItem.container == null) {
-                Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫描或者选择容器！")
-                // 容器自动获取焦点，直接扫描就能匹配数据
-                checkSaveSon('2', index)
-                recyclerView.post(Runnable { recyclerView.smoothScrollToPosition(index) })
-                return null
-            }
-            if(icItem.realQty == 0.0) {
-                Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请输入盘点数！")
-                return null
-            }
-            if(icItem.batchManager.equals("Y") && Comm.isNULLS(icItem.batchCode).length == 0) {
-                Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请长按数字框输入批次！")
-                return null
-            }
-            val m = ICInvBackup()
-            m.finterId = 0
-            m.stockId = icItem.stock.fitemId
-            m.mtlId = icItem.fitemid
-            m.fauxQty = 0.0
-            m.fauxQtyAct = 0.0
-            m.fauxCheckQty = 0.0
-            m.realQty = icItem.realQty
-            m.createUserId = user!!.id
-            m.toK3 = 1
-            m.stockPosId = if(icItem.stockPos != null) icItem.stockPos.fitemId else 0
-
-            m.stockId_wms = icItem.stock.id
-            m.stockAreaId_wms = if(icItem.stockArea != null) icItem.stockArea.id else 0
-            m.storageRackId_wms = if(icItem.storageRack != null) icItem.storageRack.id else 0
-            m.stockPosId_wms = if(icItem.stockPos != null) icItem.stockPos.id else 0
-            m.containerId = if(icItem.container != null) icItem.container.id else 0
-            m.weight = icItem.weight
-            m.weightUnitType = 2 // // 重量单位类型(1：千克，2：克，3：磅)
-            m.minPackQty = icItem.minPackQty
-            m.repeatStatus = 0 // 复盘状态
-            m.repeatQty = 0.0 // 复盘数
-
-            m.stockName = icItem.stock.stockName
-            m.mtlNumber = icItem.fnumber
-            m.mtlName = icItem.fname
-            m.unitName = icItem.unit.unitName
-            m.fmodel = icItem.fmodel
-            m.fbatchNo = icItem.batchCode
-            m.accountName = "WMS"
-
-            list.add(m)
+    fun checkSave() : Boolean {
+        if(plantMould.stockId == 0) {
+            Comm.showWarnDialog(mContext,"请扫描或选择位置！")
+            return false
         }
-        return list
-    }
-
-    /**
-     * 自动填充焦点，和选中行
-     */
-    fun checkSaveSon(flag : Char, index : Int) {
-        // 容器自动获取焦点，直接扫描就能匹配数据
-        smqFlag = flag
-        curPos = index
-        mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
-        // 自动选中行
-        checkDatas.forEach {
-            it.isCheck = false
+        if(isNULLS(plantMould.fname).length == 0) {
+            Comm.showWarnDialog(mContext,"请扫描或选择模具！")
+            return false
         }
-        checkDatas[index].isCheck = true
-        mAdapter!!.notifyDataSetChanged()
+        if(plantMould.fqty == 0.0) {
+            Comm.showWarnDialog(mContext,"数量必须大于0！")
+            return false
+        }
+        if(plantMould.usePeriod > plantMould.period) {
+            Comm.showWarnDialog(mContext,"已用周期不能大于生命周期！")
+            return false
+        }
+        if(plantMould.unitId == 0) {
+            Comm.showWarnDialog(mContext,"请选择周期单位！")
+            return false
+        }
+        return true
     }
 
     override fun setListener() {
@@ -589,6 +514,20 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         tv_storageRackName.visibility = View.INVISIBLE
         tv_stockPosName.visibility = View.INVISIBLE
 
+        plantMould.stock = null
+        plantMould.stockArea = null
+        plantMould.storageRack = null
+        plantMould.stockPos = null
+
+//        plantMould.stock = stock
+        plantMould.stockId = 0
+//        plantMould.stockArea = stockArea
+        plantMould.stockAreaId = 0
+//        plantMould.storageRack = storageRack
+        plantMould.storageRackId = 0
+//        plantMould.stockPos = stockPos
+        plantMould.stockPosId = 0
+
         if(msgObj != null) {
             resetStockGroup()
 
@@ -633,43 +572,25 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         if(stock != null ) {
             tv_positionName.text = stock!!.stockName
             tv_stockName.text = Html.fromHtml("仓库：<font color='#6a5acd'>"+stock!!.stockName+"</font>")
+            plantMould.stockId = stock!!.id
         }
         if(stockArea != null ) {
             tv_positionName.text = stockArea!!.fname
             tv_stockAreaName.visibility = View.VISIBLE
             tv_stockAreaName.text = Html.fromHtml("库区：<font color='#6a5acd'>"+stockArea!!.fname+"</font>")
+            plantMould.stockAreaId = stockArea!!.id
         }
         if(storageRack != null ) {
             tv_positionName.text = storageRack!!.fnumber
             tv_storageRackName.visibility = View.VISIBLE
             tv_storageRackName.text = Html.fromHtml("货架：<font color='#6a5acd'>"+storageRack!!.fnumber+"</font>")
+            plantMould.storageRackId = storageRack!!.id
         }
         if(stockPos != null ) {
             tv_positionName.text = stockPos!!.stockPositionName
             tv_stockPosName.visibility = View.VISIBLE
             tv_stockPosName.text = Html.fromHtml("库位：<font color='#6a5acd'>"+stockPos!!.stockPositionName+"</font>")
-        }
-
-        // 人为替换仓库信息
-        if(checkDatas.size > 0) {
-            checkDatas[curPos].stock = null
-            checkDatas[curPos].stockArea = null
-            checkDatas[curPos].storageRack = null
-            checkDatas[curPos].stockPos = null
-
-            if(stock != null) {
-                checkDatas[curPos].stock = stock
-            }
-            if(stockArea != null) {
-                checkDatas[curPos].stockArea = stockArea
-            }
-            if(storageRack != null) {
-                checkDatas[curPos].storageRack = storageRack
-            }
-            if(stockPos != null) {
-                checkDatas[curPos].stockPos = stockPos
-            }
-            mAdapter!!.notifyDataSetChanged()
+            plantMould.stockPosId = stockPos!!.id
         }
 
         // 自动跳到物料焦点
@@ -683,10 +604,27 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     fun getContainer(m : Container) {
         container = m
         tv_containerName.text = m!!.fnumber
-        if(checkDatas.size > 0 && checkDatas[curPos].useContainer.equals("Y")) {
-            checkDatas[curPos].container = m
-            mAdapter!!.notifyDataSetChanged()
-        }
+        plantMould.container = m
+        plantMould.containerId = m.id
+
+        // 自动跳到物料焦点
+        smqFlag = '3'
+        mHandler.sendEmptyMessage(SETFOCUS)
+    }
+
+    /**
+     * 得到物料
+     */
+    fun getMtl(m : ICItem) {
+        tv_mtlName.text = m.fname
+        plantMould.fname = m.fname
+        plantMould.fnumber = m.fnumber
+        plantMould.fitemId = m.fitemid
+        plantMould.mtlNumber = m.fnumber
+
+        // 自动跳到物料焦点
+        smqFlag = '3'
+        mHandler.sendEmptyMessage(SETFOCUS)
     }
 
     private fun reset() {
@@ -697,12 +635,28 @@ class ICInvBackup_Fragment2 : BaseFragment() {
             smqFlag = '1'
         }
         et_code!!.setText("")
+        et_containerCode.setText("")
         tv_mtlName.text = ""
+        tv_containerName.text = ""
+        tv_fqty.text = "1"
+        tv_worth.text = ""
+        tv_period.text = ""
+        tv_usePeriod.text = ""
+        tv_purpose.text = ""
+        plantMould.fname = ""
+        plantMould.fnumber = ""
+        plantMould.fitemId = 0
+        plantMould.mtlNumber = ""
+        plantMould.containerId = 0
+        plantMould.fqty = 1.0
+        plantMould.worth = 0.0
+        plantMould.period = 0.0
+        plantMould.usePeriod = 0.0
+        plantMould.purpose = ""
+
         parent!!.isChange = false
-        checkDatas.clear()
         mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
 
-        mAdapter!!.notifyDataSetChanged()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -732,8 +686,15 @@ class ICInvBackup_Fragment2 : BaseFragment() {
             }
             SEL_MTL -> {//查询物料	返回
                 if (resultCode == Activity.RESULT_OK) {
-                    val list = data!!.getSerializableExtra("obj") as List<ICItem>
-                    getMtlAfter(list,1)
+                    val icItem = data!!.getSerializableExtra("obj") as ICItem
+                    getMtl(icItem)
+                }
+            }
+            SEL_UNIT -> {//查询单位	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val unit = data!!.getSerializableExtra("obj") as Unit
+                    plantMould.unitId = unit.id
+                    tv_unitSel.text = unit.unitName
                 }
             }
             BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
@@ -762,124 +723,72 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                     }
                 }
             }
-            RESULT_WEIGHT -> { // 重量
-                if (resultCode == Activity.RESULT_OK) {
-                    val bundle = data!!.getExtras()
-                    if (bundle != null) {
-                        val value = bundle.getString("resultValue", "")
-                        val num = parseDouble(value)
-                        checkDatas[curPos].weight = num
-                        curPos = -1
-                        mAdapter!!.notifyDataSetChanged()
-                    }
-                }
-            }
             RESULT_NUM -> { // 数量
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data!!.getExtras()
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
                         val num = parseDouble(value)
-                        checkDatas[curPos].realQty = num
-                        curPos = -1
-                        mAdapter!!.notifyDataSetChanged()
+                        plantMould.fqty = num
+                        tv_fqty.text = num.toString()
                     }
                 }
             }
-            RESULT_MINPACK -> { // 最小包装数
+            RESULT_WORTH -> { // 价值
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data!!.getExtras()
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
                         val num = parseDouble(value)
-                        checkDatas[curPos].minPackQty = num
-                        curPos = -1
-                        mAdapter!!.notifyDataSetChanged()
+                        plantMould.worth = num
+                        tv_worth.text = df.format(num)
                     }
                 }
             }
-            RESULT_BATCH -> { // 批次号
+            RESULT_PERIOD -> { // 生命周期
                 if (resultCode == Activity.RESULT_OK) {
                     val bundle = data!!.getExtras()
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
-                        checkDatas[curPos].batchCode = value
-                        curPos = -1
-                        mAdapter!!.notifyDataSetChanged()
+                        val num = parseDouble(value)
+                        plantMould.period = num
+                        tv_period.text = df.format(num)
                     }
                 }
             }
-
+            RESULT_USEPERIOD -> { // 已使用生命周期
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.getExtras()
+                    if (bundle != null) {
+                        val value = bundle.getString("resultValue", "")
+                        val num = parseDouble(value)
+                        plantMould.usePeriod = num
+                        tv_usePeriod.text = df.format(num)
+                    }
+                }
+            }
+            RESULT_DUTYMAN -> { // 责任人
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.getExtras()
+                    if (bundle != null) {
+                        val value = bundle.getString("resultValue", "")
+                        plantMould.dutyMan = value
+                        tv_dutyMan.text = value
+                    }
+                }
+            }
+            RESULT_PURPOSE -> { // 用途
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.getExtras()
+                    if (bundle != null) {
+                        val value = bundle.getString("resultValue", "")
+                        plantMould.purpose = value
+                        tv_purpose.text = value
+                    }
+                }
+            }
         }
         mHandler.sendEmptyMessageDelayed(SETFOCUS, 300)
-    }
-
-    /**
-     * 得到扫码或选择数据
-     */
-    private fun getMtlAfter(list: List<ICItem>, flag: Int) {
-        parent!!.isChange = true
-        // 循环判断业务
-        for (icItem in list) {
-            // 填充数据
-            val size = checkDatas.size
-            var addRow = true
-            var curPosition = 0
-            for (i in 0 until size) {
-                val sr = checkDatas.get(i)
-                // 有相同的，就不新增了
-                if (sr.fitemid == icItem.fitemid) {
-                    curPosition = i
-                    addRow = false
-                    break
-                }
-            }
-            if (addRow) {
-                // 全部清空
-                icItem.stock = null
-                icItem.stockArea = null
-                icItem.storageRack = null
-                icItem.stockPos = null
-                icItem.container = null
-
-                if(stock != null) {
-                    icItem.stock = stock
-                }
-                if(stockArea != null) {
-                    icItem.stockArea = stockArea
-                }
-                if(storageRack != null) {
-                    icItem.storageRack = storageRack
-                }
-                if(stockPos != null) {
-                    icItem.stockPos = stockPos
-                }
-                if(icItem.useContainer.equals("Y") && container != null) {
-                    icItem.container = container
-                }
-                if(icItem.batchManager.equals("Y")) { // 启用了批次号，就给个默认值
-                    icItem.batchCode = Comm.getSysDate(3)
-                }
-                icItem.isCheck = false
-                icItem.realQty = 1.0
-                checkDatas.add(icItem)
-
-            } else {
-                // 已有相同物料行，就叠加数量
-                val fqty = checkDatas[curPosition].realQty
-                val addVal = BigdecimalUtil.add(fqty, 1.0);
-                checkDatas[curPosition].realQty = addVal
-            }
-        }
-
-        if(flag == 1) {
-            checkDatas.forEach {
-                it.isCheck = false
-            }
-            mAdapter!!.notifyDataSetChanged()
-            recyclerView.post(Runnable { recyclerView.smoothScrollToPosition(checkDatas.size - 1) })
-        }
-        mAdapter!!.notifyDataSetChanged()
     }
 
     /**
@@ -942,11 +851,9 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     private fun run_save(strJson : String) {
         showLoadDialog("保存中...", false)
 
-        val mUrl = getURL("icInvBackup/save")
-        val mJson = JsonUtil.objectToString(checkDatas)
+        val mUrl = getURL("plantMould/save")
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
-                .add("callType", "2") // 执行的存储过程是哪个（1：callTmpICInvBackup_To_ICInvBackup，2：callTmpICInvBackup_To_ICInvBackup2）
                 .build()
 
         val request = Request.Builder()
@@ -985,9 +892,9 @@ class ICInvBackup_Fragment2 : BaseFragment() {
 
         getUserInfo()
         val mUrl = getURL("icInvBackup/submitTok3")
-        val mJson = JsonUtil.objectToString(checkDatas)
+//        val mJson = JsonUtil.objectToString(checkDatas)
         val formBody = FormBody.Builder()
-                .add("strJson", mJson)
+//                .add("strJson", mJson)
                 .add("userId", user!!.id.toString())
                 .build()
 
