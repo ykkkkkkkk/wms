@@ -241,7 +241,11 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         popV.findViewById<View>(R.id.tv12).visibility = View.GONE
         popV.findViewById<View>(R.id.tv13).visibility = View.GONE
 
-        if(billType.equals("CGSHRK")) { // 采购
+        if (billType.equals("QTRK")) { // 其他入库
+            popV.findViewById<View>(R.id.tv1).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv2).visibility = View.VISIBLE
+
+        } else if(billType.equals("CGSHRK")) { // 采购
             popV.findViewById<View>(R.id.tv6).visibility = View.VISIBLE
             popV.findViewById<View>(R.id.tv7).visibility = View.VISIBLE
 

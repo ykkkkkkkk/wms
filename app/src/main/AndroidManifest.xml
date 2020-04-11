@@ -164,9 +164,6 @@
             android:theme="@style/dialogStyle"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".warehouse.StockTransferMainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
             android:name=".warehouse.StockTransfer_Material_DialogActivity"
             android:theme="@style/dialogStyle"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -181,6 +178,10 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".warehouse.ToolMove_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.ICInvBackUp_Plan_DialogActivity"
+            android:theme="@style/dialogStyle"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
@@ -281,8 +282,6 @@
         <activity
             android:name=".entrance.MainTabFragmentActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".LoadMoreActivity" />
-        <activity android:name=".LoadMoreWrapperActivity" />
     </application>
 
 </manifest>

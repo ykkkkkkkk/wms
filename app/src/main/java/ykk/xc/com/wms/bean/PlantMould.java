@@ -12,6 +12,7 @@ public class PlantMould implements Serializable{
 	private int id;
 	private String fnumber; 			// 模具代码
 	private String fname;				// 模具名称
+	private String fmodel;              // 模板规格型号
 	private String barcode;				// 模具条码
 	private String purpose;				// 用途
 	private int useCount;				// 使用次数
@@ -283,6 +284,14 @@ public class PlantMould implements Serializable{
 
 	public void setMtlNumber(String mtlNumber) {
 		this.mtlNumber = mtlNumber;
+	}
+
+	public String getFmodel() {
+		return fmodel;
+	}
+
+	public void setFmodel(String fmodel) {
+		this.fmodel = fmodel;
 	}
 
 }

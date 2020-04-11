@@ -1,11 +1,13 @@
 package ykk.xc.com.wms.warehouse.adapter
 
 import android.app.Activity
+import android.text.Html
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.ICStockBill
+import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.basehelper.BaseArrayRecyclerAdapter
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import java.text.DecimalFormat
@@ -31,16 +33,21 @@ class OutInStockSearchFragment1_OtherInStock_Adapter(private val context: Activi
         val lin_button = holder.obtainView<LinearLayout>(R.id.lin_button)
 
         // 赋值
-        tv_pdaNo.text = entity.pdaNo
-        tv_fdate.text = entity.fdate
-        tv_deptName?.text = entity.deptName
-        tv_suppName?.text = entity.suppName
-        tv_baoguanMan.text = entity.baoguanMan
+        tv_pdaNo.text = Html.fromHtml("PDA单号:&nbsp;<font color='#000000'>"+entity.pdaNo+"</font>")
+        tv_fdate.text = Html.fromHtml("入库日期:&nbsp;<font color='#000000'>"+entity.fdate+"</font>")
+        tv_suppName.text = Html.fromHtml("供应商:&nbsp;<font color='#FF4400'>"+entity.suppName+"</font>")
+        tv_deptName.text = Html.fromHtml("部门:&nbsp;<font color='#000000'>"+ Comm.isNULLS(entity.deptName)+"</font>")
+        if(Comm.isNULLS(entity.deptName).length == 0) {
+            tv_deptName.visibility = View.INVISIBLE
+        } else {
+            tv_deptName.visibility = View.VISIBLE
+        }
+        tv_baoguanMan.text = Html.fromHtml("<font color='#6a5acd'>"+entity.baoguanMan+"</font>")
 
         if (entity.isShowButton) {
-            lin_button!!.setVisibility(View.VISIBLE)
+            lin_button.setVisibility(View.VISIBLE)
         } else {
-            lin_button!!.setVisibility(View.GONE)
+            lin_button.setVisibility(View.GONE)
         }
 
         val click = View.OnClickListener { v ->

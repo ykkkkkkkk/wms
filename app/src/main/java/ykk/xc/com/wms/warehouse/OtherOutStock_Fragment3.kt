@@ -9,12 +9,15 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.ware_sc_other_out_stock_fragment3.*
-import kotlinx.android.synthetic.main.ware_sc_other_out_stock_main.*
+import butterknife.OnClick
+import kotlinx.android.synthetic.main.ware_other_out_stock_fragment3.*
+import kotlinx.android.synthetic.main.ware_other_out_stock_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.bean.EventBusEntity
+import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.ICStockBillEntry
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
@@ -37,14 +40,19 @@ import java.util.concurrent.TimeUnit
  */
 class OtherOutStock_Fragment3 : BaseFragment() {
 
+    companion object {
+        private val SUCC1 = 200
+        private val UNSUCC1 = 500
+        private val DELETE = 201
+        private val UNDELETE = 501
+        private val UPLOAD = 202
+        private val UNUPLOAD = 502
+    }
+
     private val context = this
     private var parent: OtherOutStock_MainActivity? = null
-    private val SUCC1 = 200
-    private val UNSUCC1 = 500
-    private val DELETE = 201
-    private val UNDELETE = 501
 
-    private val checkDatas = ArrayList<ICStockBillEntry>()
+    val checkDatas = ArrayList<ICStockBillEntry>()
     private var okHttpClient: OkHttpClient? = null
     private var mAdapter: OtherOutStockFragment3Adapter? = null
     private var user: User? = null
@@ -74,8 +82,7 @@ class OtherOutStock_Fragment3 : BaseFragment() {
                     msgObj = msg.obj as String
                 }
                 when (msg.what) {
-                    m.SUCC1 -> { // 查询分录 进入
-                        m.parent!!.fragment2.isAddEntry = false
+                    SUCC1 -> { // 查询分录 进入
                         m.checkDatas.clear()
                         val list = JsonUtil.strToList(msgObj, ICStockBillEntry::class.java)
                         m.checkDatas.addAll(list)
@@ -92,25 +99,48 @@ class OtherOutStock_Fragment3 : BaseFragment() {
 
                         m.mAdapter!!.notifyDataSetChanged()
                     }
-                    m.UNSUCC1 -> { // 查询分录  失败
+                    UNSUCC1 -> { // 查询分录  失败
                         m.tv_sumNum.text = "0"
                         m.tv_sumMoney.text = "0"
                     }
-                    m.DELETE -> { // 删除分录 进入
-                        m.checkDatas.removeAt(m.curPos)
-
-                        m.mAdapter!!.notifyDataSetChanged()
+                    DELETE -> { // 删除分录 进入
+                        m.run_findEntryList()
                     }
-                    m.UNDELETE -> { // 删除分录  失败
+                    UNDELETE -> { // 删除分录  失败
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
+                    }
+                    UPLOAD -> { // 上传单据 进入
+                        val retMsg = JsonUtil.strToString(msgObj)
+                        if(retMsg.length > 0) {
+                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
+                        } else {
+                            m.toasts("上传成功")
+                        }
+                        // 滑动第一个页面
+                        m.parent!!.viewPager!!.setCurrentItem(0, false)
+                        m.parent!!.fragment1.reset() // 重置
+                    }
+                    UNUPLOAD -> { // 上传单据  失败
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
                     }
                 }
             }
         }
     }
 
+    @Subscribe
+    fun onEventBus(entity: EventBusEntity) {
+        when (entity.caseId) {
+            12,21 -> { // 接收第一个页面（12）发来的指令，接收第二个页面（21）发来的指令
+                run_findEntryList()
+            }
+        }
+    }
+
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.ware_sc_other_out_stock_fragment3, container, false)
+        return inflater.inflate(R.layout.ware_other_out_stock_fragment3, container, false)
     }
 
     override fun initView() {
@@ -126,11 +156,11 @@ class OtherOutStock_Fragment3 : BaseFragment() {
 
         // 行事件
         mAdapter!!.setCallBack(object : OtherOutStockFragment3Adapter.MyCallBack {
-            override fun onModify(entity: ICStockBillEntry, position: Int) {
-                EventBus.getDefault().post(EventBusEntity(3, entity))
-                // 滑动第二个页面
-                parent!!.viewPager!!.setCurrentItem(1, false)
-            }
+//            override fun onModify(entity: ICStockBillEntry, position: Int) {
+//                EventBus.getDefault().post(EventBusEntity(3, entity))
+//                // 滑动第二个页面
+//                parent!!.viewPager!!.setCurrentItem(1, false)
+//            }
             override fun onDelete(entity: ICStockBillEntry, position: Int) {
                 curPos = position
                 run_removeEntry(entity.id)
@@ -138,13 +168,18 @@ class OtherOutStock_Fragment3 : BaseFragment() {
         })
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            if(curPos > -1) {
-                checkDatas[curPos].isShowButton = false
-            }
-            curPos = pos
-            checkDatas[pos].isShowButton = true
-            mAdapter!!.notifyDataSetChanged()
+            EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))
+            // 滑动第二个页面
+            parent!!.viewPager!!.setCurrentItem(1, false)
         }
+
+//        // 长按查看条码
+//        mAdapter!!.onItemLongClickListener = BaseRecyclerAdapter.OnItemLongClickListener{ adapter, holder, view, pos ->
+//            EventBus.getDefault().post(EventBusEntity(32, checkDatas[pos], (pos+1)))
+//            // 滑动第四个页面
+//            parent!!.viewPager!!.setCurrentItem(3, false)
+//            true
+//        }
     }
 
     override fun initData() {
@@ -158,75 +193,42 @@ class OtherOutStock_Fragment3 : BaseFragment() {
 
         getUserInfo()
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
+        EventBus.getDefault().register(this)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
-            if(parent!!.fragment2.isAddEntry) {
-                run_findEntryList()
-            }
         }
     }
 
-//    @OnClick(R.id.tv_deptSel, R.id.tv_suppSel, R.id.tv_stockSel, R.id.btn_scan_stockPos, R.id.btn_stockPosSel, R.id.btn_scan, R.id.btn_mtlSel, R.id.btn_save, R.id.btn_clone)
-//    fun onViewClicked(view: View) {
-//        var bundle: Bundle? = null
-//        when (view.id) {
-//            R.id.tv_deptSel -> { // 选择部门
-//                showForResult(Dept_DialogActivity::class.java, SEL_DEPT, null)
-//            }
-//            R.id.tv_suppSel -> { // 选择供应商
-//                showForResult(Supplier_DialogActivity::class.java, SEL_SUPP, null)
-//            }
-//            R.id.tv_stockSel -> { // 选择收货仓库
-//                showForResult(Stock_DialogActivity::class.java, SEL_STOCK, null)
-//            }
-//            R.id.btn_stockPosSel -> { // 选择调出库位
-//                if(!checkSelStockPos()) return
-//                var bundle = Bundle()
-//                bundle.putInt("fspGroupId", stock!!.fspGroupId);
-//                showForResult(StockPos_DialogActivity::class.java, SEL_STOCKPOS, bundle)
-//            }
-//            R.id.btn_mtlSel -> { // 选择物料
-//                if(!checkSelStockPos()) return
-//                bundle = Bundle()
-//                bundle.putInt("fStockId", stock!!.fitemId)
-//                bundle.putInt("fStockPlaceID", if(stockPos != null) stockPos!!.fspId else 0)
-//                showForResult(StockTransfer_Material_DialogActivity::class.java, SEL_MTL, bundle)
-//            }
-//            R.id.btn_scan_stockPos -> { // 调用摄像头扫描（调出库位）
-//                if(!checkSelStockPos()) return
-//                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
-//            }
-//            R.id.btn_scan -> { // 调用摄像头扫描（物料）
-//                if(!checkSelStockPos()) return
-//                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
-//            }
-//            R.id.btn_save -> { // 保存
-//                if(checkDatas.size == 0) {
-//                    Comm.showWarnDialog(mContext,"请选择物料或者扫码条码！")
-//                    return
-//                }
-//                run_save();
-//            }
-//            R.id.btn_clone -> { // 重置
-//                if (parent!!.isChange) {
-//                    val build = AlertDialog.Builder(mContext)
-//                    build.setIcon(R.drawable.caution)
-//                    build.setTitle("系统提示")
-//                    build.setMessage("您有未保存的数据，继续重置吗？")
-//                    build.setPositiveButton("是") { dialog, which -> reset(true) }
-//                    build.setNegativeButton("否", null)
-//                    build.setCancelable(false)
-//                    build.show()
-//
-//                } else {
-//                    reset(true)
-//                }
-//            }
-//        }
-//    }
+    @OnClick(R.id.btn_upload)
+    fun onViewClicked(view: View) {
+        when (view.id) {
+            R.id.btn_upload -> { // 上传
+                val size = checkDatas.size
+                if(size == 0) {
+                    Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
+                    return
+                }
+                checkDatas.forEachIndexed { index, it ->
+                    if(it.stockId_wms == 0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
+                        return
+                    }
+                    if(it.fqty == 0.0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（入库数）！")
+                        return
+                    }
+                }
+
+                val list = ArrayList<ICStockBill>()
+                list.add(parent!!.fragment1.icStockBill)
+                val strJson = JsonUtil.objectToString(list)
+                run_uploadToK3(strJson)
+            }
+        }
+    }
 
     override fun setListener() {
 
@@ -322,6 +324,44 @@ class OtherOutStock_Fragment3 : BaseFragment() {
     }
 
     /**
+     * 上传单据
+     */
+    private fun run_uploadToK3(strJson : String) {
+        showLoadDialog("加载中...", false)
+        val mUrl = getURL("stockBill_WMS/uploadToK3")
+        val formBody = FormBody.Builder()
+                .add("strJson", strJson)
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNUPLOAD)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                LogUtil.e("run_uploadToK3 --> onResponse", result)
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNUPLOAD, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(UPLOAD, result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
      * 得到用户对象
      */
     private fun getUserInfo() {
@@ -331,6 +371,7 @@ class OtherOutStock_Fragment3 : BaseFragment() {
     override fun onDestroyView() {
         closeHandler(mHandler)
         mBinder!!.unbind()
+        EventBus.getDefault().unregister(this)
         super.onDestroyView()
     }
 }

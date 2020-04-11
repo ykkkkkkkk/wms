@@ -81,12 +81,21 @@
             android:textSize="@dimen/_12sp" />
 
         <TextView
-            android:id="@+id/tv_weight"
+            android:id="@+id/tv_sourceQty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_fmodel"
             android:layout_marginLeft="@dimen/_6dp"
             android:layout_toRightOf="@+id/tv_num"
+            android:text="源单数："
+            android:textColor="@color/c_666666"
+            android:textSize="@dimen/_12sp" />
+
+        <TextView
+            android:id="@+id/tv_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_num"
             android:text="称重数："
             android:textColor="@color/c_666666"
             android:textSize="@dimen/_12sp" />
@@ -95,7 +104,7 @@
             android:id="@+id/tv_referenceNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_fmodel"
+            android:layout_below="@+id/tv_num"
             android:layout_marginLeft="@dimen/_6dp"
             android:layout_toRightOf="@+id/tv_weight"
             android:text="参考数："

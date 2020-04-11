@@ -56,6 +56,8 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
         private val UNSUCC2 = 501
         private val SAVE = 202
         private val UNSAVE = 502
+        private val FIND_MINQTY = 203
+        private val UNFIND_MINQTY = 503
 
         private val SETFOCUS = 1
         private val SAOMA = 2
@@ -89,6 +91,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
     private var autoICStockBillEntry:ICStockBillEntry? = null // 用于自动保存记录的对象
     private var smICStockBillEntry_Barcodes = ArrayList<ICStockBillEntry_Barcode>() // 扫码返回的对象
     private var smqFlag = '1' // 扫描类型1：位置扫描，2：物料扫描
+    private var minQty = 0.0 // 投料调拨单的最小领用数
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -172,6 +175,13 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "保存失败！"
                         Comm.showWarnDialog(m.mContext, errMsg)
+                    }
+                    FIND_MINQTY -> { // 查询最小领用数 进入
+                        val strMinQty = JsonUtil.strToString(msgObj)
+                        m.minQty = m.parseDouble(strMinQty)
+                    }
+                    UNFIND_MINQTY -> { // 查询最小领用数 失败
+                        m.minQty = 0.0
                     }
                     SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
                         m.setFocusable(m.et_getFocus)
@@ -368,6 +378,10 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
             return false
         }
+//        if (minQty > icStockBillEntry.fqty) {
+//            Comm.showWarnDialog(mContext, "实发数不能小于最小领用数（"+minQty+"）！")
+//            return false
+//        }
         if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y"))) {
             Comm.showWarnDialog(mContext, "请输入称重数量或连接蓝牙自动称重！")
             return false
@@ -513,7 +527,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                         tv_referenceNum.text = df.format(referenceNum)
                         icStockBillEntry.weight = weight
                         icStockBillEntry.referenceNum = referenceNum
-                    },300)
+                    },100)
                 }
             }
         })
@@ -528,7 +542,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                         val roundQty = BigdecimalUtil.round(icStockBillEntry.referenceNum, 0)
                         icStockBillEntry.fqty = roundQty
                         tv_num.text = df.format(roundQty)
-                    },300)
+                    },100)
                 }
             }
         })
@@ -1375,6 +1389,43 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                     return
                 }
                 val msg = mHandler.obtainMessage(SUCC2, result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 查询最小领用数
+     */
+    private fun run_findMinQtyById(id :Int) {
+        val mUrl = getURL("ppBomTransfer/findMinQtyById")
+        val formBody = FormBody.Builder()
+                .add("id", id.toString())
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNFIND_MINQTY)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                LogUtil.e("run_findMinQtyById --> onResponse", result)
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNFIND_MINQTY, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(FIND_MINQTY, result)
                 mHandler.sendMessage(msg)
             }
         })

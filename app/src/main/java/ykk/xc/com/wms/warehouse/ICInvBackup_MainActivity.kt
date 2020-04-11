@@ -24,8 +24,9 @@ class ICInvBackup_MainActivity : BaseActivity() {
     private val TAG = "ICInvBackupMainActivity"
     private var curRadio: View? = null
     var isChange: Boolean = false // 返回的时候是否需要判断数据是否保存了
-    private val fragment1 = ICInvBackup_Fragment1()
+//    private val fragment1 = ICInvBackup_Fragment1()
     private val fragment2 = ICInvBackup_Fragment2()
+    private val fragment2B = ICInvBackup_Fragment2B()
     private val fragment3 = ICInvBackup_Fragment3()
     private var pageId = 0
 
@@ -44,9 +45,10 @@ class ICInvBackup_MainActivity : BaseActivity() {
 //        Sal_OutFragment2 fragment2 = new Sal_OutFragment2();
 //        Sal_OutFragment3 fragment3 = new Sal_OutFragment3();
 
-        listFragment.add(fragment2)
-        listFragment.add(fragment1)
-        listFragment.add(fragment3);
+        listFragment.add(fragment2B)
+        listFragment.add(fragment3)
+//        listFragment.add(fragment1)
+        listFragment.add(fragment2);
 //        viewPager.setScanScroll(false); // 禁止左右滑动
         //ViewPager设置适配器
         viewPager.setAdapter(BaseFragmentAdapter(supportFragmentManager, listFragment))
@@ -61,9 +63,9 @@ class ICInvBackup_MainActivity : BaseActivity() {
 
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    0 -> tabChange(viewRadio1!!, "无盘点方案", 0)
-                    1 -> tabChange(viewRadio2!!, "有盘点方案", 1)
-                    2 -> tabChange(viewRadio3!!, "模具盘点", 2)
+                    0 -> tabChange(viewRadio1!!, "有盘点方案", 0)
+                    1 -> tabChange(viewRadio2!!, "模具盘点", 1)
+                    2 -> tabChange(viewRadio3!!, "无盘点方案", 2)
                 }
             }
 
@@ -109,7 +111,7 @@ class ICInvBackup_MainActivity : BaseActivity() {
             R.id.btn_search -> { // 查询
                 when(pageId) {
                     0 -> show(ICInvBackup_Search_MainActivity::class.java, null)
-                    1 -> fragment1.findFun()
+//                    1 -> fragment1.findFun()
 //                    2 -> show(ICInvBackup_Search_MainActivity::class.java, null)
                 }
             }

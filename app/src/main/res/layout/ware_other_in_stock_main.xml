@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="盘点"
+            android:text="其它入库"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
@@ -30,20 +30,19 @@
             android:layout_width="@dimen/_50dp"
             android:layout_height="match_parent"
             android:background="@drawable/btn_blue2_selector"
-            android:text="历史\n记录"
-            android:visibility="visible"
+            android:text="历史\n查询"
             android:textColor="#ffffff"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="invisible" />
     </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/lin_tabs"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
+        android:layout_height="@dimen/_42dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="visible">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/lin_tab1"
@@ -60,12 +59,13 @@
                 android:background="@drawable/check_on" />
 
             <TextView
+                android:id="@+id/tv_radioName1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="有盘点方案"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:text="表头"
+                android:textColor="@color/c_FF4400"
+                android:textSize="@dimen/_16sp" />
 
         </LinearLayout>
 
@@ -84,12 +84,13 @@
                 android:background="@drawable/check_off2" />
 
             <TextView
+                android:id="@+id/tv_radioName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="模具盘点"
+                android:text="添加明细"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/_16sp" />
 
         </LinearLayout>
 
@@ -108,12 +109,13 @@
                 android:background="@drawable/check_off2" />
 
             <TextView
+                android:id="@+id/tv_radioName3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="无盘点方案"
+                android:text="表体"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/_16sp" />
 
         </LinearLayout>
 
@@ -127,8 +129,7 @@
         android:padding="@dimen/_2dp"
         android:text="@string/str_conn_state_disconnect"
         android:textColor="@color/c_666666"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        android:textSize="12sp" />
 
     <ykk.xc.com.wms.util.MyViewPager
         android:id="@+id/viewPager"

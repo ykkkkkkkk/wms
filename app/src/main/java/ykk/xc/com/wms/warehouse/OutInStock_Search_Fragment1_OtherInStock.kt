@@ -131,9 +131,9 @@ class OutInStock_Search_Fragment1_OtherInStock : BaseFragment() {
         // 行事件
         mAdapter!!.setCallBack(object : OutInStockSearchFragment1_OtherInStock_Adapter.MyCallBack {
             override fun onSearch(entity: ICStockBill, position: Int) {
-//                val bundle = Bundle()
-//                bundle.putInt("id", entity.id)
-//                show(Pur_Receive_InStock_MainActivity::class.java, bundle)
+                val bundle = Bundle()
+                bundle.putInt("id", entity.id)
+                show(OtherInStock_MainActivity::class.java, bundle)
             }
 
             override fun onUpload(entity: ICStockBill, position: Int) {

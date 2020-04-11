@@ -266,7 +266,7 @@ class ICInvBackup_Fragment1 : BaseFragment() {
      * 检查方案是否有值
      */
     fun checkProject() : Boolean {
-        val project :String = getValues(tv_icStockCheckProcess)
+        val project = getValues(tv_icStockCheckProcess)
         if(project.length == 0 || icStockCheckProcess == null) {
             Comm.showWarnDialog(mContext,"请选择方案！")
             return false

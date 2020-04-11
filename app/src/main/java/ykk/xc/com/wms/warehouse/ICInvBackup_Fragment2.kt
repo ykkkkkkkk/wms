@@ -256,7 +256,6 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         hideSoftInputMode(mContext, et_code)
         hideSoftInputMode(mContext, et_containerCode)
 
-        mHandler.sendEmptyMessageDelayed(SETFOCUS,200)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

@@ -588,6 +588,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
         val formBody = FormBody.Builder()
                 .add("ppBomTransferId", ppBomTransferId.toString())
                 .add("entryType", "1") // 分录类型 1：仓库调车间，2：车间内调拨
+                .add("mustQtyGt0", "1") // 只查询应发数大于0的
                 .build()
 
         val request = Request.Builder()

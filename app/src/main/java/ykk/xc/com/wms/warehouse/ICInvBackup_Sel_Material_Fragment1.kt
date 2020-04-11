@@ -48,6 +48,7 @@ class ICInvBackup_Sel_Material_Fragment1 : BaseFragment(), XRecyclerView.Loading
     private var mContext: Activity? = null
     private var parent: ICInvBackup_Sel_MaterialMainDialog? = null
     private var finterId: Int = 0 // 方案id
+    private var stockGroupArr = IntArray(4)
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -122,6 +123,15 @@ class ICInvBackup_Sel_Material_Fragment1 : BaseFragment(), XRecyclerView.Loading
         val bundle = mContext!!.intent.extras
         if (bundle != null) {
             finterId = bundle.getInt("finterId")
+            val stockId = bundle.getInt("stockId")
+            val stockAreaId = bundle.getInt("stockAreaId")
+            val storageRackId = bundle.getInt("storageRackId")
+            val stockPosId = bundle.getInt("stockPosId")
+
+            stockGroupArr[0] = stockId
+            stockGroupArr[1] = stockAreaId
+            stockGroupArr[2] = storageRackId
+            stockGroupArr[3] = stockPosId
         }
         initLoadDatas()
     }
@@ -165,9 +175,9 @@ class ICInvBackup_Sel_Material_Fragment1 : BaseFragment(), XRecyclerView.Loading
         }
         val list = ArrayList<ICInvBackup>()
         for (i in 0 until size) {
-            val mtl = listDatas[i]
-            if (mtl.isCheck) {
-                list.add(mtl)
+            val icInvBackup = listDatas[i]
+            if (icInvBackup.isCheck) {
+                list.add(icInvBackup)
             }
         }
         if (list.size == 0) {
@@ -191,10 +201,14 @@ class ICInvBackup_Sel_Material_Fragment1 : BaseFragment(), XRecyclerView.Loading
      */
     private fun run_okhttpDatas() {
         showLoadDialog("加载中...", false)
-        var mUrl = getURL("icInvBackup/findMtlList")
+        var mUrl = getURL("icInvBackup/findListByPage")
         val formBody = FormBody.Builder()
                 .add("fNumberAndName", getValues(et_search).trim())
                 .add("finterId", if(finterId > 0) finterId.toString() else "") // 方案id
+                .add("stockId", stockGroupArr[0].toString())
+                .add("stockAreaId", stockGroupArr[1].toString())
+                .add("storageRackId", stockGroupArr[2].toString())
+                .add("stockPosId", stockGroupArr[3].toString())
                 .add("limit", limit.toString())
                 .add("pageSize", "50")
                 .build()

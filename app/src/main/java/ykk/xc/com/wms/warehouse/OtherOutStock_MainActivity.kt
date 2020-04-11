@@ -1,22 +1,33 @@
 package ykk.xc.com.wms.warehouse
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.ware_sc_other_out_stock_main.*
+import kotlinx.android.synthetic.main.ware_other_out_stock_fragment1.*
+import kotlinx.android.synthetic.main.ware_other_out_stock_fragment2.*
+import kotlinx.android.synthetic.main.ware_other_out_stock_main.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.comm.BaseActivity
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.adapter.BaseFragmentAdapter
-import java.text.DecimalFormat
+import ykk.xc.com.wms.util.blueTooth.Constant
+import ykk.xc.com.wms.util.blueTooth.DeviceListActivity
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 /**
@@ -26,21 +37,33 @@ import java.util.*
  */
 class OtherOutStock_MainActivity : BaseActivity() {
 
+    private val REFRESH = 1
+    private val BLUETOOTH_REC = 11
+    private val RESET_TEXT = 12
+
     private val context = this
     private val TAG = "Sc_OtherOutStockMainActivity"
     private var curRadio: View? = null
     private var curRadioName: TextView? = null
     var isChange: Boolean = false // 返回的时候是否需要判断数据是否保存了
-    private val listMaps = ArrayList<Map<String, Any>>()
-    private val df = DecimalFormat("#.####")
+
+    private val _bluetooth = BluetoothAdapter.getDefaultAdapter()    //获取本地蓝牙适配器，即蓝牙设备
+    internal var _device: BluetoothDevice? = null     //蓝牙设备
+    internal var _socket: BluetoothSocket? = null      //蓝牙通信socket
+    private var inputStream: InputStream? = null    //输入流，用来接收蓝牙数据
+    private val MY_UUID = "00001101-0000-1000-8000-00805F9B34FB"   //SPP服务UUID号
+    internal var bRun = true
+    internal var bThread = false
+    var smsg = StringBuffer()    //显示称重数据缓存
+
     val fragment1 = OtherOutStock_Fragment1()
     val fragment2 = OtherOutStock_Fragment2()
     val fragment3 = OtherOutStock_Fragment3()
     var isMainSave = false // 主表信息是否保存
-    private val REFRESH = 1
+    var pageId = 0
 
     override fun setLayoutResID(): Int {
-        return R.layout.ware_sc_other_out_stock_main;
+        return R.layout.ware_other_out_stock_main;
     }
 
     override fun initData() {
@@ -160,9 +183,24 @@ class OtherOutStock_MainActivity : BaseActivity() {
     }
 
     private fun tabChange(view: View, tv: TextView, str: String, page: Int) {
+        pageId = page
         tabSelected(view, tv)
 //        tv_title.text = str
         viewPager!!.setCurrentItem(page, false)
+    }
+
+    /**
+     * 打开已配对蓝牙
+     */
+    fun openBluetooth() {
+        if (_socket == null) {
+            // 打开蓝牙配对页面
+//            startActivityForResult(Intent(this, BluetoothDeviceListDialog::class.java), Constant.BLUETOOTH_REQUEST_CODE)
+            startActivityForResult(Intent(this, DeviceListActivity::class.java), Constant.BLUETOOTH_REQUEST_CODE)
+
+        } else {
+            closeBlueTooth(false)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -172,8 +210,13 @@ class OtherOutStock_MainActivity : BaseActivity() {
                 if (resultCode == RESULT_OK) {
                     viewPager!!.setCurrentItem(0,false)
                     fragment1.reset()
-
                 }
+            }
+            Constant.BLUETOOTH_REQUEST_CODE -> { // 蓝牙连接
+                /*获取蓝牙mac地址*/
+//                val macAddress = data!!.getStringExtra(BluetoothDeviceListDialog.EXTRA_DEVICE_ADDRESS)
+                val macAddress = data!!.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS)
+                openReceiveThread(macAddress)
             }
         }
     }
@@ -187,10 +230,186 @@ class OtherOutStock_MainActivity : BaseActivity() {
         } else super.dispatchKeyEvent(event)
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+    @SuppressLint("HandlerLeak")
+    private val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                BLUETOOTH_REC -> { // 得到电子秤返回的数据
+                    when(pageId) {
+                        0 -> context!!.fragment1.tv_roughWeight.text = smsg.toString()
+                        1 -> {
+//                            // 物料启用了称重，才写数据
+                            val icItem = context!!.fragment2.icStockBillEntry.icItem
+                            if(icItem.calByWeight.equals("M") || icItem.calByWeight.equals("Y")) {
+                                context!!.fragment2.tv_weight.text = smsg.toString()
+                            } else {
+//                                Comm.showWarnDialog(context,"请选择物料称重！")
+                            }
+                        }
+                    }
+                    this.sendEmptyMessageDelayed(RESET_TEXT,300)
+                }
+                RESET_TEXT -> {
+                    // 重置这个变量
+                    smsg.setLength(0)
+                }
+            }
+        }
+    }
+
+    // 接收电子秤数据  线程
+    private var readThread: Thread = object : Thread() {
+        override fun run() {
+            var num = 0
+            val buffer = ByteArray(1024)
+            val buffer_new = ByteArray(1024)
+            var i = 0
+            var n = 0
+            bRun = true
+            //接收线程
+            while (true) {
+                try {
+                    while (inputStream!!.available() == 0) {
+                        while (bRun == false) {
+                        }
+                    }
+                    while (true) {
+                        if (!bThread) return
+
+                        num = inputStream!!.read(buffer)         //读入数据
+                        n = 0
+
+//                        val s0 = String(buffer, 0, num)
+//                        fmsg += s0    //保存收到数据
+                        i = 0
+                        while (i < num) {
+                            if (buffer[i].toInt() == 0x0d && buffer[i + 1].toInt() == 0x0a) {
+                                buffer_new[n] = 0x0a
+                                i++
+                            } else {
+                                buffer_new[n] = buffer[i]
+                            }
+                            n++
+                            i++
+                        }
+                        val s = String(buffer_new, 0, n)
+//                        smsg += s   //写入接收缓存
+                        smsg.append(s)
+                        if (inputStream!!.available() == 0) break  //短时间没有数据才跳出进行显示
+                    }
+                    //发送显示消息，进行显示刷新
+                    mHandler.sendEmptyMessage(BLUETOOTH_REC)
+                } catch (e: IOException) {
+                }
+
+            }
+        }
+    }
+
+    /**
+     *  打开接收线程
+     */
+    fun openReceiveThread(address : String) {
+        // 得到蓝牙设备句柄
+        _device = _bluetooth!!.getRemoteDevice(address)
+
+        // 用服务号得到socket
+        try {
+            _socket = _device!!.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID))
+        } catch (e: IOException) {
+            toasts("连接失败！")
+            tv_connState.setText(getString(R.string.str_conn_state_disconnect))
+            tv_connState.setTextColor(Color.parseColor("#666666")) // 未连接-灰色
+            tv_connBlueTooth.text = "连接蓝牙"
+            tv_connBlueTooth2.text = "连接蓝牙"
+        }
+
+        try {
+            tv_connState.setText(getString(R.string.str_conn_state_connected))
+            tv_connState.setTextColor(Color.parseColor("#008800")) // 已连接-绿色
+            tv_connBlueTooth.text = "断开连接"
+            tv_connBlueTooth2.text = "断开连接"
+            _socket!!.connect()
+        } catch (e: IOException) {
+            try {
+                toasts("连接失败！")
+                tv_connState.setText(getString(R.string.str_conn_state_disconnect))
+                tv_connState.setTextColor(Color.parseColor("#666666")) // 未连接-灰色
+                tv_connBlueTooth.text = "连接蓝牙"
+                tv_connBlueTooth2.text = "连接蓝牙"
+                _socket!!.close()
+                _socket = null
+
+            } catch (ee: IOException) {
+                toasts("连接失败！")
+                tv_connState.setText(getString(R.string.str_conn_state_disconnect))
+                tv_connState.setTextColor(Color.parseColor("#666666")) // 未连接-灰色
+                tv_connBlueTooth.text = "连接蓝牙"
+                tv_connBlueTooth2.text = "连接蓝牙"
+            }
+
+            return
+        }
+
+
+        //打开接收线程
+        try {
+            inputStream = _socket!!.getInputStream()   //得到蓝牙数据输入流
+        } catch (e: IOException) {
+            toasts("接收数据失败！")
+            tv_connState.setText(getString(R.string.str_conn_state_disconnect))
+            tv_connState.setTextColor(Color.parseColor("#666666")) // 未连接-灰色
+            tv_connBlueTooth.text = "连接蓝牙"
+            tv_connBlueTooth2.text = "连接蓝牙"
+            return
+        }
+
+        if (bThread == false) {
+            readThread.start()
+            bThread = true
+        } else {
+            bRun = true
+        }
+    }
+
+    /**
+     *  关闭蓝牙服务
+     */
+    fun closeBlueTooth(isClose : Boolean) {
+        //---安全关闭蓝牙连接再退出，避免报异常----//
+        if (_socket != null) {
+            //关闭连接socket
+            try {
+                bRun = false
+                Thread.sleep(1000)
+
+                inputStream!!.close()
+                _socket!!.close()
+                _socket = null
+            } catch (e: IOException) {
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            tv_connState.setText(getString(R.string.str_conn_state_disconnect))
+            tv_connState.setTextColor(Color.parseColor("#666666")) // 未连接-灰色
+            tv_connBlueTooth.text = "连接蓝牙"
+            tv_connBlueTooth2.text = "连接蓝牙"
+        }
+        if(isClose) {
+            closeHandler(mHandler)
             context.finish()
         }
-        return false
+    }
+
+    //关闭程序掉用处理部分
+    public override fun onDestroy() {
+        super.onDestroy()
+        if (_socket != null)
+        //关闭连接socket
+            try {
+                _socket!!.close()
+            } catch (e: IOException) {
+            }
+
     }
 }

@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btn1:
 //                okhttpGet();
-                intent = new Intent(this, LoadMoreActivity.class);
+//                intent = new Intent(this, LoadMoreActivity.class);
 
                 break;
             case R.id.btn2:
-                intent = new Intent(this, LoadMoreWrapperActivity.class);
+//                intent = new Intent(this, LoadMoreWrapperActivity.class);
 
                 break;
         }

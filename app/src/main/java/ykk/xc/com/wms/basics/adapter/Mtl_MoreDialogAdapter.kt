@@ -1,6 +1,7 @@
 package ykk.xc.com.wms.basics.adapter
 
 import android.app.Activity
+import android.text.Html
 import android.view.View
 import android.widget.TextView
 import ykk.xc.com.wms.R
@@ -20,18 +21,18 @@ class Mtl_MoreDialogAdapter(private val context: Activity, private val datas: Li
         val tv_row = holder.obtainView<TextView>(R.id.tv_row)
         val tv_fnumber = holder.obtainView<TextView>(R.id.tv_fnumber)
         val tv_fname = holder.obtainView<TextView>(R.id.tv_fname)
-        val tv_FModel = holder.obtainView<TextView>(R.id.tv_FModel)
+        val tv_fmodel = holder.obtainView<TextView>(R.id.tv_fmodel)
+        val view_check = holder.obtainView<View>(R.id.view_check)
         // 赋值
-        tv_row.text = (pos + 1).toString()
-        tv_fnumber.text = entity.fnumber
-        tv_fname.text = entity.fname
-        tv_FModel.text = entity.fmodel
+        tv_row!!.setText((pos + 1).toString())
+        tv_fname!!.setText(entity.fname)
+        tv_fnumber.text = Html.fromHtml("代码:&nbsp;<font color='#6a5acd'>"+entity.fnumber+"</font>")
+        tv_fmodel.text = Html.fromHtml("规格:&nbsp;<font color='#6a5acd'>"+entity.fmodel+"</font>")
 
-        val view = tv_row.parent as View
         if (entity.isCheck) {
-            view.setBackgroundResource(R.drawable.back_style_check1_true)
+            view_check.setBackgroundResource(R.drawable.check_true)
         } else {
-            view.setBackgroundResource(R.drawable.back_style_check1_false)
+            view_check.setBackgroundResource(R.drawable.check_false)
         }
     }
 

@@ -1,6 +1,7 @@
 package ykk.xc.com.wms.warehouse.adapter
 
 import android.app.Activity
+import android.text.Html
 import android.view.View
 import android.widget.TextView
 import ykk.xc.com.wms.R
@@ -20,10 +21,12 @@ class ICInvBackup_Sel_Material_Fragment1Adapter(context: Activity, datas: List<I
         val tv_row = holder.obtainView<TextView>(R.id.tv_row)
         val tv_fnumber = holder.obtainView<TextView>(R.id.tv_fnumber)
         val tv_fname = holder.obtainView<TextView>(R.id.tv_fname)
+        val tv_fmodel = holder.obtainView<TextView>(R.id.tv_fmodel)
         // 赋值
         tv_row!!.setText((pos + 1).toString())
-        tv_fnumber!!.setText(entity.mtlNumber)
         tv_fname!!.setText(entity.mtlName)
+        tv_fnumber.text = Html.fromHtml("代码:&nbsp;<font color='#6a5acd'>"+entity.mtlNumber+"</font>")
+        tv_fmodel.text = Html.fromHtml("规格:&nbsp;<font color='#6a5acd'>"+entity.fmodel+"</font>")
 
         val view = tv_row!!.getParent() as View
         if (entity.isCheck) {

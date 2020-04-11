@@ -27,6 +27,7 @@ class Pur_Receive_InStock_Fragment3_Adapter(private val context: Activity, datas
         val tv_batchNo = holder.obtainView<TextView>(R.id.tv_batchNo)
         val tv_fmodel = holder.obtainView<TextView>(R.id.tv_fmodel)
         val tv_num = holder.obtainView<TextView>(R.id.tv_num)
+        val tv_sourceQty = holder.obtainView<TextView>(R.id.tv_sourceQty)
         val tv_weight = holder.obtainView<TextView>(R.id.tv_weight)
         val tv_referenceNum = holder.obtainView<TextView>(R.id.tv_referenceNum)
         val view_del = holder.obtainView<View>(R.id.view_del)
@@ -47,7 +48,8 @@ class Pur_Receive_InStock_Fragment3_Adapter(private val context: Activity, datas
         }
         tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+ Comm.isNULLS(entity.fmode)+"</font>")
 
-        tv_num.text = Html.fromHtml("入库数:&nbsp;<font color='#FF0000'>"+ df.format(entity.fqty) +"</font>&nbsp;<font color='#666666'>"+ entity.unitName +"</font>")
+        tv_num.text = Html.fromHtml("入库数:&nbsp;<font color='#FF0000'>"+ df.format(entity.fqty) +"</font>")
+        tv_sourceQty.text = Html.fromHtml("源单数:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fsourceQty) +"</font>&nbsp;<font color='#666666'>"+ entity.unitName +"</font>")
         tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(entity.weight > 0) df.format(entity.weight) else "") +"</font>")
         tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(entity.referenceNum > 0) df.format(entity.referenceNum) else "")+"</font>")
 

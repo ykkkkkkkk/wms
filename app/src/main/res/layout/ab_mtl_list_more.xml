@@ -73,71 +73,17 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/c_d8d8d8" />
+
+    <ykk.xc.com.wms.util.xrecyclerview.XRecyclerView
+        android:id="@+id/xRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:background="#D8D8D8">
-
-                <TextView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="行号"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="物料代码"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="88dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="物料名称"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="260dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="规格"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <ykk.xc.com.wms.util.xrecyclerview.XRecyclerView
-                    android:id="@+id/xRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-    </HorizontalScrollView>
+        android:layout_weight="1"
+        android:overScrollMode="never" />
 
     <Button
         android:id="@+id/btn_confirm"
