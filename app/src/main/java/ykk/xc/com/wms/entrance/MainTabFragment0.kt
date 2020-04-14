@@ -39,10 +39,7 @@ import ykk.xc.com.wms.produce.Prod_Transfer_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_InStock_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_QC_MainActivity
 import ykk.xc.com.wms.purchase.adapter.MissionBill_List_Adapter
-import ykk.xc.com.wms.sales.Sal_Box_MainActivity
-import ykk.xc.com.wms.sales.Sal_PickGoods_MainActivity
-import ykk.xc.com.wms.sales.Sal_QcPass_MainActivity
-import ykk.xc.com.wms.sales.Sal_ReCheck_MainActivity
+import ykk.xc.com.wms.sales.*
 import ykk.xc.com.wms.util.IDownloadContract
 import ykk.xc.com.wms.util.IDownloadPresenter
 import ykk.xc.com.wms.util.JsonUtil
@@ -206,6 +203,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     52 -> show(Sal_QcPass_MainActivity::class.java, bundle)
                     53 -> show(Sal_ReCheck_MainActivity::class.java, bundle)
                     54 -> show(Sal_Box_MainActivity::class.java, bundle)
+                    55 -> show(Sal_OutStock_RED_MainActivity::class.java, bundle)
                 }
             }
         }

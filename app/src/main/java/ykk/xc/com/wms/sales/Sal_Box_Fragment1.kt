@@ -80,7 +80,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
     private var parent: Sal_Box_MainActivity? = null
     private var isTextChange: Boolean = false // 是否进入TextChange事件
     private var timesTamp:String? = null // 时间戳
-    private var smqFlag = '3' // 扫描类型1：箱子扫描，2：上级箱子扫描，3：物料扫描
+    private var smqFlag = '1' // 扫描类型1：箱子扫描，2：上级箱子扫描，3：物料扫描
     private var curPos:Int = -1 // 当前行
     private var modifyBoxStatus = 1 // 开箱还是封箱
     private var autoSave = false // 点击封箱自动保存
@@ -736,7 +736,9 @@ class Sal_Box_Fragment1 : BaseFragment() {
                 it.createUserName = user!!.username
             }
             tv_expressCompany.text = m.listMbr[0].expressCompanyName
+            isTextChange = true
             et_expressCode.setText(m.listMbr[0].expressNo)
+            isTextChange = false
             expressNo.setLength(0)
             expressNo.append(m.listMbr[0].expressNo) // 每次都记录当前值
             mAdapter!!.notifyDataSetChanged()
@@ -748,6 +750,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
         tv_realWeight.text = df.format(m.realWeight)
         tv_realVolume.text = m.realVolume
         getBoxBarcode_status(m.status, false)
+
     }
 
     private fun getBoxBarcode_status(status : Int, isFocus : Boolean) {

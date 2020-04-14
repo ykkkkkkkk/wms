@@ -256,6 +256,9 @@
         <activity
             android:name=".sales.Sal_Box_MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".sales.Sal_OutStock_RED_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <!-- 图表 -->

@@ -208,7 +208,7 @@ public class MaterialBinningRecord implements Serializable {
 
 	public List<MaterialBinningRecord_Barcode> getMbrBarcodes() {
 		if(mbrBarcodes == null) {
-			mbrBarcodes = new ArrayList<>() ;
+			mbrBarcodes = new ArrayList<>();
 		}
 		return mbrBarcodes;
 	}

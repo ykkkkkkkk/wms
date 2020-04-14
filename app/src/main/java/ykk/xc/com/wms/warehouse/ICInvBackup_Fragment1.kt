@@ -272,7 +272,7 @@ class ICInvBackup_Fragment1 : BaseFragment() {
             return false
         }
         if(icStockCheckProcess!!.stock == null) {
-            Comm.showWarnDialog(mContext, "请选择仓库！")
+            Comm.showWarnDialog(mContext, "请选择位置！")
             return false
         }
         return true

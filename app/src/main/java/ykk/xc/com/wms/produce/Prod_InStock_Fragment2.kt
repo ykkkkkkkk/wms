@@ -238,6 +238,8 @@ class Prod_InStock_Fragment2 : BaseFragment() {
             31 -> { // 接收第三个页面发来的指令
                 var icEntry = entity.obj as ICStockBillEntry
                 btn_save.text = "保存"
+                smICStockBillEntry_Barcodes.clear()
+                smICStockBillEntry_Barcodes.addAll(icEntry.icstockBillEntry_Barcodes)
                 getICStockBillEntry(icEntry)
             }
         }
@@ -397,7 +399,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
             return false
         }
         if (icStockBillEntry.fdcStockId == 0 || stock == null) {
-            Comm.showWarnDialog(mContext, "请选择仓库！")
+            Comm.showWarnDialog(mContext, "请选择位置！")
             return false
         }
 //        if (icStockBillEntry.fprice == 0.0) {
@@ -572,7 +574,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(isWeightTextChanged  && parseDouble(s.toString()) > 0 ) {
+                if(isWeightTextChanged && parseDouble(s.toString()) > 0 ) {
                     mHandler.postDelayed(Runnable {
                         val weight = parseDouble(s.toString())
                         val icItem = icStockBillEntry.icItem
@@ -587,7 +589,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                         tv_referenceNum.text = df.format(referenceNum)
                         icStockBillEntry.weight = weight
                         icStockBillEntry.referenceNum = referenceNum
-                    },300)
+                    },150)
                 }
             }
         })
@@ -602,7 +604,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                         val roundQty = BigdecimalUtil.round(icStockBillEntry.referenceNum, 0)
                         icStockBillEntry.fqty = roundQty
                         tv_num.text = df.format(roundQty)
-                    },300)
+                    },150)
                 }
             }
         })
@@ -799,6 +801,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
     fun getICStockBillEntry(icEntry: ICStockBillEntry) {
         isWeightTextChanged = false
         isReferenceTextChanged = false
+
         icStockBillEntry.id = icEntry.id
         icStockBillEntry.icstockBillId = icEntry.icstockBillId
         icStockBillEntry.finterId = icEntry.finterId

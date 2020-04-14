@@ -199,6 +199,8 @@ class Sal_ReCheck_Fragment2 : BaseFragment() {
             31 -> { // 接收第三个页面发来的指令
                 var icEntry = entity.obj as ICStockBillEntry
                 btn_save.text = "保存"
+                smICStockBillEntry_Barcodes.clear()
+                smICStockBillEntry_Barcodes.addAll(icEntry.icstockBillEntry_Barcodes)
                 getICStockBillEntry(icEntry)
             }
         }
@@ -329,7 +331,7 @@ class Sal_ReCheck_Fragment2 : BaseFragment() {
             return false
         }
         if (icStockBillEntry.fdcStockId == 0 || stock == null) {
-            Comm.showWarnDialog(mContext, "请选择仓库！")
+            Comm.showWarnDialog(mContext, "请选择位置！")
             return false
         }
 //        if (icStockBillEntry.fprice == 0.0) {

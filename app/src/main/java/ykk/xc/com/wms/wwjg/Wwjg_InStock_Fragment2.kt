@@ -309,7 +309,7 @@ class Wwjg_InStock_Fragment2 : BaseFragment() {
             return false
         }
         if (icStockBillEntry.fdcStockId == 0 || stock == null) {
-            Comm.showWarnDialog(mContext, "请选择仓库！")
+            Comm.showWarnDialog(mContext, "请选择位置！")
             return false;
         }
         if (stock!!.fisStockMgr == 1 && icStockBillEntry.fdcStockId == 0) {

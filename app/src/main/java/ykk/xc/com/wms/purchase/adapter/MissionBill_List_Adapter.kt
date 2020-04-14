@@ -43,6 +43,7 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
             52 -> tv_missionType.text = "出库质检任务"
             53 -> tv_missionType.text = "仓管复核任务"
             54 -> tv_missionType.text = "销售装箱任务"
+            55 -> tv_missionType.text = "销售退货任务"
         }
         val missionContent = Comm.isNULLS(entity.missionContent)
         if(missionContent.length > 0) {

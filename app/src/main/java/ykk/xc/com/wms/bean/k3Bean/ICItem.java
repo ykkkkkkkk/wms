@@ -529,7 +529,7 @@ public class ICItem implements Serializable{
 	}
 
 	public String getBatchCode() {
-		return batchCode;
+		return Comm.isNULLS(batchCode);
 	}
 
 	public void setBatchCode(String batchCode) {
@@ -537,7 +537,7 @@ public class ICItem implements Serializable{
 	}
 
 	public String getSnCode() {
-		return snCode;
+		return Comm.isNULLS(snCode);
 	}
 
 	public void setSnCode(String snCode) {

@@ -86,6 +86,8 @@ class OtherOutStock_Fragment2 : BaseFragment() {
     private var autoICStockBillEntry:ICStockBillEntry? = null // 用于自动保存记录的对象
     private var smICStockBillEntry_Barcodes = ArrayList<ICStockBillEntry_Barcode>() // 扫码返回的对象
     private var smqFlag = '1' // 扫描类型1：位置扫描，2：物料扫描
+    private var isWeightTextChanged = true // 是否改变称重数就执行改变事件
+    private var isReferenceTextChanged = true // 是否改变参考数就执行改变事件
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -500,7 +502,7 @@ class OtherOutStock_Fragment2 : BaseFragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(parseDouble(s.toString()) > 0 ) {
+                if(isWeightTextChanged && parseDouble(s.toString()) > 0 ) {
                     mHandler.postDelayed(Runnable {
                         val weight = parseDouble(s.toString())
                         val icItem = icStockBillEntry.icItem
@@ -515,7 +517,7 @@ class OtherOutStock_Fragment2 : BaseFragment() {
                         tv_referenceNum.text = df.format(referenceNum)
                         icStockBillEntry.weight = weight
                         icStockBillEntry.referenceNum = referenceNum
-                    },300)
+                    },150)
                 }
             }
         })
@@ -525,12 +527,12 @@ class OtherOutStock_Fragment2 : BaseFragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(parseDouble(s.toString()) > 0 ) {
+                if(isReferenceTextChanged && parseDouble(s.toString()) > 0 ) {
                     mHandler.postDelayed(Runnable {
                         val roundQty = BigdecimalUtil.round(icStockBillEntry.referenceNum, 0)
                         icStockBillEntry.fqty = roundQty
                         tv_num.text = df.format(roundQty)
-                    },300)
+                    },150)
                 }
             }
         })
@@ -704,6 +706,9 @@ class OtherOutStock_Fragment2 : BaseFragment() {
     }
 
     fun getICStockBillEntry(icEntry: ICStockBillEntry) {
+        isWeightTextChanged = false
+        isReferenceTextChanged = false
+
         icStockBillEntry.id = icEntry.id
         icStockBillEntry.icstockBillId = icEntry.icstockBillId
         icStockBillEntry.finterId = icEntry.finterId
@@ -780,7 +785,10 @@ class OtherOutStock_Fragment2 : BaseFragment() {
 //        showBatch_Qty(icEntry.icstockBillEntry_Barcodes, icEntry.fqty)
             showBatch_Qty(smICStockBillEntry_Barcodes, icEntry.fqty)
         }
-
+        mHandler.postDelayed(Runnable {
+            isWeightTextChanged = true
+            isReferenceTextChanged = true
+        },300)
     }
 
     /**
