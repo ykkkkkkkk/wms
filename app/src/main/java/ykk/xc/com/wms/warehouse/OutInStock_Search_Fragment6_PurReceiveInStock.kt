@@ -301,7 +301,7 @@ class OutInStock_Search_Fragment6_PurReceiveInStock : BaseFragment() {
      * 查询单据
      */
     private fun run_findList() {
-        showLoadDialog("加载中...", false)
+        showLoadDialog("加载中...")
         val mUrl = getURL("stockBill_WMS/findList")
         val formBody = FormBody.Builder()
                 .add("createUserId", user!!.id.toString())

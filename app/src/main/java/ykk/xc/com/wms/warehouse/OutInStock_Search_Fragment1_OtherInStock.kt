@@ -182,7 +182,7 @@ class OutInStock_Search_Fragment1_OtherInStock : BaseFragment() {
         if(isVisibleToUser) {
             // 显示上传按钮
             mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
-            if( isInit && !isLoadData) {
+            if(isInit && !isLoadData) {
                 findFun()
             }
         }
@@ -294,7 +294,7 @@ class OutInStock_Search_Fragment1_OtherInStock : BaseFragment() {
      * 查询单据
      */
     private fun run_findList() {
-        showLoadDialog("加载中...", false)
+        showLoadDialog("加载中...")
         val mUrl = getURL("stockBill_WMS/findList")
         val formBody = FormBody.Builder()
                 .add("createUserId", user!!.id.toString())

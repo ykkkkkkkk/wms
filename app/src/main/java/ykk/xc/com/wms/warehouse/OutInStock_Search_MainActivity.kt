@@ -214,7 +214,7 @@ class OutInStock_Search_MainActivity : BaseActivity() {
     }
 
     /**
-     * 创建PopupWindow 【 单据类型选择 】
+     * 创建PopupWindow 【单据类型选择 】
      */
     private var popWindow: PopupWindow? = null
     private fun pop_billType(v: View) {

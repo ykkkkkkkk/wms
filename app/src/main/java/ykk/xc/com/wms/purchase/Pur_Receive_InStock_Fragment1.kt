@@ -125,7 +125,9 @@ class Pur_Receive_InStock_Fragment1 : BaseFragment() {
                         m.setEnables(m.tv_suppSel, R.drawable.back_style_gray3b, false)
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
-                        m.toasts("该页面有错误！2秒后自动关闭...")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "该页面有错误！2秒后自动关闭..."
+                        Comm.showWarnDialog(m.mContext, errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)
@@ -135,7 +137,9 @@ class Pur_Receive_InStock_Fragment1 : BaseFragment() {
                         m.setICStockBill(icsBill)
                     }
                     UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
-                        m.toasts("查询信息有错误！2秒后自动关闭...")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "查询信息有错误！2秒后自动关闭..."
+                        Comm.showWarnDialog(m.mContext, errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)

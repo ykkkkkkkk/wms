@@ -299,7 +299,7 @@ class OutInStock_Search_Fragment13_XSZX : BaseFragment() {
      * 查询单据
      */
     private fun run_findList() {
-        showLoadDialog("加载中...", false)
+        showLoadDialog("加载中...")
         val mUrl = getURL("materialBinningRecord/findListByXSZX")
         val formBody = FormBody.Builder()
                 .add("createUserId", user!!.id.toString())

@@ -125,7 +125,9 @@ class Sal_OutStock_RED_Fragment1 : BaseFragment() {
                         m.tv_deptSel.text = list[0].seOutStock.dept.departmentName
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
-                        m.toasts("该页面有错误！2秒后自动关闭...")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "该页面有错误！2秒后自动关闭..."
+                        Comm.showWarnDialog(m.mContext, errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)
@@ -135,7 +137,9 @@ class Sal_OutStock_RED_Fragment1 : BaseFragment() {
                         m.setICStockBill(icsBill)
                     }
                     UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
-                        m.toasts("查询信息有错误！2秒后自动关闭...")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "查询信息有错误！2秒后自动关闭..."
+                        Comm.showWarnDialog(m.mContext, errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)

@@ -414,7 +414,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请输入数量！")
             return false
         }
-        if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y"))) {
+        if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y")) && !icStockBillEntry.icItem.snManager.equals("Y")) {
             Comm.showWarnDialog(mContext, "请输入称重数量或连接蓝牙自动称重！")
             return false
         }
@@ -862,7 +862,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         tv_remark.text = icEntry.remark
 
         // 如果物料启用了称重
-        if(icEntry.icItem.calByWeight.equals("M") || icEntry.icItem.calByWeight.equals("N")) {
+        if(icEntry.icItem.calByWeight.equals("M") || icEntry.icItem.calByWeight.equals("N") || icEntry.icItem.snManager.equals("Y")) {
             setEnables(tv_weight, R.drawable.back_style_gray3, false)
         } else {
             setEnables(tv_weight, R.drawable.back_style_blue, true)
