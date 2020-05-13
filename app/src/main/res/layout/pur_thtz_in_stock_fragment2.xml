@@ -25,37 +25,7 @@
             android:layout_height="match_parent"
             android:ems="2"
             android:gravity="center"
-            android:text="调出位置"
-            android:textColor="#000000"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_outPositionName"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/back_style_gray3"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_marginRight="@dimen/_6dp"
-        android:layout_marginTop="@dimen/_6dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:ems="2"
-            android:gravity="center"
-            android:text="调入位置"
+            android:text="位置"
             android:textColor="#000000"
             android:textSize="12sp" />
 
@@ -94,7 +64,7 @@
                 android:background="@color/c_eaeaea" />
 
             <TextView
-                android:id="@+id/tv_inPositionName"
+                android:id="@+id/tv_positionName"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -403,7 +373,7 @@
                     android:layout_height="match_parent"
                     android:ems="2"
                     android:gravity="center"
-                    android:text="调拨数"
+                    android:text="退货数"
                     android:textColor="#000000"
                     android:textSize="12sp" />
 
@@ -421,10 +391,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_3dp"
                     android:ems="2"
+                    android:layout_marginLeft="@dimen/_3dp"
                     android:gravity="center"
-                    android:text="可调拨"
+                    android:text="源单数量"
                     android:textColor="#000000"
                     android:textSize="12sp" />
 
@@ -473,9 +443,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_3dp"
                     android:ems="2"
                     android:gravity="center"
+                    android:layout_marginLeft="@dimen/_3dp"
                     android:text="称重数"
                     android:textColor="#000000"
                     android:textSize="12sp" />
@@ -490,6 +460,58 @@
                     android:paddingLeft="@dimen/_3dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_6dp"
+                android:layout_marginRight="@dimen/_6dp"
+                android:layout_marginTop="@dimen/_5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="4"
+                    android:gravity="center"
+                    android:text="生产/采购日期"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_fkfDate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ems="3"
+                    android:layout_marginLeft="@dimen/_3dp"
+                    android:gravity="center"
+                    android:text="保质期(天)"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_fkfPeriod"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:background="@drawable/back_style_blue"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_3dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+
             </LinearLayout>
 
             <LinearLayout

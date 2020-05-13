@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：销售退货
  * 作者：ykk
  */
 class Sal_OutStock_RED_Fragment1 : BaseFragment() {

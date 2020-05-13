@@ -135,7 +135,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
 //                                    m.icStockBillEntry.fkfDate = m.getValues(m.tv_fkfDate)
 
                                         m.autoICStockBillEntry = icEntry // 加到自动保存对象
-                                        m.run_save(null)
+                                        m.run_save(null,1,0)
 //                                    Comm.showWarnDialog(m.mContext,"请先保存当前数据！")
                                         return
                                     }
@@ -201,7 +201,18 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                     UNSAVE -> { // 保存失败
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "保存失败！"
-                        Comm.showWarnDialog(m.mContext, errMsg)
+                        if(errMsg.equals("UpdateConfirmDialog")) { // 提示是否同时修改物料默认仓库
+                            val build = AlertDialog.Builder(m.mContext)
+                            build.setIcon(R.drawable.caution)
+                            build.setTitle("系统提示")
+                            build.setMessage("物料默认仓库不一致，是否修改？")
+                            build.setPositiveButton("是") { dialog, which -> m.run_save(null, 1,1) }
+                            build.setNegativeButton("否") {dialog, which -> m.run_save(null, 0,0) }
+                            build.setCancelable(false)
+                            build.show()
+                        } else {
+                            Comm.showWarnDialog(m.mContext, errMsg)
+                        }
                     }
                     SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
                         m.setFocusable(m.et_getFocus)
@@ -370,7 +381,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                 if(!checkSave()) return
                 icStockBillEntry.icstockBillId = parent!!.fragment1.icStockBill.id
 //                icStockBillEntry.fkfDate = getValues(tv_fkfDate)
-                run_save(null)
+                run_save(null,1,0)
             }
             R.id.btn_clone -> { // 重置
                 if (checkSaveHint()) {
@@ -1318,7 +1329,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         // 设置表头的部门
 
 
-        run_save(null)
+        run_save(null,1,0)
     }
 
     private fun setICStockEntry_BoxBarCode(boxBarCode : BoxBarCode) {
@@ -1377,7 +1388,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
 
             listEntry.add(entry)
         }
-        run_save(listEntry)
+        run_save(listEntry,1,0)
     }
 
     /**
@@ -1447,7 +1458,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
     /**
      * 保存
      */
-    private fun run_save(list: List<ICStockBillEntry>?) {
+    private fun run_save(list: List<ICStockBillEntry>?, checkMtlStockEqual: Int, isUpdateMtlStock: Int) {
         showLoadDialog("保存中...", false)
         var mUrl:String? = null
         var mJson:String? = null
@@ -1468,6 +1479,8 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                 .add("strJson", mJson)
                 .add("isInStock", isInStock)
                 .add("updateBarCodeTableBatchCode", updateBarCodeTableBatchCode)
+                .add("checkMtlStockEqual", checkMtlStockEqual.toString()) // 是否检查物料的默认仓库是否和当前一致
+                .add("isUpdateMtlStock", isUpdateMtlStock.toString())
                 .build()
 
         val request = Request.Builder()

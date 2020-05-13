@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：生产调拨
+ * 描述：生产入库调拨
  * 作者：ykk
  */
 class Prod_InStock_Transfer_Fragment1 : BaseFragment() {
@@ -577,6 +577,7 @@ class Prod_InStock_Transfer_Fragment1 : BaseFragment() {
 
         val formBody = FormBody.Builder()
                 .add("icstockBillId", icstockBillId.toString())
+                .add("isFindUseableQty", "1") // 是否查询可用数
                 .build()
 
         val request = Request.Builder()

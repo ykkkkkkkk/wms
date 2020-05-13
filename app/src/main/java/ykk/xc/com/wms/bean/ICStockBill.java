@@ -51,6 +51,7 @@ public class ICStockBill implements Serializable {
 	private String strMissionBillId;	// 用于点击了多个任务单然后保存了这张单
 	private String custOutStockNo;		// 客户出库单号
 	private String custOutStockDate;	// 客户出库日期
+	private String pushDownType;		// 下推业务类型 =（01：外购入库，02：其他入库）
 
 	// 临时字段，不存表
 	private boolean showButton; 		// 是否显示操作按钮
@@ -480,4 +481,12 @@ public class ICStockBill implements Serializable {
 	public void setCustOutStockDate(String custOutStockDate) {
 		this.custOutStockDate = custOutStockDate;
 	}
+	public String getPushDownType() {
+		return pushDownType;
+	}
+
+	public void setPushDownType(String pushDownType) {
+		this.pushDownType = pushDownType;
+	}
+
 }

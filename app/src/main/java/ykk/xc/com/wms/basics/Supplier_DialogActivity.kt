@@ -119,7 +119,7 @@ class Supplier_DialogActivity : BaseDialogActivity(), XRecyclerView.LoadingListe
         if (bundle != null) {
             //            isAll = bundle.getInt("isAll");
             //            caseId = bundle.getInt("caseId");
-            checkDatas = bundle.getSerializable("checkDatas") as List<Supplier>
+            checkDatas = bundle.getSerializable(" checkDatas") as List<Supplier>
             // 如果有供应商数据，就直接显示
             if (checkDatas != null && checkDatas!!.size > 0) {
                 xRecyclerView!!.isPullRefreshEnabled = false // 上啦刷新禁用

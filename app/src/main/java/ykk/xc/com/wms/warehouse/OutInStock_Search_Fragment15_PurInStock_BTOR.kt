@@ -2,6 +2,7 @@ package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
@@ -17,10 +18,11 @@ import ykk.xc.com.wms.bean.ICStockBill
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
+import ykk.xc.com.wms.purchase.Pur_InStock_RED_MainActivity
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
-import ykk.xc.com.wms.warehouse.adapter.OutInStockSearchFragment2_OtherOutStock_Adapter
+import ykk.xc.com.wms.warehouse.adapter.OutInStockSearchFragment6_PurReceiveInStock_Adapter
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.DecimalFormat
@@ -29,10 +31,10 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：其他入库查询
+ * 描述：采购红字入库
  * 作者：ykk
  */
-class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
+class OutInStock_Search_Fragment15_PurInStock_BTOR : BaseFragment() {
 
     companion object {
         private val SUCC1 = 200
@@ -44,12 +46,11 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
 
         private val VISIBLE = 1
     }
-
     private val context = this
     private var parent: OutInStock_Search_MainActivity? = null
     private val checkDatas = ArrayList<ICStockBill>()
     private var okHttpClient: OkHttpClient? = null
-    private var mAdapter: OutInStockSearchFragment2_OtherOutStock_Adapter? = null
+    private var mAdapter: OutInStockSearchFragment6_PurReceiveInStock_Adapter? = null
     private var user: User? = null
     private var mContext: Activity? = null
     private var curPos:Int = -1 // 当前行
@@ -61,8 +62,8 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: OutInStock_Search_Fragment2_OtherOutStock) : Handler() {
-        private val mActivity: WeakReference<OutInStock_Search_Fragment2_OtherOutStock>
+    private class MyHandler(activity: OutInStock_Search_Fragment15_PurInStock_BTOR) : Handler() {
+        private val mActivity: WeakReference<OutInStock_Search_Fragment15_PurInStock_BTOR>
 
         init {
             mActivity = WeakReference(activity)
@@ -108,7 +109,9 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
                         }
                     }
                     UNUPLOAD -> { // 上传单据  失败
-                        Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     VISIBLE -> m.parent!!.btn_batchUpload.visibility = View.VISIBLE
                 }
@@ -117,7 +120,7 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.ware_outin_stock_search_fragment2__other_out_stock, container, false)
+        return inflater.inflate(R.layout.ware_outin_stock_search_fragment1__other_in_stock, container, false)
     }
 
     override fun initView() {
@@ -126,17 +129,17 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
 
         recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = OutInStockSearchFragment2_OtherOutStock_Adapter(mContext!!, checkDatas)
+        mAdapter = OutInStockSearchFragment6_PurReceiveInStock_Adapter(mContext!!, checkDatas)
         recyclerView.adapter = mAdapter
         // 设值listview空间失去焦点
         recyclerView.isFocusable = false
 
         // 行事件
-        mAdapter!!.setCallBack(object : OutInStockSearchFragment2_OtherOutStock_Adapter.MyCallBack {
+        mAdapter!!.setCallBack(object : OutInStockSearchFragment6_PurReceiveInStock_Adapter.MyCallBack {
             override fun onSearch(entity: ICStockBill, position: Int) {
-//                val bundle = Bundle()
-//                bundle.putInt("id", entity.id)
-//                show(Pur_Receive_InStock_MainActivity::class.java, bundle)
+                val bundle = Bundle()
+                bundle.putInt("id", entity.id)
+                show(Pur_InStock_RED_MainActivity::class.java, bundle)
             }
             override fun onUpload(entity: ICStockBill, position: Int) {
                 val list = ArrayList<ICStockBill>()
@@ -182,7 +185,6 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
-            // 显示上传按钮
             // 显示上传按钮
             mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
             if( isInit && !isLoadData) {
@@ -302,7 +304,7 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
         val formBody = FormBody.Builder()
                 .add("createUserId", user!!.id.toString())
                 .add("isToK3", "0") // 查询未上传的
-                .add("billType", "QTCK") // 根据不同类型查询
+                .add("billType", "CGRK_BTOR") // 根据不同类型查询
                 .add("childSize", "1") // 必须有分录的单据
                 .build()
 

@@ -1,4 +1,4 @@
-package ykk.xc.com.wms.warehouse
+package ykk.xc.com.wms.purchase
 
 import android.app.Activity
 import android.content.Intent
@@ -9,18 +9,24 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.ware_outin_stock_search_fragment2__other_out_stock.*
-import kotlinx.android.synthetic.main.ware_outin_stock_search_main.*
+import butterknife.OnClick
+import kotlinx.android.synthetic.main.pur_thtz_in_stock_fragment3.*
+import kotlinx.android.synthetic.main.pur_thtz_in_stock_main.viewPager
 import okhttp3.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import ykk.xc.com.wms.R
+import ykk.xc.com.wms.bean.EventBusEntity
 import ykk.xc.com.wms.bean.ICStockBill
+import ykk.xc.com.wms.bean.ICStockBillEntry
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
+import ykk.xc.com.wms.purchase.adapter.Pur_InStock_RED_Fragment3_Adapter
+import ykk.xc.com.wms.util.BigdecimalUtil
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
-import ykk.xc.com.wms.warehouse.adapter.OutInStockSearchFragment2_OtherOutStock_Adapter
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.text.DecimalFormat
@@ -29,10 +35,10 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：其他入库查询
+ * 描述：采购退货入库
  * 作者：ykk
  */
-class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
+class Pur_InStock_RED_Fragment3 : BaseFragment() {
 
     companion object {
         private val SUCC1 = 200
@@ -42,27 +48,24 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
         private val UPLOAD = 202
         private val UNUPLOAD = 502
 
-        private val VISIBLE = 1
     }
-
     private val context = this
-    private var parent: OutInStock_Search_MainActivity? = null
-    private val checkDatas = ArrayList<ICStockBill>()
+    private var parent: Pur_InStock_RED_MainActivity? = null
+
+    val checkDatas = ArrayList<ICStockBillEntry>()
     private var okHttpClient: OkHttpClient? = null
-    private var mAdapter: OutInStockSearchFragment2_OtherOutStock_Adapter? = null
+    private var mAdapter: Pur_InStock_RED_Fragment3_Adapter? = null
     private var user: User? = null
     private var mContext: Activity? = null
     private var curPos:Int = -1 // 当前行
     private var timesTamp:String? = null // 时间戳
     private val df = DecimalFormat("#.######")
-    var isInit = false
-    var isLoadData = false
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: OutInStock_Search_Fragment2_OtherOutStock) : Handler() {
-        private val mActivity: WeakReference<OutInStock_Search_Fragment2_OtherOutStock>
+    private class MyHandler(activity: Pur_InStock_RED_Fragment3) : Handler() {
+        private val mActivity: WeakReference<Pur_InStock_RED_Fragment3>
 
         init {
             mActivity = WeakReference(activity)
@@ -79,89 +82,105 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
                     msgObj = msg.obj as String
                 }
                 when (msg.what) {
-                    SUCC1 -> { // 查询单据 进入
+                    SUCC1 -> { // 查询分录 进入
                         m.checkDatas.clear()
-                        val list = JsonUtil.strToList(msgObj, ICStockBill::class.java)
+                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry::class.java)
                         m.checkDatas.addAll(list)
+
+                        var sumNum = 0.0
+                        var sumMoney = 0.0
+                        list.forEach() {
+                            sumNum += it.fqty
+                            val mul = BigdecimalUtil.mul(it.fqty, it.fprice)
+                            sumMoney += mul
+                        }
+                        m.tv_sumNum.text = m.df.format(sumNum)
+                        m.tv_sumMoney.text = m.df.format(sumMoney)
 
                         m.mAdapter!!.notifyDataSetChanged()
                     }
-                    UNSUCC1 -> { // 查询单据  失败
-                        m.checkDatas.clear()
-                        m.mAdapter!!.notifyDataSetChanged()
-                        m.toasts("很抱歉，没有找到数据！")
+                    UNSUCC1 -> { // 查询分录  失败
+                        m.tv_sumNum.text = "0"
+                        m.tv_sumMoney.text = "0"
                     }
-                    DELETE -> { // 删除单据 进入
-                        m.curPos = -1
-                        m.run_findList()
+                    DELETE -> { // 删除分录 进入
+                        m.run_findEntryList()
                     }
-                    UNDELETE -> { // 删除单据  失败
+                    UNDELETE -> { // 删除分录  失败
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
                         val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0) {
-                            Comm.showWarnDialog(m.mContext, retMsg+"单，库存不足，不能上传！")
+                        if(retMsg.length > 0 && retMsg.indexOf("succ") == -1) {
+                            Comm.showWarnDialog(m.mContext, retMsg)
                         } else {
                             m.toasts("上传成功")
-                            m.run_findList()
+                            m.parent!!.finish()
                         }
+                        // 滑动第一个页面
+//                        m.parent!!.viewPager!!.setCurrentItem(0, false)
+//                        m.parent!!.fragment1.reset() // 重置
                     }
                     UNUPLOAD -> { // 上传单据  失败
-                        Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
                     }
-                    VISIBLE -> m.parent!!.btn_batchUpload.visibility = View.VISIBLE
                 }
             }
         }
     }
 
+    @Subscribe
+    fun onEventBus(entity: EventBusEntity) {
+        when (entity.caseId) {
+            12,21 -> { // 接收第一个页面（12）发来的指令，接收第二个页面（21）发来的指令
+                run_findEntryList()
+            }
+        }
+    }
+
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.ware_outin_stock_search_fragment2__other_out_stock, container, false)
+        return inflater.inflate(R.layout.pur_thtz_in_stock_fragment3, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as OutInStock_Search_MainActivity
+        parent = mContext as Pur_InStock_RED_MainActivity
 
         recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = OutInStockSearchFragment2_OtherOutStock_Adapter(mContext!!, checkDatas)
+        mAdapter = Pur_InStock_RED_Fragment3_Adapter(mContext!!, checkDatas)
         recyclerView.adapter = mAdapter
         // 设值listview空间失去焦点
         recyclerView.isFocusable = false
 
         // 行事件
-        mAdapter!!.setCallBack(object : OutInStockSearchFragment2_OtherOutStock_Adapter.MyCallBack {
-            override fun onSearch(entity: ICStockBill, position: Int) {
-//                val bundle = Bundle()
-//                bundle.putInt("id", entity.id)
-//                show(Pur_Receive_InStock_MainActivity::class.java, bundle)
-            }
-            override fun onUpload(entity: ICStockBill, position: Int) {
-                val list = ArrayList<ICStockBill>()
-                list.add(entity)
-                val strJson = JsonUtil.objectToString(list)
-                run_uploadToK3(strJson)
-            }
-            override fun onDelete(entity: ICStockBill, position: Int) {
+        mAdapter!!.setCallBack(object : Pur_InStock_RED_Fragment3_Adapter.MyCallBack {
+//            override fun onModify(entity: ICStockBillEntry, position: Int) {
+//                EventBus.getDefault().post(EventBusEntity(31, entity))
+//                // 滑动第二个页面
+//                parent!!.viewPager!!.setCurrentItem(1, false)
+//            }
+            override fun onDelete(entity: ICStockBillEntry, position: Int) {
                 curPos = position
-                run_remove(entity.id)
+                run_removeEntry(entity.id)
             }
         })
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
-            if(curPos > -1) {
-                checkDatas[curPos].isShowButton = false
-            }
-            curPos = pos
-            checkDatas[pos].isShowButton = true
-            mAdapter!!.notifyDataSetChanged()
-            // 如果是最后一个item,点击就滑动到最下面
-            if(checkDatas.size > 2 && checkDatas.size-1 == pos) {
-                recyclerView.post(Runnable { recyclerView.smoothScrollToPosition(pos) })
-            }
+            EventBus.getDefault().post(EventBusEntity(31, checkDatas[pos]))
+            // 滑动第二个页面
+            parent!!.viewPager!!.setCurrentItem(1, false)
         }
+
+        // 长按查看条码
+//        mAdapter!!.onItemLongClickListener = BaseRecyclerAdapter.OnItemLongClickListener{ adapter, holder, view, pos ->
+//            EventBus.getDefault().post(EventBusEntity(32, checkDatas[pos], (pos+1)))
+//            // 滑动第四个页面
+//            parent!!.viewPager!!.setCurrentItem(3, false)
+//            true
+//        }
     }
 
     override fun initData() {
@@ -175,106 +194,42 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
 
         getUserInfo()
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
-        isInit = true
-//        run_findList()
+        EventBus.getDefault().register(this)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser) {
-            // 显示上传按钮
-            // 显示上传按钮
-            mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
-            if( isInit && !isLoadData) {
-                findFun()
+        if (isVisibleToUser) {
+        }
+    }
+
+    @OnClick(R.id.btn_upload)
+    fun onViewClicked(view: View) {
+        when (view.id) {
+            R.id.btn_upload -> { // 上传
+                val size = checkDatas.size
+                if(size == 0) {
+                    Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
+                    return
+                }
+                checkDatas.forEachIndexed { index, it ->
+                    if(it.stockId_wms == 0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
+                        return
+                    }
+                    if(it.fqty == 0.0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（入库数）！")
+                        return
+                    }
+                }
+
+                val list = ArrayList<ICStockBill>()
+                list.add(parent!!.fragment1.icStockBill)
+                val strJson = JsonUtil.objectToString(list)
+                run_uploadToK3(strJson)
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        if(userVisibleHint == true) {
-            findFun()
-        }
-    }
-
-    /**
-     * 查询
-     */
-    fun findFun() {
-        isLoadData = true
-        curPos = -1
-        run_findList()
-    }
-
-    /**
-     * 一键上传
-     */
-    fun batchUpload() {
-        if(checkDatas.size > 0) {
-            val strJson = JsonUtil.objectToString(checkDatas)
-            run_uploadToK3(strJson)
-        }
-    }
-
-//    @OnClick(R.id.tv_deptSel, R.id.tv_suppSel, R.id.tv_stockSel, R.id.btn_scan_stockPos, R.id.btn_stockPosSel, R.id.btn_scan, R.id.btn_mtlSel, R.id.btn_save, R.id.btn_clone)
-//    fun onViewClicked(view: View) {
-//        var bundle: Bundle? = null
-//        when (view.id) {
-//            R.id.tv_deptSel -> { // 选择部门
-//                showForResult(Dept_DialogActivity::class.java, SEL_DEPT, null)
-//            }
-//            R.id.tv_suppSel -> { // 选择供应商
-//                showForResult(Supplier_DialogActivity::class.java, SEL_SUPP, null)
-//            }
-//            R.id.tv_stockSel -> { // 选择收货仓库
-//                showForResult(Stock_DialogActivity::class.java, SEL_STOCK, null)
-//            }
-//            R.id.btn_stockPosSel -> { // 选择调出库位
-//                if(!checkSelStockPos()) return
-//                var bundle = Bundle()
-//                bundle.putInt("fspGroupId", stock!!.fspGroupId);
-//                showForResult(StockPos_DialogActivity::class.java, SEL_STOCKPOS, bundle)
-//            }
-//            R.id.btn_mtlSel -> { // 选择物料
-//                if(!checkSelStockPos()) return
-//                bundle = Bundle()
-//                bundle.putInt("fStockId", stock!!.fitemId)
-//                bundle.putInt("fStockPlaceID", if(stockPos != null) stockPos!!.fspId else 0)
-//                showForResult(StockTransfer_Material_DialogActivity::class.java, SEL_MTL, bundle)
-//            }
-//            R.id.btn_scan_stockPos -> { // 调用摄像头扫描（调出库位）
-//                if(!checkSelStockPos()) return
-//                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
-//            }
-//            R.id.btn_scan -> { // 调用摄像头扫描（物料）
-//                if(!checkSelStockPos()) return
-//                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
-//            }
-//            R.id.btn_save -> { // 保存
-//                if(checkDatas.size == 0) {
-//                    Comm.showWarnDialog(mContext,"请选择物料或者扫码条码！")
-//                    return
-//                }
-//                run_save();
-//            }
-//            R.id.btn_clone -> { // 重置
-//                if (parent!!.isChange) {
-//                    val build = AlertDialog.Builder(mContext)
-//                    build.setIcon(R.drawable.caution)
-//                    build.setTitle("系统提示")
-//                    build.setMessage("您有未保存的数据，继续重置吗？")
-//                    build.setPositiveButton("是") { dialog, which -> reset(true) }
-//                    build.setNegativeButton("否", null)
-//                    build.setCancelable(false)
-//                    build.show()
-//
-//                } else {
-//                    reset(true)
-//                }
-//            }
-//        }
-//    }
 
     override fun setListener() {
 
@@ -294,16 +249,13 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     }
 
     /**
-     * 查询单据
+     * 历史查询
      */
-    private fun run_findList() {
-        showLoadDialog("加载中...")
-        val mUrl = getURL("stockBill_WMS/findList")
+    private fun run_findEntryList() {
+        showLoadDialog("加载中...", false)
+        val mUrl = getURL("stockBill_WMS/findEntryList")
         val formBody = FormBody.Builder()
-                .add("createUserId", user!!.id.toString())
-                .add("isToK3", "0") // 查询未上传的
-                .add("billType", "QTCK") // 根据不同类型查询
-                .add("childSize", "1") // 必须有分录的单据
+                .add("icstockBillId", parent!!.fragment1.icStockBill.id.toString())
                 .build()
 
         val request = Request.Builder()
@@ -322,7 +274,7 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()
                 val result = body.string()
-                LogUtil.e("run_findList --> onResponse", result)
+                LogUtil.e("run_findEntryList --> onResponse", result)
                 if (!JsonUtil.isSuccess(result)) {
                     val msg = mHandler.obtainMessage(UNSUCC1, result)
                     mHandler.sendMessage(msg)
@@ -335,11 +287,11 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     }
 
     /**
-     * 删除单据
+     * 删除
      */
-    private fun run_remove(id : Int) {
+    private fun run_removeEntry(id : Int) {
         showLoadDialog("加载中...", false)
-        val mUrl = getURL("stockBill_WMS/remove")
+        val mUrl = getURL("stockBill_WMS/removeEntry")
         val formBody = FormBody.Builder()
                 .add("id", id.toString())
                 .build()
@@ -360,7 +312,7 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()
                 val result = body.string()
-                LogUtil.e("run_remove --> onResponse", result)
+                LogUtil.e("run_findEntryList --> onResponse", result)
                 if (!JsonUtil.isSuccess(result)) {
                     val msg = mHandler.obtainMessage(UNDELETE, result)
                     mHandler.sendMessage(msg)
@@ -420,6 +372,7 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     override fun onDestroyView() {
         closeHandler(mHandler)
         mBinder!!.unbind()
+        EventBus.getDefault().unregister(this)
         super.onDestroyView()
     }
 }

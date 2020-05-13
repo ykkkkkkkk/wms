@@ -115,8 +115,8 @@ class Prod_Transfer_Fragment3 : BaseFragment() {
                             Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
                         } else {
                             m.toasts("上传成功")
+                            m.parent!!.finish()
                         }
-                        m.parent!!.finish()
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -224,7 +224,7 @@ class Prod_Transfer_Fragment3 : BaseFragment() {
                 }
 
                 checkDatas.forEachIndexed { index, it ->
-                    if(it.stockId_wms == 0) {
+                    if(it.fqty > 0 && it.stockId_wms == 0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
                         return
                     }

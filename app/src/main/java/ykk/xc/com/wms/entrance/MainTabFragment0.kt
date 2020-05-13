@@ -36,6 +36,7 @@ import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.produce.Prod_InStock_Transfer_MainActivity
 import ykk.xc.com.wms.produce.Prod_Transfer_MainActivity
+import ykk.xc.com.wms.purchase.Pur_InStock_RED_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_InStock_MainActivity
 import ykk.xc.com.wms.purchase.Pur_Receive_QC_MainActivity
 import ykk.xc.com.wms.purchase.adapter.MissionBill_List_Adapter
@@ -59,8 +60,10 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
     companion object {
         private val SUCC1 = 200
         private val UNSUCC1 = 500
-        private val UPDATE = 201
-        private val UNUPDATE = 501
+        private val CLOSE = 201
+        private val UNCLOSE = 501
+        private val UPDATE = 202
+        private val UNUPDATE = 502
 
         private val UPDATE_PLAN = 1
     }
@@ -135,6 +138,12 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                         m.mAdapter!!.notifyDataSetChanged()
                         m.toasts("抱歉，没有加载到数据！")
                     }
+                    CLOSE -> { // 关闭    成功
+                        m.initLoadDatas()
+                    }
+                    UNCLOSE -> { // 关闭    失败！
+                        Comm.showWarnDialog(m.mContext,"很抱歉，服务器繁忙！")
+                    }
                 }
             }
         }
@@ -192,6 +201,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     1 -> show(Pur_Receive_InStock_MainActivity::class.java, bundle)
 //                21 -> show(Pur_Receive_InStock_MainActivity::class.java, bundle)
                     31 -> show(Pur_Receive_QC_MainActivity::class.java, bundle)
+                    32 -> show(Pur_InStock_RED_MainActivity::class.java, bundle)
                     41 -> show(Prod_Transfer_MainActivity::class.java, bundle)
                     42 -> show(Prod_InStock_Transfer_MainActivity::class.java, bundle)
                     51 -> {
@@ -206,6 +216,19 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     55 -> show(Sal_OutStock_RED_MainActivity::class.java, bundle)
                 }
             }
+        }
+        // 长按查看条码
+        mAdapter!!.onItemLongClickListener = BaseRecyclerAdapter.OnItemLongClickListener{ adapter, holder, view, pos ->
+            val build = AlertDialog.Builder(mContext)
+            build.setIcon(R.drawable.caution)
+            build.setTitle("系统提示")
+            build.setMessage("是否关闭任务？")
+            build.setPositiveButton("是") { dialog, which -> run_close(listDatas[pos-1].id) }
+            build.setNegativeButton("否", null)
+            build.setCancelable(false)
+            build.show()
+
+            true
         }
     }
 
@@ -300,26 +323,30 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     missionType = 31
                 }
                 R.id.tv4 -> {
+                    tv_missionType.text = "采购退货任务"
+                    missionType = 32
+                }
+                R.id.tv5 -> {
                     tv_missionType.text = "投料调拨任务"
                     missionType = 41
                 }
-                R.id.tv5 -> {
+                R.id.tv6 -> {
                     tv_missionType.text = "生产入库调拨任务"
                     missionType = 42
                 }
-                R.id.tv6 -> {
+                R.id.tv7 -> {
                     tv_missionType.text = "销售拣货任务"
                     missionType = 51
                 }
-                R.id.tv7 -> {
+                R.id.tv8 -> {
                     tv_missionType.text = "出库质检任务"
                     missionType = 52
                 }
-                R.id.tv8 -> {
+                R.id.tv9 -> {
                     tv_missionType.text = "仓管复核任务"
                     missionType = 53
                 }
-                R.id.tv9 -> {
+                R.id.tv10 -> {
                     tv_missionType.text = "销售装箱任务"
                     missionType = 54
                 }
@@ -341,6 +368,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         popV.findViewById<View>(R.id.tv7).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv8).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv9).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv10).setOnClickListener(click)
     }
 
     fun initLoadDatas() {
@@ -390,6 +418,46 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                 isNextPage = JsonUtil.isNextPage(result, limit)
 
                 val msg = mHandler.obtainMessage(SUCC1, result)
+                Log.e("run_okhttpDatas --> onResponse", result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 关闭任务
+     */
+    private fun run_close(id :Int) {
+        val formBody = FormBody.Builder()
+                .add("closeTime", "1") // 关闭日期
+                .add("missionStatus", "E") // 任务状态 A：创建、B：审核、C：业务关闭、D：进行中，E：手工关闭
+                .add("closerName", user!!.username)
+                .add("id", id.toString())
+                .build()
+        showLoadDialog("关闭中...", false)
+        val mUrl = getURL("missionBill/modifyStatus")
+
+        val request = Request.Builder()
+                .addHeader("cookie", session)
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNCLOSE)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                if (!JsonUtil.isSuccess(result)) {
+                    mHandler.sendEmptyMessage(UNCLOSE)
+                    return
+                }
+                val msg = mHandler.obtainMessage(CLOSE, result)
                 Log.e("run_okhttpDatas --> onResponse", result)
                 mHandler.sendMessage(msg)
             }

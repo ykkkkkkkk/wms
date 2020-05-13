@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_fmodel"
-        android:text="调拨数："
+        android:text="入库数："
         android:textColor="@color/c_666666"
         android:textSize="@dimen/_12sp" />
 
@@ -81,7 +81,7 @@
         android:layout_below="@+id/tv_fmodel"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_toRightOf="@+id/tv_num"
-        android:text="可调拨："
+        android:text="源单数："
         android:textColor="@color/c_666666"
         android:textSize="@dimen/_12sp" />
 
@@ -89,7 +89,7 @@
         android:id="@+id/tv_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_sourceQty"
+        android:layout_below="@+id/tv_num"
         android:text="称重数："
         android:textColor="@color/c_666666"
         android:textSize="@dimen/_12sp" />
@@ -98,7 +98,7 @@
         android:id="@+id/tv_referenceNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_sourceQty"
+        android:layout_below="@+id/tv_num"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_toRightOf="@+id/tv_weight"
         android:text="参考数："
@@ -110,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_below="@+id/tv_referenceNum"
-        android:text="调入仓库："
+        android:text="仓库："
         android:textColor="@color/c_666666"
         android:textSize="@dimen/_12sp" />
 
@@ -141,46 +141,6 @@
         android:layout_below="@+id/tv_stockAreaName"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_toRightOf="@+id/tv_storageRackName"
-        android:text="库位："
-        android:textColor="@color/c_666666"
-        android:textSize="@dimen/_12sp" />
-
-    <TextView
-        android:id="@+id/tv_stockName2"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_below="@+id/tv_stockPosName"
-        android:text="调出仓库："
-        android:textColor="@color/c_666666"
-        android:textSize="@dimen/_12sp" />
-
-    <TextView
-        android:id="@+id/tv_stockAreaName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_stockPosName"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_toRightOf="@+id/tv_stockName2"
-        android:text="库区："
-        android:textColor="@color/c_666666"
-        android:textSize="@dimen/_12sp" />
-
-    <TextView
-        android:id="@+id/tv_storageRackName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_stockAreaName2"
-        android:text="货架："
-        android:textColor="@color/c_666666"
-        android:textSize="@dimen/_12sp" />
-
-    <TextView
-        android:id="@+id/tv_stockPosName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_stockAreaName2"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_toRightOf="@+id/tv_storageRackName2"
         android:text="库位："
         android:textColor="@color/c_666666"
         android:textSize="@dimen/_12sp" />

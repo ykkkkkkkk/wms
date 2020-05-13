@@ -87,6 +87,7 @@ public class ICStockBillEntry implements Serializable {
 	private String strBatchCode; // 拼接的批次号
 	private String k3Number; // 主表的k3Number
 	private double inventoryNowQty; // 当前扫码的可用库存数
+	private String pushDownType;	// 下推业务类型 =（01：外购入库，02：其他入库）
 
 	private ICStockBillEntry sourceThis; // 来源本身对象
 	private List<ICStockBillEntry_Barcode> icstockBillEntry_Barcodes; // 条码记录
@@ -660,6 +661,14 @@ public class ICStockBillEntry implements Serializable {
 
 	public void setBoxBarCode(BoxBarCode boxBarCode) {
 		this.boxBarCode = boxBarCode;
+	}
+
+	public String getPushDownType() {
+		return pushDownType;
+	}
+
+	public void setPushDownType(String pushDownType) {
+		this.pushDownType = pushDownType;
 	}
 
 }

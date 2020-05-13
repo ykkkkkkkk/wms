@@ -1,4 +1,4 @@
-package ykk.xc.com.wms.produce.adapter
+package ykk.xc.com.wms.purchase.adapter
 
 import android.app.Activity
 import android.text.Html
@@ -11,12 +11,12 @@ import ykk.xc.com.wms.util.basehelper.BaseArrayRecyclerAdapter
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import java.text.DecimalFormat
 
-class Prod_InStock_Transfer_Fragment3_Adapter(private val context: Activity, datas: List<ICStockBillEntry>) : BaseArrayRecyclerAdapter<ICStockBillEntry>(datas) {
+class Pur_InStock_RED_Fragment3_Adapter(private val context: Activity, datas: List<ICStockBillEntry>) : BaseArrayRecyclerAdapter<ICStockBillEntry>(datas) {
     private val df = DecimalFormat("#.######")
     private var callBack: MyCallBack? = null
 
     override fun bindView(viewtype: Int): Int {
-        return R.layout.prod_instock_transfer_fragment3_item
+        return R.layout.pur_thtz_in_stock_fragment3_item
     }
 
     override fun onBindHoder(holder: BaseRecyclerAdapter.RecyclerHolder, entity: ICStockBillEntry, pos: Int) {
@@ -35,10 +35,6 @@ class Prod_InStock_Transfer_Fragment3_Adapter(private val context: Activity, dat
         val tv_stockAreaName = holder.obtainView<TextView>(R.id.tv_stockAreaName)
         val tv_storageRackName = holder.obtainView<TextView>(R.id.tv_storageRackName)
         val tv_stockPosName = holder.obtainView<TextView>(R.id.tv_stockPosName)
-        val tv_stockName2 = holder.obtainView<TextView>(R.id.tv_stockName2)
-        val tv_stockAreaName2 = holder.obtainView<TextView>(R.id.tv_stockAreaName2)
-        val tv_storageRackName2 = holder.obtainView<TextView>(R.id.tv_storageRackName2)
-        val tv_stockPosName2 = holder.obtainView<TextView>(R.id.tv_stockPosName2)
 
         // 赋值
         tv_row.text = (pos+1).toString()
@@ -52,15 +48,15 @@ class Prod_InStock_Transfer_Fragment3_Adapter(private val context: Activity, dat
         }
         tv_fmodel.text = Html.fromHtml("规格型号:&nbsp;<font color='#6a5acd'>"+ Comm.isNULLS(entity.fmode)+"</font>")
 
-        tv_num.text = Html.fromHtml("调拨数:&nbsp;<font color='#FF0000'>"+ df.format(entity.fqty) +"</font>")
-        tv_sourceQty.text = Html.fromHtml("可调拨:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fsourceQty) +"</font>&nbsp;<font color='#666666'>"+ entity.unitName +"</font>")
+        tv_num.text = Html.fromHtml("入库数:&nbsp;<font color='#FF0000'>"+ df.format(entity.fqty) +"</font>")
+        tv_sourceQty.text = Html.fromHtml("源单数:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fsourceQty) +"</font>&nbsp;<font color='#666666'>"+ entity.unitName +"</font>")
         tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(entity.weight > 0) df.format(entity.weight) else "") +"</font>")
         tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(entity.referenceNum > 0) df.format(entity.referenceNum) else "")+"</font>")
 
-        // 显示调入仓库组信息
+        // 显示仓库组信息
         if(entity.stock != null ) {
             tv_stockName.visibility = View.VISIBLE
-            tv_stockName.text = Html.fromHtml("调入仓库:&nbsp;<font color='#000000'>"+entity.stock!!.stockName+"</font>")
+            tv_stockName.text = Html.fromHtml("仓库:&nbsp;<font color='#000000'>"+entity.stock!!.stockName+"</font>")
         } else {
             tv_stockName.visibility = View.INVISIBLE
         }
@@ -81,31 +77,6 @@ class Prod_InStock_Transfer_Fragment3_Adapter(private val context: Activity, dat
             tv_stockPosName.text = Html.fromHtml("库位:&nbsp;<font color='#000000'>"+entity.stockPos!!.stockPositionName+"</font>")
         } else {
             tv_stockPosName.visibility = View.INVISIBLE
-        }
-        // 显示调出仓库组信息
-        if(entity.stock2 != null ) {
-            tv_stockName2.visibility = View.VISIBLE
-            tv_stockName2.text = Html.fromHtml("调出仓库:&nbsp;<font color='#000000'>"+entity.stock2!!.stockName+"</font>")
-        } else {
-            tv_stockName2.visibility = View.INVISIBLE
-        }
-        if(entity.stockArea2 != null ) {
-            tv_stockAreaName2.visibility = View.VISIBLE
-            tv_stockAreaName2.text = Html.fromHtml("库区:&nbsp;<font color='#000000'>"+entity.stockArea2!!.fname+"</font>")
-        } else {
-            tv_stockAreaName2.visibility = View.INVISIBLE
-        }
-        if(entity.storageRack2 != null ) {
-            tv_storageRackName2.visibility = View.VISIBLE
-            tv_storageRackName2.text = Html.fromHtml("货架:&nbsp;<font color='#000000'>"+entity.storageRack2!!.fnumber+"</font>")
-        } else {
-            tv_storageRackName2.visibility = View.INVISIBLE
-        }
-        if(entity.stockPos2 != null ) {
-            tv_stockPosName2.visibility = View.VISIBLE
-            tv_stockPosName2.text = Html.fromHtml("库位:&nbsp;<font color='#000000'>"+entity.stockPos2!!.stockPositionName+"</font>")
-        } else {
-            tv_stockPosName2.visibility = View.INVISIBLE
         }
 //        if(entity.container != null ) {
 //            tv_containerName.visibility = View.VISIBLE

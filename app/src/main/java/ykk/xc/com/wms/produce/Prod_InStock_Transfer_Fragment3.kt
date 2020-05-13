@@ -216,15 +216,25 @@ class Prod_InStock_Transfer_Fragment3 : BaseFragment() {
                     Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
                     return
                 }
+                var isGt0 = false
+                checkDatas.forEach {
+                    if(it.fqty > 0.0) {
+                        isGt0 = true
+                    }
+                }
+                if(!isGt0) {
+                    Comm.showWarnDialog(mContext,"请至少输入一行数量！")
+                    return
+                }
                 checkDatas.forEachIndexed { index, it ->
-                    if(it.stockId_wms == 0) {
+                    if(it.fqty > 0 && it.stockId_wms == 0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
                         return
                     }
-                    if(it.fqty == 0.0) {
-                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（实发数）！")
-                        return
-                    }
+//                    if(it.fqty == 0.0) {
+//                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（实发数）！")
+//                        return
+//                    }
                 }
 
                 val list = ArrayList<ICStockBill>()

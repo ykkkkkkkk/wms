@@ -86,6 +86,8 @@ public class POInStock implements Serializable {
 	private String fcheckdate;
 	/* 分销订单号 */
 	private String fpoordbillno;
+	/* 下推业务类型 ( 01：外购入库，02：其他入库 )*/
+	private String pushDownType;
 
 	/* 供应商 */
 	private Supplier supplier;
@@ -412,6 +414,12 @@ public class POInStock implements Serializable {
 	}
 	public void setStockName(String stockName) {
 		this.stockName = stockName;
+	}
+	public String getPushDownType() {
+		return pushDownType;
+	}
+	public void setPushDownType(String pushDownType) {
+		this.pushDownType = pushDownType;
 	}
 
 

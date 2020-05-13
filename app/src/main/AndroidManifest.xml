@@ -204,6 +204,9 @@
         <activity
             android:name=".purchase.MissionBillListActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".purchase.Pur_InStock_RED_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- 生产模块 -->
         <activity

@@ -37,6 +37,7 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
             1 -> tv_missionType.text = "外购收料任务"
             21 -> tv_missionType.text = "销售发货任务"
             31 -> tv_missionType.text = "仓库外购收货任务"
+            32 -> tv_missionType.text = "采购退货任务"
             41 -> tv_missionType.text = "投料调拨任务"
             42 -> tv_missionType.text = "生产入库调拨任务"
             51 -> tv_missionType.text = "销售拣货任务"
@@ -45,8 +46,7 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
             54 -> tv_missionType.text = "销售装箱任务"
             55 -> tv_missionType.text = "销售退货任务"
         }
-        val missionContent = Comm.isNULLS(entity.missionContent)
-        if(missionContent.length > 0) {
+        if(Comm.isNULLS(entity.missionContent).length > 0) {
             tv_missionContent.visibility = View.VISIBLE
         } else {
             tv_missionContent.visibility = View.INVISIBLE

@@ -383,7 +383,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             return false
         }
         if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
-            Comm.showWarnDialog(mContext, "调拨数量不能大于入库数！")
+            Comm.showWarnDialog(mContext, "调拨数量不能大于可调拨数！")
             return false
         }
         if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y")) && icStockBillEntry.boxBarCodeId == 0 && !icStockBillEntry.icItem.snManager.equals("Y")) {
@@ -1241,9 +1241,9 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             entry.storageRackId2_wms = it.storageRackId_wms
             entry.stockPosId2_wms = it.stockPosId_wms
             // 是箱子里的物料，就给值
-            if(it.boxBarCodeId > 0) {
-                entry.fqty = it.fqty
-            }
+//            if(it.boxBarCodeId > 0) {
+//                entry.fqty = it.fqty
+//            }
 //            entry.fqty = it.useableQty
 //            entry.fprice = it.fprice
             entry.funitId = it.funitId
@@ -1282,6 +1282,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
         var moreStock = "" // 多仓库查询
         var billType:String = "" // 单据类型
         var checkInventoryNow = "" // 是否检查库存
+        var strStockGroup = "" // 保存仓库组id，用，号隔开(stockK3Id,stockId,stockAreaId,storageRackId,stockPosId)
         var sourceBarcode = "" // 条码来源
         var isSmBoxBarcode = "" // 是否可以扫描箱码
         var isProdInStockDB = "" // 更新箱码的是否生产入库调拨状态
@@ -1297,6 +1298,8 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                 moreStock = "1"
                 billType = parent!!.fragment1.icStockBill.billType
                 checkInventoryNow = "1"
+                strStockGroup = icStockBillEntry.fdcStockId.toString() +","+ icStockBillEntry.stockId_wms +","+ icStockBillEntry.stockAreaId_wms +","+
+                        icStockBillEntry.storageRackId_wms +","+ icStockBillEntry.stockPosId_wms
                 sourceBarcode = "1"
                 isSmBoxBarcode = "1"
                 isProdInStockDB = "1"
@@ -1308,6 +1311,7 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
                 .add("moreStock", moreStock)
                 .add("billType", billType)
                 .add("checkInventoryNow", checkInventoryNow)
+                .add("strStockGroup", strStockGroup)
                 .add("sourceBarcode", sourceBarcode)
                 .add("isSmBoxBarcode", isSmBoxBarcode)
                 .add("isProdInStockDB", isProdInStockDB)
