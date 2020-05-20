@@ -1,4 +1,4 @@
-package ykk.xc.com.wms.produce
+package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.prod_transfer_fragment2.*
+import kotlinx.android.synthetic.main.ware_transfer_fragment2.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -41,10 +41,10 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：生产调拨---添加明细
+ * 描述：仓库调拨---添加明细
  * 作者：ykk
  */
-class Prod_Transfer_Fragment2 : BaseFragment() {
+class Ware_Transfer_Fragment2 : BaseFragment() {
 
     companion object {
         private val SEL_POSITION = 61
@@ -83,7 +83,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
     private var stockPos2:StockPosition? = null
     private var mContext: Activity? = null
     private val df = DecimalFormat("#.######")
-    private var parent: Prod_Transfer_MainActivity? = null
+    private var parent: Ware_Transfer_MainActivity? = null
     private var isTextChange: Boolean = false // 是否进入TextChange事件
     private var timesTamp:String? = null // 时间戳
     var icStockBillEntry = ICStockBillEntry()
@@ -97,8 +97,8 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
 
     // 消息处理
     private val mHandler = MyHandler(this)
-    private class MyHandler(activity: Prod_Transfer_Fragment2) : Handler() {
-        private val mActivity: WeakReference<Prod_Transfer_Fragment2>
+    private class MyHandler(activity: Ware_Transfer_Fragment2) : Handler() {
+        private val mActivity: WeakReference<Ware_Transfer_Fragment2>
 
         init {
             mActivity = WeakReference(activity)
@@ -227,12 +227,12 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.prod_transfer_fragment2, container, false)
+        return inflater.inflate(R.layout.ware_transfer_fragment2, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Prod_Transfer_MainActivity
+        parent = mContext as Ware_Transfer_MainActivity
         EventBus.getDefault().register(this) // 注册EventBus
 
     }
@@ -378,10 +378,10 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请输入实发数！")
             return false
         }
-//        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
-//            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
-//            return false
-//        }
+        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
+            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
+            return false
+        }
 //        if (minQty > icStockBillEntry.fqty) {
 //            Comm.showWarnDialog(mContext, "实发数不能小于最小领用数（"+minQty+"）！")
 //            return false

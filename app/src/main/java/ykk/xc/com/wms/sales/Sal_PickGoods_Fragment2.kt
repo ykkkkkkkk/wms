@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.OnClick
+import kotlinx.android.synthetic.main.sal_pickgoods_fragment1.lin_mtlDefaultStock
 import kotlinx.android.synthetic.main.sal_pickgoods_fragment2.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
@@ -1016,14 +1017,31 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
 
     private fun setICStockEntry_SeoutStock(list : List<SeoutStockEntry>?) {
         parent!!.fragment1.icStockBill.fselTranType = 83
+        parent!!.fragment1.lin_mtlDefaultStock.visibility = View.GONE
+
         var listEntry = ArrayList<ICStockBillEntry>()
         list!!.forEach {
             val entry = ICStockBillEntry()
             entry.icstockBillId = parent!!.fragment1.icStockBill.id
             entry.fitemId = it.icItem.fitemid
 //            entry.fentryId = it.fentryid
-            entry.fdcStockId = 0
-            entry.fdcSPId = 0
+            if(parent!!.fragment1.isUseMtlDefaultStock) {
+                if(it.icItem.stock != null) {
+                    entry.fdcStockId = it.icItem.stockId
+                    entry.stockId_wms = it.icItem.stock.id
+                    entry.inStockName = it.icItem.stock.stockName
+
+                    entry.stockAreaId_wms = parseInt(it.icItem.stockAreaId)
+                    entry.storageRackId_wms = parseInt(it.icItem.storageRackId)
+                    entry.fdcSPId = 0
+                    entry.stockPosId_wms = parseInt(it.icItem.stockPositionId)
+                    if(it.icItem.stockPos != null) {
+                        entry.inStockPosName = it.icItem.stockPos.stockPositionName
+                    }
+                }
+            }
+//            entry.fdcStockId = 0
+//            entry.fdcSPId = 0
 //            entry.fqty = it.useableQty
             entry.fprice = it.fprice
             entry.funitId = it.funitid
@@ -1037,8 +1055,8 @@ class Sal_PickGoods_Fragment2 : BaseFragment() {
             entry.mtlNumber = it.icItem.fnumber
             entry.mtlName = it.icItem.fname
             entry.fmode = it.icItem.fmodel
-            entry.inStockName = icStockBillEntry.inStockName
-            entry.inStockPosName = ""
+//            entry.inStockName = icStockBillEntry.inStockName
+//            entry.inStockPosName = ""
             entry.unitName = it.icItem.unit.unitName
             entry.remark = ""
             listEntry.add(entry)

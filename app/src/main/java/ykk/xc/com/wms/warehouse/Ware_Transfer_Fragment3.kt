@@ -1,7 +1,6 @@
-package ykk.xc.com.wms.sales
+package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Handler
 import android.os.Message
@@ -11,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.sal_pickgoods_fragment3.*
-import kotlinx.android.synthetic.main.sal_pickgoods_main.viewPager
+import kotlinx.android.synthetic.main.ware_transfer_fragment3.*
+import kotlinx.android.synthetic.main.ware_transfer_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -23,7 +22,7 @@ import ykk.xc.com.wms.bean.ICStockBillEntry
 import ykk.xc.com.wms.bean.User
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
-import ykk.xc.com.wms.sales.adapter.Sal_PickGoods_Fragment3_Adapter
+import ykk.xc.com.wms.produce.adapter.Ware_Transfer_Fragment3_Adapter
 import ykk.xc.com.wms.util.BigdecimalUtil
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
@@ -36,10 +35,10 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：仓库调拨
  * 作者：ykk
  */
-class Sal_PickGoods_Fragment3 : BaseFragment() {
+class Ware_Transfer_Fragment3 : BaseFragment() {
 
     companion object {
         private val SUCC1 = 200
@@ -48,13 +47,14 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
         private val UNDELETE = 501
         private val UPLOAD = 202
         private val UNUPLOAD = 502
+
     }
     private val context = this
-    private var parent: Sal_PickGoods_MainActivity? = null
+    private var parent: Ware_Transfer_MainActivity? = null
 
     val checkDatas = ArrayList<ICStockBillEntry>()
     private var okHttpClient: OkHttpClient? = null
-    private var mAdapter: Sal_PickGoods_Fragment3_Adapter? = null
+    private var mAdapter: Ware_Transfer_Fragment3_Adapter? = null
     private var user: User? = null
     private var mContext: Activity? = null
     private var curPos:Int = -1 // 当前行
@@ -64,8 +64,8 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Sal_PickGoods_Fragment3) : Handler() {
-        private val mActivity: WeakReference<Sal_PickGoods_Fragment3>
+    private class MyHandler(activity: Ware_Transfer_Fragment3) : Handler() {
+        private val mActivity: WeakReference<Ware_Transfer_Fragment3>
 
         init {
             mActivity = WeakReference(activity)
@@ -110,8 +110,13 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        m.toasts("操作成功")
-                        m.parent!!.finish()
+                        val retMsg = JsonUtil.strToString(msgObj)
+                        if(retMsg.length > 0) {
+                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
+                        } else {
+                            m.toasts("上传成功")
+                            m.parent!!.finish()
+                        }
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -136,22 +141,22 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.sal_pickgoods_fragment3, container, false)
+        return inflater.inflate(R.layout.ware_transfer_fragment3, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Sal_PickGoods_MainActivity
+        parent = mContext as Ware_Transfer_MainActivity
 
         recyclerView.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(mContext)
-        mAdapter = Sal_PickGoods_Fragment3_Adapter(mContext!!, checkDatas)
+        mAdapter = Ware_Transfer_Fragment3_Adapter(mContext!!, checkDatas)
         recyclerView.adapter = mAdapter
         // 设值listview空间失去焦点
         recyclerView.isFocusable = false
 
         // 行事件
-        mAdapter!!.setCallBack(object : Sal_PickGoods_Fragment3_Adapter.MyCallBack {
+        mAdapter!!.setCallBack(object : Ware_Transfer_Fragment3_Adapter.MyCallBack {
 //            override fun onModify(entity: ICStockBillEntry, position: Int) {
 //                EventBus.getDefault().post(EventBusEntity(31, entity))
 //                // 滑动第二个页面
@@ -198,45 +203,41 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
         }
     }
 
-    @OnClick(R.id.btn_save)
+    @OnClick(R.id.btn_upload)
     fun onViewClicked(view: View) {
         when (view.id) {
-            R.id.btn_save -> { // 上传
-                if(checkDatas.size == 0) {
+            R.id.btn_upload -> { // 上传
+                val size = checkDatas.size
+                if(size == 0) {
                     Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
                     return
                 }
-                var sumFqty = 0.0
-                var sumSourceQty = 0.0
-                checkDatas.forEachIndexed { index, it ->
-                    sumFqty = BigdecimalUtil.add(sumFqty, it.fqty)
-                    sumSourceQty = BigdecimalUtil.add(sumSourceQty, it.fsourceQty)
+                var isGt0 = false
+                checkDatas.forEach {
+                    if(it.fqty > 0.0) {
+                        isGt0 = true
+                    }
+                }
+                if(!isGt0) {
+                    Comm.showWarnDialog(mContext,"请至少输入一行数量！")
+                    return
+                }
 
-                    if(it.stockId_wms == 0) {
+                checkDatas.forEachIndexed { index, it ->
+                    if(it.fqty > 0 && it.stockId_wms == 0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
                         return
                     }
-                    if(it.fqty == 0.0) {
-                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（拣货数）！")
-                        return
-                    }
-                    if(it.fqty > it.fsourceQty) {
-                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，拣货数不能大于源单数！")
-                        return
-                    }
+//                    if(it.fqty == 0.0) {
+//                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（实发数）！")
+//                        return
+//                    }
                 }
-                if(sumFqty < sumSourceQty) {
-                    val build = AlertDialog.Builder(mContext)
-                    build.setIcon(R.drawable.caution)
-                    build.setTitle("系统提示")
-                    build.setMessage("当前货物未全部捡完，继续操作吗？")
-                    build.setPositiveButton("是") { dialog, which -> run_saveToMissionBill() }
-                    build.setNegativeButton("否", null)
-                    build.setCancelable(false)
-                    build.show()
-                } else {
-                    run_saveToMissionBill()
-                }
+
+                val list = ArrayList<ICStockBill>()
+                list.add(parent!!.fragment1.icStockBill)
+                val strJson = JsonUtil.objectToString(list)
+                run_uploadToK3(strJson)
             }
         }
     }
@@ -266,6 +267,7 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/findEntryList")
         val formBody = FormBody.Builder()
                 .add("icstockBillId", parent!!.fragment1.icStockBill.id.toString())
+                .add("moreStock", "1") // 多仓库查询
                 .build()
 
         val request = Request.Builder()
@@ -335,17 +337,13 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
     }
 
     /**
-     * 保存生产质检任务单
+     * 上传单据
      */
-    private fun run_saveToMissionBill() {
-        val strIcstockBill = JsonUtil.objectToString(parent!!.fragment1.icStockBill)
-        val strIcstockBillEntry = JsonUtil.objectToString(checkDatas)
+    private fun run_uploadToK3(strJson : String) {
         showLoadDialog("加载中...", false)
-        val mUrl = getURL("stockBill_WMS/saveToMissionBill")
+        val mUrl = getURL("stockBill_WMS/uploadToK3")
         val formBody = FormBody.Builder()
-                .add("strIcstockBill", strIcstockBill)
-                .add("strIcstockBillEntry", strIcstockBillEntry)
-                .add("missionType", "52") // 生成出库质检任务单生
+                .add("strJson", strJson)
                 .build()
 
         val request = Request.Builder()
@@ -364,7 +362,7 @@ class Sal_PickGoods_Fragment3 : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()
                 val result = body.string()
-                LogUtil.e("run_saveToMissionBill --> onResponse", result)
+                LogUtil.e("run_uploadToK3 --> onResponse", result)
                 if (!JsonUtil.isSuccess(result)) {
                     val msg = mHandler.obtainMessage(UNUPLOAD, result)
                     mHandler.sendMessage(msg)

@@ -1,4 +1,4 @@
-package ykk.xc.com.wms.sales
+package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,18 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.sal_out_stock_fragment2.*
-import kotlinx.android.synthetic.main.sal_pickgoods_fragment1.*
-import kotlinx.android.synthetic.main.sal_pickgoods_main.*
+import kotlinx.android.synthetic.main.ware_transfer_fragment1.*
+import kotlinx.android.synthetic.main.ware_transfer_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import ykk.xc.com.wms.R
-import ykk.xc.com.wms.bean.EventBusEntity
-import ykk.xc.com.wms.bean.ICStockBill
-import ykk.xc.com.wms.bean.MissionBill
-import ykk.xc.com.wms.bean.User
+import ykk.xc.com.wms.basics.Dept_DialogActivity
+import ykk.xc.com.wms.basics.Emp_DialogActivity
+import ykk.xc.com.wms.basics.Supplier_DialogActivity
+import ykk.xc.com.wms.bean.*
 import ykk.xc.com.wms.bean.k3Bean.Emp
-import ykk.xc.com.wms.bean.k3Bean.SeoutStockEntry
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.JsonUtil
@@ -35,16 +33,20 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：仓库调拨
  * 作者：ykk
  */
-class Sal_PickGoods_Fragment1 : BaseFragment() {
+class Ware_Transfer_Fragment1 : BaseFragment() {
 
     companion object {
+        private val SEL_DEPT = 10
+        private val SEL_SUPP = 11
         private val SEL_EMP1 = 12
         private val SEL_EMP2 = 13
         private val SEL_EMP3 = 14
         private val SEL_EMP4 = 15
+        private val SEL_STOCK = 16
+        private val RESULT_NUM = 1
         private val SAVE = 201
         private val UNSAVE = 501
         private val FIND_SOURCE = 202
@@ -59,20 +61,19 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
     private var okHttpClient: OkHttpClient? = null
     private var user: User? = null
     private var mContext: Activity? = null
-    private var parent: Sal_PickGoods_MainActivity? = null
+    private var parent: Ware_Transfer_MainActivity? = null
     private val df = DecimalFormat("#.###")
     private var timesTamp:String? = null // 时间戳
     var icStockBill = ICStockBill() // 保存的对象
 //    var isReset = false // 是否点击了重置按钮.
-    var seoutStockEntryList:List<SeoutStockEntry>? = null
+    var ppBomTransferEntryList:List<PPBomTransferEntry>? = null
     private var icStockBillId = 0 // 上个页面传来的id
-    var isUseMtlDefaultStock = false // 是否使用物料默认仓库
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Sal_PickGoods_Fragment1) : Handler() {
-        private val mActivity: WeakReference<Sal_PickGoods_Fragment1>
+    private class MyHandler(activity: Ware_Transfer_Fragment1) : Handler() {
+        private val mActivity: WeakReference<Ware_Transfer_Fragment1>
 
         init {
             mActivity = WeakReference(activity)
@@ -110,13 +111,32 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     FIND_SOURCE ->{ // 查询源单 返回
-                        val list = JsonUtil.strToList(msgObj, SeoutStockEntry::class.java)
-                        m.seoutStockEntryList = list
+                        val list = JsonUtil.strToList(msgObj, PPBomTransferEntry::class.java)
+                        m.ppBomTransferEntryList = list
+                        val ppBomTransfer = list[0].ppBomTransfer
+                        when(ppBomTransfer.sourceBillType) {
+                            1 -> { // 显示部门
+                                if(ppBomTransfer.dept != null) {
+                                    m.icStockBill.fdeptId = ppBomTransfer.dept.fitemID
+                                    m.icStockBill.deptName = ppBomTransfer.dept.departmentName
+                                    m.tv_deptSel.text = m.icStockBill.deptName
+                                    m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
+                                }
+                            }
+                            2 -> { // 显示供应商
+                                if(ppBomTransfer.supplier != null) {
+                                    m.icStockBill.fsupplyId = ppBomTransfer.supplier.supplierId
+                                    m.icStockBill.suppName = ppBomTransfer.supplier.fname
+                                    m.tv_suppSel.text = m.icStockBill.deptName
+                                    m.setEnables(m.tv_suppSel, R.drawable.back_style_gray3b, false)
+                                }
+                            }
+                        }
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "该页面有错误！2秒后自动关闭..."
-                        Comm.showWarnDialog(m.mContext, errMsg)
+                        m.toasts(errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)
@@ -169,7 +189,6 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
         icStockBill.qualifiedStockId = m.qualifiedStockId       // 合格仓库id
         icStockBill.unQualifiedStockId = m.unQualifiedStockId       // 不合格仓库id
         icStockBill.missionBillId = m.missionBillId
-        icStockBill.strMissionBillId = m.strMissionBillId
 
         icStockBill.supplier = m.supplier
         icStockBill.qualifiedStock = m.qualifiedStock
@@ -177,10 +196,26 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
 
         tv_pdaNo.text = m.pdaNo
         tv_inDateSel.text = m.fdate
+        tv_suppSel.text = m.suppName
+        tv_deptSel.text = m.deptName
         tv_emp1Sel.text = m.yewuMan
         tv_emp2Sel.text = m.baoguanMan
         tv_emp3Sel.text = m.fuzheMan
         tv_emp4Sel.text = m.yanshouMan
+        tv_roughWeight.text = df.format(m.roughWeight)
+        tv_netWeight.text = df.format(m.netWeight)
+        // 重量单位类型(1：千克，2：克，3：磅)
+        when(m.weightUnitType) {
+            1 -> { // 千克（kg）
+                tv_weightUnitType.text = "千克（kg）"
+            }
+            2 -> { // 克（g）
+                tv_weightUnitType.text = "克（g）"
+            }
+            3 -> { // 磅（lb）
+                tv_weightUnitType.text = "磅（lb）"
+            }
+        }
 
         parent!!.isChange = false
         parent!!.isMainSave = true
@@ -189,12 +224,12 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.sal_pickgoods_fragment1, container, false)
+        return inflater.inflate(R.layout.ware_transfer_fragment1, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Sal_PickGoods_MainActivity
+        parent = mContext as Ware_Transfer_MainActivity
     }
 
     override fun initData() {
@@ -215,7 +250,7 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
         tv_emp3Sel.text = user!!.empName
         tv_emp4Sel.text = user!!.empName
 
-        icStockBill.billType = "XSJH" // 销售拣货
+        icStockBill.billType = "SCDB" // 生产调拨
         icStockBill.ftranType = 1
         icStockBill.frob = 1
         icStockBill.weightUnitType = 1
@@ -238,25 +273,20 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
         val bundle = mContext!!.intent.extras
         if(bundle != null) {
             // 任务单点击过来的
-            if(bundle.containsKey("missionBills")) {
-                val missionBills = bundle.getSerializable("missionBills") as List<MissionBill>
-
-                lin_mtlDefaultStock.visibility = View.VISIBLE
-//                icStockBill.missionBillId = missionBill.id // 记录任务单的id
-                val strFinterId = StringBuffer()
-                val strMissionBillId = StringBuffer()
-                missionBills.forEach {
-                    strMissionBillId.append((if(strMissionBillId.length == 0) "" else ",") + it.id)
-                    strFinterId.append((if(strFinterId.length == 0) "" else ",") + it.sourceBillId)
+            if(bundle.containsKey("missionBill")) {
+                val missionBill = bundle.getSerializable("missionBill") as MissionBill
+                icStockBill.missionBillId = missionBill.id // 记录任务单的id
+                run_ppBomTransferList(missionBill.sourceBillId)
+                if (missionBill.sourceBillId > 0) {
+                    // 修改任务单状态
+                    run_missionBillModifyStatus(missionBill.id)
                 }
-                icStockBill.strMissionBillId = strMissionBillId.toString()
-                run_seoutStockList(strFinterId.toString())
-
             } else if(bundle.containsKey("id")) { // 查询过来的
                 icStockBillId = bundle.getInt("id") // ICStockBill主表id
                 // 查询主表信息
                 run_findStockBill(icStockBillId)
             }
+
 
         } else {
             toasts("该页面有错误！2秒后自动关闭...")
@@ -272,21 +302,54 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
         }
     }
 
-    @OnClick(R.id.tv_inDateSel, R.id.btn_save, R.id.btn_clone, R.id.tv_mtlDefaultStockSel)
+    @OnClick(R.id.tv_inDateSel, R.id.tv_suppSel, R.id.tv_deptSel, R.id.tv_emp1Sel, R.id.tv_emp2Sel, R.id.tv_emp3Sel, R.id.tv_emp4Sel,
+             R.id.btn_save, R.id.btn_clone, R.id.tv_weightUnitType, R.id.tv_connBlueTooth, R.id.tv_roughWeight)
     fun onViewClicked(view: View) {
         var bundle: Bundle? = null
         when (view.id) {
             R.id.tv_inDateSel -> { // 选择日期
                 Comm.showDateDialog(mContext, tv_inDateSel, 0)
             }
+            R.id.tv_suppSel -> { // 选择供应商
+                showForResult(Supplier_DialogActivity::class.java, SEL_SUPP, null)
+            }
+            R.id.tv_deptSel -> { // 选择部门
+                showForResult(Dept_DialogActivity::class.java, SEL_DEPT, null)
+            }
+            R.id.tv_emp1Sel -> { // 选择业务员
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP1, bundle)
+            }
+            R.id.tv_emp2Sel -> { // 选择保管者
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP2, bundle)
+            }
+            R.id.tv_emp3Sel -> { // 选择负责人
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP3, bundle)
+            }
+            R.id.tv_emp4Sel -> { // 选择验收人
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP4, bundle)
+            }
+            R.id.tv_weightUnitType -> { // 称重单位选择
+                pop_unitType(view)
+                popWindow!!.showAsDropDown(view)
+            }
+            R.id.tv_connBlueTooth -> { // 蓝牙连接
+                parent!!.openBluetooth()
+            }
+            R.id.tv_roughWeight -> { // 输入毛重
+                showInputDialog("毛重", "", "0.0", RESULT_NUM)
+            }
             R.id.btn_save -> { // 保存
                 if(!checkSave()) return
                 icStockBill.fdate = getValues(tv_inDateSel)
                 run_save();
-            }
-            R.id.tv_mtlDefaultStockSel -> { // 物料默认仓库
-                pop_true_false(view)
-                popWindow!!.showAsDropDown(view)
             }
             R.id.btn_clone -> { // 重置
                 if (parent!!.isChange) {
@@ -330,10 +393,20 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
     }
 
     fun reset() {
+        setEnables(tv_suppSel, R.drawable.back_style_blue2, true)
+        setEnables(tv_deptSel, R.drawable.back_style_blue2, true)
         parent!!.isMainSave = false
         parent!!.viewPager.setScanScroll(false) // 禁止滑动
         tv_pdaNo.text = ""
         tv_inDateSel.text = Comm.getSysDate(7)
+        tv_suppSel.text = ""
+        tv_deptSel.text = ""
+//        tv_emp1Sel.text = ""
+//        tv_emp2Sel.text = ""
+//        tv_emp3Sel.text = ""
+//        tv_emp4Sel.text = ""
+        tv_roughWeight.text = ""
+        tv_netWeight.text = ""
         icStockBill.id = 0
         icStockBill.fselTranType = 0
         icStockBill.pdaNo = ""
@@ -364,13 +437,13 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
      * 创建PopupWindow 【 来源类型选择 】
      */
     private var popWindow: PopupWindow? = null
-    private fun pop_true_false(v: View) {
+    private fun pop_unitType(v: View) {
         if (null != popWindow) {//不为空就隐藏
             popWindow!!.dismiss()
             return
         }
         // 获取自定义布局文件popupwindow_left.xml的视图
-        val popV = layoutInflater.inflate(R.layout.popup_true_false, null)
+        val popV = layoutInflater.inflate(R.layout.weight_unitname_popwindow, null)
         // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
         popWindow = PopupWindow(popV, v.width, ViewGroup.LayoutParams.WRAP_CONTENT, true)
         // 设置动画效果
@@ -382,24 +455,45 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
         // 点击其他地方消失
         val click = View.OnClickListener { v ->
             when (v.id) {
-                R.id.btn1 -> { // 是
-                    tv_mtlDefaultStockSel.text = "是"
-                    isUseMtlDefaultStock = true
+                R.id.tv1 -> { // 千克（kg）
+                    tv_weightUnitType.text = "千克（kg）"
+                    icStockBill.weightUnitType = 1
                 }
-                R.id.btn2 -> {// 否
-                    tv_mtlDefaultStockSel.text = "否"
-                    isUseMtlDefaultStock = false
+                R.id.tv2 -> { // 克（g）
+                    tv_weightUnitType.text = "克（g）"
+                    icStockBill.weightUnitType = 2
+                }
+                R.id.tv3 -> { // 磅（lb）
+                    tv_weightUnitType.text = "磅（lb）"
+                    icStockBill.weightUnitType = 3
                 }
             }
             popWindow!!.dismiss()
         }
-        popV.findViewById<View>(R.id.btn1).setOnClickListener(click)
-        popV.findViewById<View>(R.id.btn2).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv1).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv2).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv3).setOnClickListener(click)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            SEL_SUPP -> {//查询供应商	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val supp = data!!.getSerializableExtra("obj") as Supplier
+                    tv_suppSel.text = supp!!.fname
+                    icStockBill.fsupplyId = supp.supplierId
+                    icStockBill.suppName = supp.fname
+                }
+            }
+            SEL_DEPT -> {//查询部门	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val dept = data!!.getSerializableExtra("obj") as Department
+                    tv_deptSel.text = dept!!.departmentName
+                    icStockBill.fdeptId = dept.fitemID
+                    icStockBill.deptName = dept.departmentName
+                }
+            }
             SEL_EMP1 -> {//查询业务员	返回
                 if (resultCode == Activity.RESULT_OK) {
                     val emp = data!!.getSerializableExtra("obj") as Emp
@@ -430,6 +524,17 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
                     tv_emp4Sel.text = emp!!.fname
                     icStockBill.ffmanagerId = emp.fitemId
                     icStockBill.yanshouMan = emp.fname
+                }
+            }
+            RESULT_NUM -> { // 数量	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.getExtras()
+                    if (bundle != null) {
+                        val value = bundle.getString("resultValue", "")
+                        val num = parseDouble(value)
+                        tv_roughWeight.text = df.format(num)
+                        icStockBill.roughWeight = num
+                    }
                 }
             }
         }
@@ -476,14 +581,16 @@ class Sal_PickGoods_Fragment1 : BaseFragment() {
     }
 
     /**
-     * 根据任务单查询发货通知单
+     * 根据任务单查询投料调拨单
      */
-    private fun run_seoutStockList(strFinterId: String) {
+    private fun run_ppBomTransferList(ppBomTransferId: Int) {
         showLoadDialog("保存中...", false)
-        val mUrl = getURL("seoutStock/findEntryList")
+        val mUrl = getURL("ppBomTransfer/findListByParam")
 
         val formBody = FormBody.Builder()
-                .add("strFinterId", strFinterId)
+                .add("ppBomTransferId", ppBomTransferId.toString())
+                .add("entryType", "1") // 分录类型 1：仓库调车间，2：车间内调拨
+                .add("mustQtyGt0", "1") // 只查询应发数大于0的
                 .build()
 
         val request = Request.Builder()

@@ -382,10 +382,10 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请输入数量！")
             return false
         }
-        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
-            Comm.showWarnDialog(mContext, "调拨数量不能大于可调拨数！")
-            return false
-        }
+//        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
+//            Comm.showWarnDialog(mContext, "调拨数量不能大于可调拨数！")
+//            return false
+//        }
         if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y")) && icStockBillEntry.boxBarCodeId == 0 && !icStockBillEntry.icItem.snManager.equals("Y")) {
             Comm.showWarnDialog(mContext, "请输入称重数量或连接蓝牙自动称重！")
             return false

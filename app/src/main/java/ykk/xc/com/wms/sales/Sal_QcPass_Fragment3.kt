@@ -200,8 +200,7 @@ class Sal_QcPass_Fragment3 : BaseFragment() {
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.btn_save -> { // 上传
-                val size = checkDatas.size
-                if(size == 0) {
+                if(checkDatas.size == 0) {
                     Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
                     return
                 }
