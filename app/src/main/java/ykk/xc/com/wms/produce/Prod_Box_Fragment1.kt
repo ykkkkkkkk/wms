@@ -936,7 +936,7 @@ class Prod_Box_Fragment1 : BaseFragment() {
         showLoadDialog("加载中...", false)
         var mUrl:String? = null
         var barcode:String? = null
-        var type:String? = null
+        var type = ""
         when(smqFlag) {
             '1' -> { // 箱码
                 mUrl = getURL("boxBarCode/findBarcode")
@@ -946,12 +946,11 @@ class Prod_Box_Fragment1 : BaseFragment() {
             '2' -> { // 上级箱码
                 mUrl = getURL("boxBarCode/findBarcode_parent")
                 barcode = getValues(et_boxCode2)
-                type = ""
+                type = "1"
             }
             '3' -> { // 物料
                 mUrl = getURL("prodOrder/findBarcodeByBinning")
                 barcode = getValues(et_mtlCode)
-                type = ""
             }
         }
         val formBody = FormBody.Builder()

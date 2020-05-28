@@ -45,10 +45,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6dp"
+        android:gravity="center">
+
+        <CheckBox
+            android:id="@+id/cb_stockAutoConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_12sp"
+            android:textColor="@color/c_FF6600"
+            android:text="到最末级自动返回" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="@dimen/_42dp"
         android:layout_marginBottom="@dimen/_6dp"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_marginRight="@dimen/_6dp"
+        android:layout_marginLeft="@dimen/_3dp"
+        android:layout_marginRight="@dimen/_3dp"
         android:layout_marginTop="@dimen/_12dp"
         android:gravity="center"
         android:orientation="horizontal">
@@ -56,7 +72,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:ems="3"
+            android:ems="2"
             android:gravity="center"
             android:text="仓库"
             android:textColor="#000000"
@@ -119,14 +135,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_42dp"
-        android:layout_margin="@dimen/_6dp"
+        android:layout_marginBottom="@dimen/_6dp"
+        android:layout_marginLeft="@dimen/_3dp"
+        android:layout_marginRight="@dimen/_3dp"
+        android:layout_marginTop="@dimen/_6dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:ems="3"
+            android:ems="2"
             android:gravity="center"
             android:text="库区"
             android:textColor="#000000"
@@ -194,14 +213,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_42dp"
-        android:layout_margin="@dimen/_6dp"
+        android:layout_marginBottom="@dimen/_6dp"
+        android:layout_marginLeft="@dimen/_3dp"
+        android:layout_marginRight="@dimen/_3dp"
+        android:layout_marginTop="@dimen/_6dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:ems="3"
+            android:ems="2"
             android:gravity="center"
             android:text="货架"
             android:textColor="#000000"
@@ -267,17 +289,19 @@
     </LinearLayout>
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="@dimen/_42dp"
-        android:layout_margin="@dimen/_6dp"
+        android:layout_marginBottom="@dimen/_6dp"
+        android:layout_marginLeft="@dimen/_3dp"
+        android:layout_marginRight="@dimen/_3dp"
+        android:layout_marginTop="@dimen/_6dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:ems="3"
+            android:ems="2"
             android:gravity="center"
             android:text="库位"
             android:textColor="#000000"

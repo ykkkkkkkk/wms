@@ -173,6 +173,15 @@ public abstract class BaseDialogActivity extends AppCompatActivity {
 	}
 
 	/**
+	 * 删除（xml）指定键值
+	 */
+	public void spfRemove(String key, String xmlName) {
+		SharedPreferences.Editor editor = spf(xmlName).edit();
+		editor.remove(key);
+		editor.commit();
+	}
+
+	/**
 	 * 得到xml中的value
 	 *
 	 * @param key

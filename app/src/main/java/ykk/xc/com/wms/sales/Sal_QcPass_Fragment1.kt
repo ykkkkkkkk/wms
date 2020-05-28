@@ -111,6 +111,7 @@ class Sal_QcPass_Fragment1 : BaseFragment() {
                         val list = JsonUtil.strToList(msgObj, SeoutStock::class.java)
                         m.icStockBill.fcustId = list[0].fcustid
                         m.icStockBill.deliverWay = list[0].fheadselfs0241
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         errMsg = JsonUtil.strToString(msgObj)
@@ -123,6 +124,7 @@ class Sal_QcPass_Fragment1 : BaseFragment() {
                     FIND_ICSTOCKBILL -> { // 查询主表信息 成功
                         val icsBill = JsonUtil.strToObject(msgObj, ICStockBill::class.java)
                         m.setICStockBill(icsBill)
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
                         errMsg = JsonUtil.strToString(msgObj)

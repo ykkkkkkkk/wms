@@ -24,11 +24,12 @@ import java.util.*
 class ToolMove_MainActivity : BaseActivity() {
 
     private val context = this
-    private val TAG = "PlantMould_MainActivity"
+    private val TAG = "ToolMove_MainActivity"
     private var curRadio: View? = null
     private var curRadioName: TextView? = null
     var isChange: Boolean = false // 返回的时候是否需要判断数据是否保存了
     val fragment1 = ToolMove_Fragment1()
+    val fragment3 = ToolMove_Fragment3()
     val fragment2 = ToolMove_Fragment2()
     var isMainSave = false // 主表信息是否保存
     private val REFRESH = 1
@@ -50,13 +51,14 @@ class ToolMove_MainActivity : BaseActivity() {
 //        Sal_OutFragment2 fragment2 = new Sal_OutFragment2();
 //        Sal_OutFragment3 fragment3 = new Sal_OutFragment3();
 
+        listFragment.add(fragment3)
         listFragment.add(fragment1)
-        listFragment.add(fragment2);
+        listFragment.add(fragment2)
 //        viewPager.setScanScroll(false); // 禁止左右滑动
         //ViewPager设置适配器
         viewPager.setAdapter(BaseFragmentAdapter(supportFragmentManager, listFragment))
         //设置ViewPage缓存界面数，默认为1
-//        viewPager!!.offscreenPageLimit = 1
+        viewPager!!.offscreenPageLimit = 3
         //ViewPager显示第一个Fragment
         viewPager!!.setCurrentItem(0)
 
@@ -68,8 +70,9 @@ class ToolMove_MainActivity : BaseActivity() {
 
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    0 -> tabChange(viewRadio1!!, tv_radioName1, "容器移库", 0)
-                    1 -> tabChange(viewRadio2!!, tv_radioName2, "工具移库", 1)
+                    0 -> tabChange(viewRadio1!!, tv_radioName1, "物料移库", 0)
+                    1 -> tabChange(viewRadio2!!, tv_radioName2, "容器移库", 1)
+                    2 -> tabChange(viewRadio3!!, tv_radioName3, "工具移库", 2)
                 }
             }
 
@@ -86,7 +89,7 @@ class ToolMove_MainActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.btn_close, R.id.lin_tab1, R.id.lin_tab2, R.id.btn_search)
+    @OnClick(R.id.btn_close, R.id.lin_tab1, R.id.lin_tab2, R.id.lin_tab3, R.id.btn_search)
     fun onViewClicked(view: View) {
         // setCurrentItem第二个参数控制页面切换动画
         //  true:打开/false:关闭
@@ -120,10 +123,13 @@ class ToolMove_MainActivity : BaseActivity() {
 //                showForResult(OutInStock_Search_MainActivity::class.java, REFRESH, bundle)
             }
             R.id.lin_tab1 -> {
-                tabChange(viewRadio1!!, tv_radioName1, "容器移库", 0)
+                tabChange(viewRadio1!!, tv_radioName1, "物料移库", 0)
             }
             R.id.lin_tab2 -> {
-                tabChange(viewRadio2!!, tv_radioName2, "工具移库", 1)
+                tabChange(viewRadio2!!, tv_radioName2, "容器移库", 1)
+            }
+            R.id.lin_tab3 -> {
+                tabChange(viewRadio3!!, tv_radioName3, "工具移库", 2)
             }
         }
     }

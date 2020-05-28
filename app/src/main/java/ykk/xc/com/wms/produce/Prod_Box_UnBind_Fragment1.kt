@@ -106,6 +106,7 @@ class Prod_Box_UnBind_Fragment1 : BaseFragment() {
                                     m.tv_boxSize0.text = ""
                                     m.btn_save.visibility = View.GONE
                                 }
+                                m.checkDatas.clear()
                                 m.getBoxBarcode(list[0])
                             }
                             '2'-> { // 物料

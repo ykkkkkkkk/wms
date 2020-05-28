@@ -183,6 +183,17 @@
             android:name=".warehouse.ICInvBackUp_Plan_DialogActivity"
             android:theme="@style/dialogStyle"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.InventoryNowByMtl_DialogActivity"
+            android:theme="@style/dialogStyle"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.InventoryNowByStock_DialogActivity"
+            android:theme="@style/dialogStyle"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_Box_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
         <!-- 采购模块 -->

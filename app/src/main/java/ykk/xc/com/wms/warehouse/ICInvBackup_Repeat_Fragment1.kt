@@ -110,9 +110,9 @@ class ICInvBackup_Repeat_Fragment1 : BaseFragment() {
                             '1' -> { // 仓库位置扫描
                                 m.resetStockGroup()
                                 m.getStockGroup(msgObj)
-                                if(m.checkDatas.size == 0) {
-                                    m.run_okhttpDatas(null)
-                                }
+//                                if(m.checkDatas.size == 0) {
+//                                    m.run_okhttpDatas(null)
+//                                }
                             }
                             '2' -> { // 容器扫描
                                 val container = JsonUtil.strToObject(msgObj, Container::class.java)
@@ -644,22 +644,26 @@ class ICInvBackup_Repeat_Fragment1 : BaseFragment() {
 
         if(stock != null ) {
             tv_stockName.text = Html.fromHtml("仓库：<font color='#6a5acd'>"+stock!!.stockName+"</font>")
+            tv_positionName.text = stock!!.stockName
         }
         if(stockArea != null ) {
             tv_stockAreaName.visibility = View.VISIBLE
             tv_stockAreaName.text = Html.fromHtml("库区：<font color='#6a5acd'>"+stockArea!!.fname+"</font>")
+            tv_positionName.text = stockArea!!.fname
         }
         if(storageRack != null ) {
             tv_storageRackName.visibility = View.VISIBLE
             tv_storageRackName.text = Html.fromHtml("货架：<font color='#6a5acd'>"+storageRack!!.fnumber+"</font>")
+            tv_positionName.text = storageRack!!.fnumber
         }
         if(stockPos != null ) {
             tv_stockPosName.visibility = View.VISIBLE
             tv_stockPosName.text = Html.fromHtml("库位：<font color='#6a5acd'>"+stockPos!!.stockPositionName+"</font>")
+            tv_positionName.text = stockPos!!.stockPositionName
         }
 
         // 人为替换仓库信息
-        if(checkDatas.size > 0) {
+        if(checkDatas.size > 0 && curPos > -1) {
             checkDatas[curPos].stock = null
             checkDatas[curPos].stockArea = null
             checkDatas[curPos].storageRack = null
@@ -739,9 +743,9 @@ class ICInvBackup_Repeat_Fragment1 : BaseFragment() {
                         stockPos = data!!.getSerializableExtra("stockPos") as StockPosition
                     }
                     getStockGroup(null)
-                    if(checkDatas.size == 0) {
-                        run_okhttpDatas(null)
-                    }
+//                    if(checkDatas.size == 0) {
+//                        run_okhttpDatas(null)
+//                    }
                 }
             }
             SEL_CONTAINER -> {//查询容器	返回

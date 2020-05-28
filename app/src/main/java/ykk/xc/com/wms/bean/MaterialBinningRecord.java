@@ -18,7 +18,7 @@ public class MaterialBinningRecord implements Serializable {
 
 	private int id;
 	private int status;                        //
-	private char type;                        // 1:生产装箱，2:销售装箱
+	private char type;                        // 1:生产装箱，2:销售装箱，3:库内装箱
 	private char packType;                    // 包装类型（A:单装，B:混装）
 	private int boxId;                        // 包装箱id
 	private int boxBarCodeId;                // 包装条码id

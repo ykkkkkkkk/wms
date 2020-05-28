@@ -13,7 +13,9 @@ public class ICStockBill implements Serializable {
 	private int id;
 	private String pdaNo;				// 本地生产的流水号
 	/* 单据类型( QTRK:其他入库，QTCK:其他出库，CGSHRK:采购收货入库，CGSHCZ:采购收货操作(不更新库存单据)，CGSHCZ_DBD:采购收货操作_调拨单，CGSHCZ_BTOR:采购收货操作_红字外购入库，CGSHCZ_QTRK:采购收货操作_其他入库
-	 		  SCRK:生产入库，SCDB:生产调拨，SCRKDB:生产入库调拨， SCLL:生产领料，XSCK:销售出库，XSCK_BTOR:销售出库_红字，DBD:调拨单，WWCK:委外出库，WWRK:委外入库，STRK：受托入库,STLL:受托领料) */
+	 		  SCRK:生产入库，SCDB:生产调拨，SCRKDB:生产入库调拨， SCLL:生产领料，XSCK:销售出库，XSCK_BTOR:销售出库_红字，DBD:调拨单，WWCK:委外出库，WWRK:委外入库，STRK：受托入库,STLL:受托领料)
+	 		  WLYK:物料移库
+	*/
 	private String billType;
 	private String wmsBillType;
 	private char billStatus;			// 单据业务状态 (A：创建，B：审核，C：未审核)

@@ -485,6 +485,7 @@
             android:background="@drawable/btn_blue2_selector"
             android:gravity="center"
             android:text="保存"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:textSize="16sp" />
 

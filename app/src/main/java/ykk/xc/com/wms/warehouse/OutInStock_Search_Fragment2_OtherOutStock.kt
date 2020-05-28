@@ -2,6 +2,7 @@ package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.DividerItemDecoration
@@ -134,9 +135,9 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
         // 行事件
         mAdapter!!.setCallBack(object : OutInStockSearchFragment2_OtherOutStock_Adapter.MyCallBack {
             override fun onSearch(entity: ICStockBill, position: Int) {
-//                val bundle = Bundle()
-//                bundle.putInt("id", entity.id)
-//                show(Pur_Receive_InStock_MainActivity::class.java, bundle)
+                val bundle = Bundle()
+                bundle.putInt("id", entity.id)
+                show(OtherOutStock_MainActivity::class.java, bundle)
             }
             override fun onUpload(entity: ICStockBill, position: Int) {
                 val list = ArrayList<ICStockBill>()

@@ -46,13 +46,9 @@ class MainTabFragment4 : BaseFragment() {
             R.id.relative6 -> { // 工具移库
                 show(ToolMove_MainActivity::class.java, null)
             }
-            R.id.relative7 -> {// 库存查询
-
+            R.id.relative7 -> {// 库内装箱
+                show(Ware_Box_MainActivity::class.java, null)
             }
-        }//                bundle = new Bundle();
-        //                show(OtherInStock_MainActivity.class, bundle);
-        //                bundle = new Bundle();
-        //                show(OtherOutStock_MainActivity.class, bundle);
-        //                show(InventoryNowSearchActivity.class, null);
+        }
     }
 }

@@ -227,7 +227,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/relative7"
@@ -243,7 +243,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_9" />
+                android:src="@drawable/aa_ico2a_2b" />
 
 
             <TextView
@@ -253,7 +253,7 @@
                 android:layout_below="@+id/imgView7"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="库存查询"
+                android:text="库内装箱"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

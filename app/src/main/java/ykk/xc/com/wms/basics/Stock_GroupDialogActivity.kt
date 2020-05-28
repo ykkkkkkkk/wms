@@ -45,6 +45,7 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
 
         private val SUCC1 = 200
         private val UNSUCC1 = 500
+        private val SEL_STOCKAUTOBACK = "SEL_STOCKAUTOBACK"
     }
     private val context = this
     private var okHttpClient: OkHttpClient? = null
@@ -54,10 +55,6 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
     private var stockPos:StockPosition? = null
     private var isTextChange: Boolean = false // 是否进入TextChange事件
     private var smqFlag = '1' // 使用扫码枪扫码（1：仓库扫码，2：库区扫码，3：货架扫码，4：库位扫码）
-    private var curStockId = 0 // 当前仓库id
-    private var curStockAreaId = 0 // 当前库区id
-    private var curStorageRackId = 0 // 当前货架id
-    private var curStockPosId = 0 // 当前库位id
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -83,15 +80,15 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
                         when(m.smqFlag) {
                             '1' -> { // 仓库扫码
                                 val stock = JsonUtil.strToObject(msgObj, Stock::class.java)
-                                m.getStock(stock)
+                                m.getStock(stock,false)
                             }
                             '2' -> { // 库区扫码
                                 val stockArea = JsonUtil.strToObject(msgObj, StockArea::class.java)
-                                m.getStockArea(stockArea)
+                                m.getStockArea(stockArea,false)
                             }
                             '3' -> { // 货架扫码
                                 val storageRack = JsonUtil.strToObject(msgObj, StorageRack::class.java)
-                                m.getStorageRack(storageRack)
+                                m.getStorageRack(storageRack,false)
                             }
                             '4' -> { // 库位扫码
                                 val stockPos = JsonUtil.strToObject(msgObj, StockPosition::class.java)
@@ -150,6 +147,11 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
         hideSoftInputMode(et_stockAreaCode)
         hideSoftInputMode(et_storageRackCode)
         hideSoftInputMode(et_stockPosCode)
+
+        val spf = spf(getResStr(R.string.saveOther))
+        if(spf.contains(SEL_STOCKAUTOBACK)) {
+            cb_stockAutoConfirm.isChecked = true
+        }
     }
 
     override fun initData() {
@@ -157,19 +159,19 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
         if (bundle != null) {
             if(bundle.containsKey("stock") && bundle.getSerializable("stock") != null) {
                 stock = bundle.getSerializable("stock") as Stock
-                getStock(stock!!)
+                getStock(stock!!,false)
             }
             if(bundle.containsKey("stockArea") && bundle.getSerializable("stockArea") != null) {
                 stockArea = bundle.getSerializable("stockArea") as StockArea
-                getStockArea(stockArea!!)
+                getStockArea(stockArea!!,false)
             }
             if(bundle.containsKey("storageRack") && bundle.getSerializable("storageRack") != null) {
                 storageRack = bundle.getSerializable("storageRack") as StorageRack
-                getStorageRack(storageRack!!)
+                getStorageRack(storageRack!!,false)
             }
             if(bundle.containsKey("stockPos") && bundle.getSerializable("stockPos") != null) {
                 stockPos = bundle.getSerializable("stockPos") as StockPosition
-                getStockPos(stockPos!!)
+                getStockPos(stockPos!!,false)
             }
         }
         mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
@@ -255,19 +257,7 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
                     return
                 }
                 // 传送对象
-                val intent = Intent()
-                intent.putExtra("stock", stock as Serializable)
-                if(stockArea != null) {
-                    intent.putExtra("stockArea", stockArea as Serializable)
-                }
-                if(storageRack != null) {
-                    intent.putExtra("storageRack", storageRack as Serializable)
-                }
-                if(stockPos != null) {
-                    intent.putExtra("stockPos", stockPos as Serializable)
-                }
-                context.setResult(Activity.RESULT_OK, intent)
-                context.finish()
+                sendObj()
             }
         }
     }
@@ -406,9 +396,35 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
                 }
             }
         }
+
+        // 自动返回
+        cb_stockAutoConfirm.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked) {
+                spf(getResStr(R.string.saveOther)).edit().putBoolean(SEL_STOCKAUTOBACK, true).commit()
+            } else {
+                spf(getResStr(R.string.saveOther)).edit().remove(SEL_STOCKAUTOBACK).commit()
+            }
+        }
     }
 
-    fun stockStartParam() {
+    private fun sendObj() {
+        // 传送对象
+        val intent = Intent()
+        intent.putExtra("stock", stock as Serializable)
+        if(stockArea != null) {
+            intent.putExtra("stockArea", stockArea as Serializable)
+        }
+        if(storageRack != null) {
+            intent.putExtra("storageRack", storageRack as Serializable)
+        }
+        if(stockPos != null) {
+            intent.putExtra("stockPos", stockPos as Serializable)
+        }
+        context.setResult(Activity.RESULT_OK, intent)
+        context.finish()
+    }
+
+    private fun stockStartParam() {
         // 是否启用了库区
         if(stock!!.useStockArea.equals("Y")) {
             setEnables(lin_focusStockArea, R.drawable.back_style_blue, true)
@@ -455,25 +471,25 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
             SEL_STOCK -> {// 仓库	返回
                 if (resultCode == Activity.RESULT_OK) {
                     stock = data!!.getSerializableExtra("obj") as Stock
-                    getStock(stock!!)
+                    getStock(stock!!,true)
                 }
             }
             SEL_STOCKAREA -> { // 库区	返回
                 if (resultCode == Activity.RESULT_OK) {
                     stockArea = data!!.getSerializableExtra("obj") as StockArea
-                    getStockArea(stockArea!!)
+                    getStockArea(stockArea!!,true)
                 }
             }
             SEL_STORAGE_RACK -> { // 货架	返回
                 if (resultCode == Activity.RESULT_OK) {
                     storageRack = data!!.getSerializableExtra("obj") as StorageRack
-                    getStorageRack(storageRack!!)
+                    getStorageRack(storageRack!!,true)
                 }
             }
             SEL_STOCKPOS -> { // 库位	返回
                 if (resultCode == Activity.RESULT_OK) {
                     stockPos = data!!.getSerializableExtra("obj") as StockPosition
-                    getStockPos(stockPos!!)
+                    getStockPos(stockPos!!, true)
                 }
             }
             BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
@@ -511,17 +527,9 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
     /**
      * 得到仓库
      */
-    fun getStock(stock : Stock) {
+    fun getStock(stock :Stock, autoNext :Boolean) {
         context.stock = stock
         tv_stockName.text = stock!!.stockName
-        // 如果选择的和上次的仓库一样，就不执行
-        if(curStockId > 0 && curStockId == stock!!.id) {
-            return
-        }
-        curStockId = stock!!.id
-        curStockAreaId = 0
-        curStorageRackId = 0
-        curStockPosId = 0
 
         stockStartParam()
         stockArea = null
@@ -530,51 +538,111 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
         tv_stockAreaName.text = ""
         tv_storageRackName.text = ""
         tv_stockPosName.text = ""
+
+        var isBool = true
+        // 只有选择的时候，自动打开下一级
+        if(autoNext && btn_stockAreaSel.isEnabled) {
+            isBool = false
+            val bundle = Bundle()
+            bundle.putInt("stockId", if(stock != null)stock!!.id else 0)
+            showForResult(StockArea_DialogActivity::class.java, SEL_STOCKAREA, bundle)
+
+        } else if(autoNext && btn_storageRackSel.isEnabled) {
+            isBool = false
+            val bundle = Bundle()
+            bundle.putInt("stockId", if(stock != null)stock!!.id else 0)
+            bundle.putInt("stockAreaId", if(stockArea != null)stockArea!!.id else 0)
+            showForResult(StorageRack_DialogActivity::class.java, SEL_STORAGE_RACK, bundle)
+
+        } else if(autoNext && btn_stockPosSel.isEnabled) {
+            isBool = false
+            val bundle = Bundle()
+            bundle.putInt("stockId", if(stock != null)stock!!.id else 0)
+            bundle.putInt("stockAreaId", if(stockArea != null)stockArea!!.id else 0)
+            bundle.putInt("storageRackId", if(storageRack != null)storageRack!!.id else 0)
+            showForResult(StockPos_DialogActivity::class.java, SEL_STOCKPOS, bundle)
+        }
+
+        // 自动返回
+        if(isBool && autoNext && cb_stockAutoConfirm.isChecked) {
+            sendObj()
+        }
     }
 
     /**
      * 得到库区
      */
-    fun getStockArea(stockArea : StockArea) {
+    fun getStockArea(stockArea : StockArea, autoNext :Boolean) {
         context.stockArea = stockArea
         tv_stockAreaName.text = stockArea!!.fname
-        // 如果选择的和上次的库区一样，就不执行
-        if(curStockAreaId > 0 && curStockAreaId == stockArea!!.id) {
-            return
-        }
-        curStockAreaId = stockArea!!.id
-        curStorageRackId = 0
-        curStockPosId = 0
 
         storageRack = null
         stockPos = null
         tv_storageRackName.text = ""
         tv_stockPosName.text = ""
+
+        var isBool = true
+        // 只有选择的时候，自动打开下一级
+        if(autoNext && btn_storageRackSel.isEnabled) {
+            isBool = false
+            val bundle = Bundle()
+            bundle.putInt("stockId", if(stock != null)stock!!.id else 0)
+            bundle.putInt("stockAreaId", if(stockArea != null)stockArea!!.id else 0)
+            showForResult(StorageRack_DialogActivity::class.java, SEL_STORAGE_RACK, bundle)
+
+        } else if(autoNext && btn_stockPosSel.isEnabled) {
+            isBool = false
+            val bundle = Bundle()
+            bundle.putInt("stockId", if(stock != null)stock!!.id else 0)
+            bundle.putInt("stockAreaId", if(stockArea != null)stockArea!!.id else 0)
+            bundle.putInt("storageRackId", if(storageRack != null)storageRack!!.id else 0)
+            showForResult(StockPos_DialogActivity::class.java, SEL_STOCKPOS, bundle)
+        }
+
+        // 自动返回
+        if(isBool && autoNext && cb_stockAutoConfirm.isChecked) {
+            sendObj()
+        }
     }
 
     /**
      * 得到货架
      */
-    fun getStorageRack(storageRack : StorageRack) {
+    fun getStorageRack(storageRack : StorageRack, autoNext :Boolean) {
         context.storageRack = storageRack
         tv_storageRackName.text = storageRack!!.fnumber
-        // 如果选择的和上次的库区一样，就不执行
-        if(curStorageRackId > 0 && curStorageRackId == storageRack!!.id) {
-            return
-        }
-        curStorageRackId = storageRack!!.id
-        curStockPosId = 0
 
         stockPos = null
         tv_stockPosName.text = ""
+
+        var isBool = true
+        // 只有选择的时候，自动打开下一级
+        if(autoNext && autoNext && btn_stockPosSel.isEnabled) {
+            isBool = false
+            val bundle = Bundle()
+            bundle.putInt("stockId", if(stock != null)stock!!.id else 0)
+            bundle.putInt("stockAreaId", if(stockArea != null)stockArea!!.id else 0)
+            bundle.putInt("storageRackId", if(storageRack != null)storageRack!!.id else 0)
+            showForResult(StockPos_DialogActivity::class.java, SEL_STOCKPOS, bundle)
+        }
+
+        // 自动返回
+        if(isBool && autoNext && cb_stockAutoConfirm.isChecked) {
+            sendObj()
+        }
     }
 
     /**
      * 得到库位
      */
-    fun getStockPos(stockPos : StockPosition) {
+    fun getStockPos(stockPos : StockPosition, autoNext :Boolean) {
         context.stockPos = stockPos
         tv_stockPosName.text = stockPos!!.stockPositionName
+
+        // 自动返回
+        if(autoNext && cb_stockAutoConfirm.isChecked) {
+            sendObj()
+        }
     }
 
     /**
@@ -582,16 +650,16 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
      */
     fun getStockGroup(stock: Stock?, stockArea: StockArea?, storageRack: StorageRack?, stockPos : StockPosition?) {
         if(context.stock == null && stock != null) {
-            getStock(stock)
+            getStock(stock,false)
         }
         if(context.stockArea == null && stockArea != null) {
-            getStockArea(stockArea)
+            getStockArea(stockArea,false)
         }
         if(context.storageRack == null && storageRack != null) {
-            getStorageRack(storageRack)
+            getStorageRack(storageRack,false)
         }
         if(context.stockPos == null && stockPos != null) {
-            getStockPos(stockPos)
+            getStockPos(stockPos, false)
         }
     }
 

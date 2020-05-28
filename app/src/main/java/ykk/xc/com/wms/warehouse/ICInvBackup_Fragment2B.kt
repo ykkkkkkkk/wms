@@ -331,11 +331,11 @@ class ICInvBackup_Fragment2B : BaseFragment() {
             R.id.btn_positionSel -> { // 选择仓库位置
                 smqFlag = '1'
                 if(!checkSaoMa()) return
-//                bundle = Bundle()
-//                bundle.putSerializable("stock", stock)
-//                bundle.putSerializable("stockArea", stockArea)
-//                bundle.putSerializable("storageRack", storageRack)
-//                bundle.putSerializable("stockPos", stockPos)
+                bundle = Bundle()
+                bundle.putSerializable("stock", stock)
+                bundle.putSerializable("stockArea", stockArea)
+                bundle.putSerializable("storageRack", storageRack)
+                bundle.putSerializable("stockPos", stockPos)
                 showForResult(Stock_GroupDialogActivity::class.java, SEL_STOCK, bundle)
             }
             R.id.btn_containerSel -> { // 选择容器
