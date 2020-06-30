@@ -5,16 +5,11 @@
     android:background="@color/c_e0e0e0"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_getFocus"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:inputType="none" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,7 +68,7 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="退货日期*"
+                    android:text="出库日期*"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -108,166 +103,12 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="客户"
+                    android:text="客户*"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_custSel"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_gray1c"
-                    android:gravity="center|left"
-                    android:paddingLeft="@dimen/_6dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:layout_marginRight="@dimen/_8dp"
-                android:layout_marginTop="@dimen/_8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="#b7b7b7"
-                    android:ems="6"
-                    android:gravity="center|right"
-                    android:paddingRight="@dimen/_6dp"
-                    android:text="部门"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_deptSel"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_gray1c"
-                    android:gravity="center|left"
-                    android:paddingLeft="@dimen/_6dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:layout_marginRight="@dimen/_8dp"
-                android:layout_marginTop="@dimen/_8dp"
-                android:visibility="gone"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="#b7b7b7"
-                    android:ems="6"
-                    android:gravity="center|right"
-                    android:paddingRight="@dimen/_6dp"
-                    android:text="发货方式"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_deliveryWay"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_6dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/back_style_gray1c"
-                    android:gravity="center|left"
-                    android:paddingLeft="@dimen/_6dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:layout_marginRight="@dimen/_8dp"
-                android:layout_marginTop="@dimen/_8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="#b7b7b7"
-                    android:ems="6"
-                    android:gravity="center|right"
-                    android:paddingRight="@dimen/_6dp"
-                    android:text="客户出库单号"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:id="@+id/lin_focusNo"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="@dimen/_6dp"
-                    android:background="@drawable/back_style_blue2"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_scan"
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:background="@drawable/btn_scan_selector" />
-
-                    <EditText
-                        android:id="@+id/et_custOutSotckNo"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@color/transparent"
-                        android:hint="请扫描送货单条码"
-                        android:inputType="none"
-                        android:paddingLeft="@dimen/_2dp"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sp" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:layout_marginRight="@dimen/_8dp"
-                android:layout_marginTop="@dimen/_8dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="#b7b7b7"
-                    android:ems="6"
-                    android:gravity="center|right"
-                    android:paddingRight="@dimen/_6dp"
-                    android:text="客户出库日期"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_custOutStockDate"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/_6dp"
@@ -288,8 +129,42 @@
                 android:layout_marginRight="@dimen/_8dp"
                 android:layout_marginTop="@dimen/_8dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="领料部门*"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_deptSel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:drawableRight="@drawable/xiala3"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -324,8 +199,7 @@
                 android:layout_marginRight="@dimen/_8dp"
                 android:layout_marginTop="@dimen/_8dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -334,7 +208,7 @@
                     android:ems="6"
                     android:gravity="center|right"
                     android:paddingRight="@dimen/_6dp"
-                    android:text="保管*"
+                    android:text="领料*"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -360,8 +234,7 @@
                 android:layout_marginRight="@dimen/_8dp"
                 android:layout_marginTop="@dimen/_8dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -396,8 +269,107 @@
                 android:layout_marginRight="@dimen/_8dp"
                 android:layout_marginTop="@dimen/_8dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="称重单位"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_weightUnitType"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:drawableRight="@drawable/xiala3"
+                    android:gravity="center"
+                    android:text="千克（kg）"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+                <TextView
+                    android:id="@+id/tv_connBlueTooth"
+                    android:layout_width="@dimen/_72dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_3dp"
+                    android:background="@drawable/btn_blue2_selector"
+                    android:gravity="center"
+                    android:text="连接蓝牙"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#b7b7b7"
+                    android:ems="6"
+                    android:gravity="center|right"
+                    android:paddingRight="@dimen/_6dp"
+                    android:text="毛重"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_roughWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_blue2"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+
+                <TextView
+                    android:layout_width="@dimen/_45dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_6dp"
+                    android:background="#b7b7b7"
+                    android:gravity="center"
+                    android:text="净重"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_netWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/back_style_gray1c"
+                    android:gravity="center|left"
+                    android:paddingLeft="@dimen/_6dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -428,7 +400,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
-                android:layout_margin="@dimen/_8dp"
+                android:layout_marginLeft="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_8dp"
+                android:layout_marginTop="@dimen/_8dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -470,12 +444,12 @@
             android:layout_width="0dp"
             android:layout_height="38dp"
             android:layout_weight="0.5"
-            android:visibility="gone"
             android:background="@drawable/btn_gray2_selector"
             android:gravity="center"
             android:text="重置"
             android:textColor="@color/c_515151"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_save"
@@ -485,9 +459,9 @@
             android:background="@drawable/btn_blue2_selector"
             android:gravity="center"
             android:text="保存"
-            android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

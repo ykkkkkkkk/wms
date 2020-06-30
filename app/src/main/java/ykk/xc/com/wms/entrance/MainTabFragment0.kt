@@ -46,6 +46,8 @@ import ykk.xc.com.wms.util.IDownloadPresenter
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import ykk.xc.com.wms.util.xrecyclerview.XRecyclerView
+import ykk.xc.com.wms.warehouse.OtherInStock2_MainActivity
+import ykk.xc.com.wms.warehouse.OtherOutStock2_MainActivity
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -214,6 +216,8 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     53 -> show(Sal_ReCheck_MainActivity::class.java, bundle)
                     54 -> show(Sal_Box_MainActivity::class.java, bundle)
                     55 -> show(Sal_OutStock_RED_MainActivity::class.java, bundle)
+                    61 -> show(OtherInStock2_MainActivity::class.java, bundle)
+                    62 -> show(OtherOutStock2_MainActivity::class.java, bundle)
                 }
             }
         }
@@ -350,6 +354,14 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     tv_missionType.text = "销售装箱任务"
                     missionType = 54
                 }
+                R.id.tv11 -> {
+                    tv_missionType.text = "其他入库任务"
+                    missionType = 61
+                }
+                R.id.tv12 -> {
+                    tv_missionType.text = "其他出库任务"
+                    missionType = 62
+                }
             }
             if(missionType == 51) { // 拣货任务可以多个任务单一起拣货
                 btn_confirm.visibility = View.VISIBLE
@@ -369,6 +381,8 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         popV.findViewById<View>(R.id.tv8).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv9).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv10).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv11).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv12).setOnClickListener(click)
     }
 
     fun initLoadDatas() {

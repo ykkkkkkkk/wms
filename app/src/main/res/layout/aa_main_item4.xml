@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -20,13 +20,14 @@
             android:clickable="true"
             android:gravity="center">
 
+
             <ImageView
                 android:id="@+id/imgView1"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_3" />
+                android:src="@drawable/aa_ico4a_9" />
 
             <TextView
                 android:id="@+id/tvMenu1"
@@ -35,9 +36,10 @@
                 android:layout_below="@+id/imgView1"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="其他入库"
+                android:text="盘点"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
+
 
         </RelativeLayout>
 
@@ -46,7 +48,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imgView2"
@@ -54,7 +57,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_4" />
+                android:src="@drawable/aa_ico4a_9" />
 
             <TextView
                 android:id="@+id/tvMenu2"
@@ -63,7 +66,7 @@
                 android:layout_below="@+id/imgView2"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="其他出库"
+                android:text="复盘"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -77,31 +80,12 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="@dimen/_60dp"
-                android:layout_height="@dimen/_60dp"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitXY"
-                android:visibility="gone"
-                android:src="@drawable/aa_ico4a_2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_below="@+id/imgView3"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_3dp"
-                android:text="调拨"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_18sp" />
-
-            <ImageView
                 android:id="@+id/imgView3"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/upload" />
+                android:src="@drawable/aa_ico4a_10" />
 
 
             <TextView
@@ -111,7 +95,7 @@
                 android:layout_below="@+id/imgView3"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="待上传"
+                android:text="工具移动"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -125,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -136,14 +120,13 @@
             android:clickable="true"
             android:gravity="center">
 
-
             <ImageView
                 android:id="@+id/imgView4"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_9" />
+                android:src="@drawable/upload" />
 
             <TextView
                 android:id="@+id/tvMenu4"
@@ -152,10 +135,9 @@
                 android:layout_below="@+id/imgView4"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="盘点"
+                android:text="待上传"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
-
 
         </RelativeLayout>
 
@@ -164,8 +146,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="visible">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/imgView5"
@@ -173,7 +154,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_9" />
+                android:src="@drawable/aa_ico2a_2b" />
 
             <TextView
                 android:id="@+id/tvMenu5"
@@ -182,7 +163,7 @@
                 android:layout_below="@+id/imgView5"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="复盘"
+                android:text="库内装箱"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -193,7 +174,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:visibility="invisible"
             android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/_60dp"
+                android:layout_height="@dimen/_60dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                android:src="@drawable/aa_ico4a_2" />
 
             <ImageView
                 android:id="@+id/imgView6"
@@ -201,7 +191,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_10" />
+                android:src="@drawable/upload" />
 
 
             <TextView
@@ -211,7 +201,7 @@
                 android:layout_below="@+id/imgView6"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="工具移动"
+                android:text="待上传"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -219,6 +209,8 @@
 
 
     </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/lin_tab3"
@@ -234,7 +226,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clickable="true"
+            android:visibility="invisible"
             android:gravity="center">
 
             <ImageView

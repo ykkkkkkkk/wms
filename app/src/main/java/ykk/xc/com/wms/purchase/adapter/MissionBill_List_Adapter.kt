@@ -45,6 +45,8 @@ class MissionBill_List_Adapter(private val context: Activity, private val datas:
             53 -> tv_missionType.text = "仓管复核任务"
             54 -> tv_missionType.text = "销售装箱任务"
             55 -> tv_missionType.text = "销售退货任务"
+            61 -> tv_missionType.text = "其他入库任务"
+            62 -> tv_missionType.text = "其他出库任务"
         }
         if(Comm.isNULLS(entity.missionContent).length > 0) {
             tv_missionContent.visibility = View.VISIBLE

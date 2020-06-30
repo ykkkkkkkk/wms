@@ -384,10 +384,10 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请输入实发数！")
             return false
         }
-//        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
-//            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
-//            return false
-//        }
+        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
+            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
+            return false
+        }
 //        if (minQty > icStockBillEntry.fqty) {
 //            Comm.showWarnDialog(mContext, "实发数不能小于最小领用数（"+minQty+"）！")
 //            return false
@@ -938,7 +938,7 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
                         val num = parseDouble(value)
-                        if(num > icStockBillEntry.inventoryNowQty) {
+                        if(num > smICStockBillEntry!!.inventoryNowQty) {
                             Comm.showWarnDialog(mContext,"当前输入的数量不能大于可用库存数量！")
                             return
                         }

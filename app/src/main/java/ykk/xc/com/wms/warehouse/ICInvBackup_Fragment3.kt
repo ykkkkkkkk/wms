@@ -354,10 +354,10 @@ class ICInvBackup_Fragment3 : BaseFragment() {
             Comm.showWarnDialog(mContext,"请扫描或选择模具！")
             return false
         }
-        if(plantMould.fqty == 0.0) {
-            Comm.showWarnDialog(mContext,"数量必须大于0！")
-            return false
-        }
+//        if(plantMould.fqty == 0.0) {
+//            Comm.showWarnDialog(mContext,"数量必须大于0！")
+//            return false
+//        }
         if(plantMould.usePeriod > plantMould.period) {
             Comm.showWarnDialog(mContext,"已用周期不能大于生命周期！")
             return false

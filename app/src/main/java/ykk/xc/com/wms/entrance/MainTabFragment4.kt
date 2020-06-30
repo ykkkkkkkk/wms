@@ -25,29 +25,32 @@ class MainTabFragment4 : BaseFragment() {
     fun onViewClicked(view: View) {
         val bundle: Bundle? = null
         when (view.id) {
-            R.id.relative1 -> {// 其他入库
-                show(OtherInStock_MainActivity::class.java, null)
+            R.id.relative1 -> { // 盘点
+//                show(OtherInStock_MainActivity::class.java, null)
+                show(ICInvBackup_MainActivity::class.java, null)
             }
-            R.id.relative2 -> {// 其他出库
-                show(OtherOutStock_MainActivity::class.java, null)
+            R.id.relative2 -> { // 复盘
+//                show(OtherOutStock_MainActivity::class.java, null)
+                show(ICInvBackup_Repeat_MainActivity::class.java, null)
             }
-            R.id.relative3 -> {// 待上传
+            R.id.relative3 -> { // 工具移库
+                show(ToolMove_MainActivity::class.java, null)
+
+            }
+            R.id.relative4 -> { // 待上传
                 val bundle = Bundle()
                 bundle.putInt("pageId", 0)
                 bundle.putString("billType", "QTRK")
                 show(OutInStock_Search_MainActivity::class.java, bundle)
             }
-            R.id.relative4 -> { // 盘点
-                show(ICInvBackup_MainActivity::class.java, null)
-            }
-            R.id.relative5 -> {// 复盘
-                show(ICInvBackup_Repeat_MainActivity::class.java, null)
-            }
-            R.id.relative6 -> { // 工具移库
-                show(ToolMove_MainActivity::class.java, null)
-            }
-            R.id.relative7 -> {// 库内装箱
+            R.id.relative5 -> { // 库内装箱
                 show(Ware_Box_MainActivity::class.java, null)
+            }
+            R.id.relative6 -> {
+
+            }
+            R.id.relative7 -> {
+
             }
         }
     }

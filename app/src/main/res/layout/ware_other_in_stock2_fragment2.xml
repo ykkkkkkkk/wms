@@ -34,8 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-
-            android:background="@drawable/back_style_gray3"
+            android:background="@drawable/back_style_blue"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -43,7 +42,6 @@
                 android:id="@+id/btn_positionScan"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:enabled="false"
                 android:background="@drawable/btn_scan_selector" />
 
             <EditText
@@ -53,7 +51,6 @@
                 android:layout_weight="1"
                 android:background="@color/transparent"
                 android:hint="扫描位置条码"
-                android:enabled="false"
                 android:inputType="none"
                 android:paddingLeft="@dimen/_2dp"
                 android:textColor="@color/black"
@@ -72,7 +69,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:enabled="false"
                 android:textColor="@color/c_6a5acd"
                 android:textSize="@dimen/_12sp" />
 
@@ -82,7 +78,6 @@
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/_1dp"
                 android:background="@drawable/btn_blue_selector"
-                android:enabled="false"
                 android:text="选择"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12sp" />
@@ -159,8 +154,7 @@
                 android:background="@drawable/btn_blue_selector"
                 android:text="选择"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sp"
-                android:visibility="gone" />
+                android:textSize="@dimen/_12sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -351,8 +345,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:ems="2"
                     android:layout_marginLeft="@dimen/_3dp"
+                    android:ems="2"
                     android:gravity="center"
                     android:text="源单数量"
                     android:textColor="#000000"
@@ -403,9 +397,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_3dp"
                     android:ems="2"
                     android:gravity="center"
-                    android:layout_marginLeft="@dimen/_3dp"
                     android:text="称重数"
                     android:textColor="#000000"
                     android:textSize="12sp" />
@@ -454,8 +448,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:ems="3"
                     android:layout_marginLeft="@dimen/_3dp"
+                    android:ems="3"
                     android:gravity="center"
                     android:text="保质期(天)"
                     android:textColor="#000000"

@@ -92,6 +92,8 @@ class Prod_InStock_Fragment2 : BaseFragment() {
     private var isWeightTextChanged = true // 是否改变称重数就执行改变事件
     private var isReferenceTextChanged = true // 是否改变参考数就执行改变事件
     private var addFlag = false // 是否扫描就新增一行
+    private var clickSaveButtom = false // 是否点击保存按钮
+
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -201,7 +203,8 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                     UNSAVE -> { // 保存失败
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "保存失败！"
-                        if(errMsg.equals("UpdateConfirmDialog")) { // 提示是否同时修改物料默认仓库
+                        if(m.clickSaveButtom && errMsg.equals("UpdateConfirmDialog")) { // 提示是否同时修改物料默认仓库
+                            m.clickSaveButtom = false
                             val build = AlertDialog.Builder(m.mContext)
                             build.setIcon(R.drawable.caution)
                             build.setTitle("系统提示")
@@ -385,6 +388,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
                 if(!checkSave()) return
                 icStockBillEntry.icstockBillId = parent!!.fragment1.icStockBill.id
 //                icStockBillEntry.fkfDate = getValues(tv_fkfDate)
+                clickSaveButtom = true
                 run_save(null,1,0)
             }
             R.id.btn_clone -> { // 重置
@@ -1297,7 +1301,8 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         icStockBillEntry.funitId = it.unitId
         icStockBillEntry.fsourceInterId = it.prodId
         icStockBillEntry.fsourceEntryId = it.prodId
-        icStockBillEntry.fsourceQty = it.fqty
+//        icStockBillEntry.fsourceQty = it.fqty
+        icStockBillEntry.fsourceQty = it.useableQty
         icStockBillEntry.qcPassQty = it.fauxInHighLimitQty
         icStockBillEntry.fsourceTranType = 85
         icStockBillEntry.fsourceBillNo = it.prodNo
@@ -1315,7 +1320,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         // 设置表头的部门
 
 
-        run_save(null,1,0)
+        run_save(null,0,0)
     }
 
     private fun setICStockEntry_BoxBarCode(boxBarCode : BoxBarCode) {
@@ -1386,19 +1391,17 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         var mUrl:String? = null
         var barcode:String? = null
         var icstockBillId:String? = null
-        var mbrType:String? = null // 1:生产装箱，2：销售装箱
+        var mbrType = "" // 1:生产装箱，2：销售装箱
         when(smqFlag) {
             '1' -> {
                 mUrl = getURL("stockPosition/findBarcodeGroup")
                 barcode = getValues(et_positionCode)
                 icstockBillId = ""
-                mbrType = ""
             }
             '2' -> {
                 mUrl = getURL("prodOrder/findBarcodeByInStock")
                 barcode = getValues(et_code)
                 icstockBillId = parent!!.fragment1.icStockBill.id.toString()
-                mbrType = ""
             }
             '3' -> {
                 mUrl = getURL("boxBarCode/findBarcodeByIcStockBill")

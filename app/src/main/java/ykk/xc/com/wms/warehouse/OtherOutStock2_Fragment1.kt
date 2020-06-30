@@ -1,51 +1,54 @@
-package ykk.xc.com.wms.sales
+package ykk.xc.com.wms.warehouse
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.sal_recheck_fragment1.*
-import kotlinx.android.synthetic.main.sal_recheck_main.*
+import kotlinx.android.synthetic.main.ware_other_out_stock2_fragment1.*
+import kotlinx.android.synthetic.main.ware_other_out_stock2_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import ykk.xc.com.wms.R
-import ykk.xc.com.wms.bean.EventBusEntity
-import ykk.xc.com.wms.bean.ICStockBill
-import ykk.xc.com.wms.bean.MissionBill
-import ykk.xc.com.wms.bean.User
+import ykk.xc.com.wms.basics.Cust_DialogActivity
+import ykk.xc.com.wms.basics.Dept_DialogActivity
+import ykk.xc.com.wms.basics.Emp_DialogActivity
+import ykk.xc.com.wms.bean.*
+import ykk.xc.com.wms.bean.k3Bean.Customer
 import ykk.xc.com.wms.bean.k3Bean.Emp
-import ykk.xc.com.wms.bean.k3Bean.SeoutStock
+import ykk.xc.com.wms.bean.k3Bean.ICStockBillEntry_K3
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.LogUtil
-import ykk.xc.com.wms.util.zxing.android.CaptureActivity
 import java.io.IOException
-import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：其他出库
  * 作者：ykk
  */
-class Sal_ReCheck_Fragment1 : BaseFragment() {
+class OtherOutStock2_Fragment1 : BaseFragment() {
 
     companion object {
-        private val SEL_EMP1 = 62
-        private val SEL_EMP2 = 63
-        private val SEL_EMP3 = 64
-        private val SEL_EMP4 = 65
+        private val SEL_DEPT = 10
+        private val SEL_SUPP = 11
+        private val SEL_EMP1 = 12
+        private val SEL_EMP2 = 13
+        private val SEL_EMP3 = 14
+        private val SEL_EMP4 = 15
+        private val SEL_STOCK = 16
+        private val RESULT_NUM = 1
         private val SAVE = 201
         private val UNSAVE = 501
         private val FIND_SOURCE = 202
@@ -54,34 +57,25 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         private val UNMODIFY_STATUS = 503
         private val FIND_ICSTOCKBILL = 204
         private val UNFIND_ICSTOCKBILL = 504
-        private val FIND_103 = 205
-        private val UNFIND_103 = 505
-
-        private val SETFOCUS = 1
-        private val SAOMA = 2
-        private val WRITE_CODE = 3
     }
 
     private val context = this
     private var okHttpClient: OkHttpClient? = null
     private var user: User? = null
     private var mContext: Activity? = null
-    private var parent: Sal_ReCheck_MainActivity? = null
+    private var parent: OtherOutStock2_MainActivity? = null
     private val df = DecimalFormat("#.###")
     private var timesTamp:String? = null // 时间戳
     var icStockBill = ICStockBill() // 保存的对象
-//    var isReset = false // 是否点击了重置按钮.
+    //    var isReset = false // 是否点击了重置按钮.
+    var icstockEntry_K3List:List<ICStockBillEntry_K3>? = null
     private var icStockBillId = 0 // 上个页面传来的id
-    var icStockBillId2 = 0 // 上个页面传来的id
-    var fsourceInterId = 0 // 上个页面传来的id
-    private var isTextChange: Boolean = false // 是否进入TextChange事件
-    private var f103 = 990663 // 是否必填客户销售出库单号 （是：990662 ， 否：990663 ）
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Sal_ReCheck_Fragment1) : Handler() {
-        private val mActivity: WeakReference<Sal_ReCheck_Fragment1>
+    private class MyHandler(activity: OtherOutStock2_Fragment1) : Handler() {
+        private val mActivity: WeakReference<OtherOutStock2_Fragment1>
 
         init {
             mActivity = WeakReference(activity)
@@ -119,20 +113,23 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     FIND_SOURCE ->{ // 查询源单 返回
-                        val list = JsonUtil.strToList(msgObj, SeoutStock::class.java)
-                        m.icStockBill.fcustId = list[0].fcustid
-                        m.icStockBill.deliverWay = list[0].fheadselfs0241
+                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry_K3::class.java)
+                        m.icstockEntry_K3List = list
+                        if(list[0].stockBill.customer != null) {
+                            m.icStockBill.fcustId = list[0].stockBill.customer.fitemId
 
-                        m.tv_custSel.text = list[0].cust.fname
-                        // 发货方式( 发货运:990664），送货:990665 )
-                        if(list[0].fheadselfs0241 == 990664) {
-                            m.tv_deliveryWay.text = "发货运"
-                        } else {
-                            m.tv_deliveryWay.text = "送货"
+                            m.tv_custSel.text = list[0].stockBill.customer.fname
+                            m.setEnables(m.tv_custSel, R.drawable.back_style_gray3b, false)
                         }
-                        m.btn_save.visibility = View.VISIBLE
+                        if(list[0].stockBill.department != null) {
+                            m.icStockBill.fdeptId = list[0].stockBill.department.fitemID
+                            m.icStockBill.deptName = list[0].stockBill.department.departmentName
 
-                        m.run_findF103(list[0].fcustid)
+                            m.tv_deptSel.text = list[0].stockBill.department.departmentName
+                            m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
+                        }
+
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         errMsg = JsonUtil.strToString(msgObj)
@@ -155,27 +152,6 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                             m.mContext!!.finish()
                         },2000)
                     }
-                    FIND_103 -> { // 查询客户必填 成功
-                        m.f103 = m.parseInt(JsonUtil.strToString(msgObj))
-                    }
-                    UNFIND_103 -> { // 查询客户必填 失败
-                    }
-                    SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
-                        m.setFocusable(m.et_getFocus)
-                        m.setFocusable(m.et_custOutSotckNo)
-                    }
-                    SAOMA -> { // 扫码之后
-                        var code = m.getValues(m.et_custOutSotckNo)
-                        if(code.indexOf("DN:") > -1) {
-                            m.setTexts(m.et_custOutSotckNo, code.substring(code.indexOf("DN:")+3, code.length-1))
-
-                        } else {
-                            m.et_custOutSotckNo.setText("")
-                            Comm.showWarnDialog(m.mContext, "扫描的二维码不正确，请检查！")
-                        }
-                        m.icStockBill.custOutStockNo = m.getValues(m.et_custOutSotckNo)
-                        m.isTextChange = false
-                    }
                 }
             }
         }
@@ -185,8 +161,7 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         icStockBill.id = m.id
         icStockBill.pdaNo = m.pdaNo
         icStockBill.fdate = m.fdate
-        icStockBill.fsupplyId = m.fsupplyId
-        icStockBill.suppName = m.suppName
+        icStockBill.fcustId = m.fcustId
         icStockBill.fdeptId = m.fdeptId
         icStockBill.fempId = m.fempId
         icStockBill.fsmanagerId = m.fsmanagerId
@@ -195,7 +170,6 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         icStockBill.fbillerId = m.fbillerId
         icStockBill.fselTranType = m.fselTranType
 
-        icStockBill.suppName = m.suppName
         icStockBill.deptName = m.deptName
         icStockBill.yewuMan = m.yewuMan          // 业务员
         icStockBill.baoguanMan = m.baoguanMan          // 保管人
@@ -213,32 +187,35 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         icStockBill.unQualifiedStockId = m.unQualifiedStockId       // 不合格仓库id
         icStockBill.missionBillId = m.missionBillId
         icStockBill.fcustId = m.fcustId
-        icStockBill.deliverWay = m.deliverWay
-        icStockBill.custOutStockNo = m.custOutStockNo
-        icStockBill.custOutStockDate = m.custOutStockDate
 
-        icStockBill.supplier = m.supplier
+        icStockBill.cust = m.cust
         icStockBill.qualifiedStock = m.qualifiedStock
         icStockBill.unQualifiedStock = m.unQualifiedStock
 
-        tv_custSel.text = m.cust.fname
-        // 发货方式( 发货运:990664），送货:990665 )
-        if(m.deliverWay == 990664) {
-            tv_deliveryWay.text = "发货运"
-        } else {
-            tv_deliveryWay.text = "送货"
-        }
-        isTextChange = true
-        setTexts(et_custOutSotckNo, isNULLS(m.custOutStockNo))
-        isTextChange = false
-        tv_custOutStockDate.text = isNULLS(m.custOutStockDate)
-
         tv_pdaNo.text = m.pdaNo
         tv_inDateSel.text = m.fdate
+        if(m.cust != null) {
+            tv_custSel.text = m.cust.fname
+        }
+        tv_deptSel.text = m.deptName
         tv_emp1Sel.text = m.yewuMan
         tv_emp2Sel.text = m.baoguanMan
         tv_emp3Sel.text = m.fuzheMan
         tv_emp4Sel.text = m.yanshouMan
+        tv_roughWeight.text = df.format(m.roughWeight)
+        tv_netWeight.text = df.format(m.netWeight)
+        // 重量单位类型(1：千克，2：克，3：磅)
+        when(m.weightUnitType) {
+            1 -> { // 千克（kg）
+                tv_weightUnitType.text = "千克（kg）"
+            }
+            2 -> { // 克（g）
+                tv_weightUnitType.text = "克（g）"
+            }
+            3 -> { // 磅（lb）
+                tv_weightUnitType.text = "磅（lb）"
+            }
+        }
 
         parent!!.isChange = false
         parent!!.isMainSave = true
@@ -247,12 +224,12 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.sal_recheck_fragment1, container, false)
+        return inflater.inflate(R.layout.ware_other_out_stock2_fragment1, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Sal_ReCheck_MainActivity
+        parent = mContext as OtherOutStock2_MainActivity
     }
 
     override fun initData() {
@@ -267,16 +244,14 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         getUserInfo()
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         tv_inDateSel.text = Comm.getSysDate(7)
-        hideSoftInputMode(mContext, et_custOutSotckNo)
-
         tv_operationManName.text = user!!.erpUserName
         tv_emp1Sel.text = user!!.empName
         tv_emp2Sel.text = user!!.empName
         tv_emp3Sel.text = user!!.empName
         tv_emp4Sel.text = user!!.empName
 
-        icStockBill.billType = "CGFH" // 仓管复核
-        icStockBill.ftranType = 1
+        icStockBill.billType = "QTCK" // 采购收货入库
+        icStockBill.ftranType = 29
         icStockBill.frob = 1
         icStockBill.weightUnitType = 1
         icStockBill.fempId = user!!.empId
@@ -300,17 +275,18 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
             // 任务单点击过来的
             if(bundle.containsKey("missionBill")) {
                 val missionBill = bundle.getSerializable("missionBill") as MissionBill
-
-                icStockBillId2 = missionBill.icstockBillId
-                fsourceInterId = missionBill.sourceBillId
                 icStockBill.missionBillId = missionBill.id // 记录任务单的id
-                run_findList(missionBill.sourceBillId)
-
+                run_findICSotckBill_K3(missionBill.sourceBillId)
+                if (missionBill.sourceBillId > 0) {
+                    // 修改任务单状态
+                    run_missionBillModifyStatus(missionBill.id)
+                }
             } else if(bundle.containsKey("id")) { // 查询过来的
                 icStockBillId = bundle.getInt("id") // ICStockBill主表id
                 // 查询主表信息
                 run_findStockBill(icStockBillId)
             }
+
 
         } else {
             toasts("该页面有错误！2秒后自动关闭...")
@@ -323,28 +299,57 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
-            mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
         }
     }
 
-    @OnClick(R.id.tv_inDateSel, R.id.btn_save, R.id.btn_clone, R.id.btn_scan, R.id.tv_custOutStockDate)
+    @OnClick(R.id.tv_inDateSel, R.id.tv_custSel, R.id.tv_deptSel, R.id.tv_emp1Sel, R.id.tv_emp2Sel, R.id.tv_emp3Sel, R.id.tv_emp4Sel,
+             R.id.btn_save, R.id.btn_clone, R.id.tv_weightUnitType, R.id.tv_connBlueTooth, R.id.tv_roughWeight )
     fun onViewClicked(view: View) {
         var bundle: Bundle? = null
         when (view.id) {
             R.id.tv_inDateSel -> { // 选择日期
                 Comm.showDateDialog(mContext, tv_inDateSel, 0)
             }
-            R.id.btn_scan -> { // 调用摄像头扫描（物料）
-                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
+            R.id.tv_custSel -> { // 选择客户
+                showForResult(Cust_DialogActivity::class.java, SEL_SUPP, null)
             }
-            R.id.tv_custOutStockDate -> {
-                Comm.showDateDialog(mContext, view,0)
+            R.id.tv_deptSel -> { // 选择部门
+                showForResult(Dept_DialogActivity::class.java, SEL_DEPT, null)
+            }
+            R.id.tv_emp1Sel -> { // 选择业务员
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP1, bundle)
+            }
+            R.id.tv_emp2Sel -> { // 选择保管者
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP2, bundle)
+            }
+            R.id.tv_emp3Sel -> { // 选择负责人
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP3, bundle)
+            }
+            R.id.tv_emp4Sel -> { // 选择验收人
+                bundle = Bundle()
+                bundle.putString("accountType", "SC")
+                showForResult(Emp_DialogActivity::class.java, SEL_EMP4, bundle)
+            }
+            R.id.tv_weightUnitType -> { // 称重单位选择
+                pop_unitType(view)
+                popWindow!!.showAsDropDown(view)
+            }
+            R.id.tv_connBlueTooth -> { // 蓝牙连接
+                parent!!.openBluetooth()
+            }
+            R.id.tv_roughWeight -> { // 输入毛重
+                showInputDialog("毛重", "", "0.0", RESULT_NUM)
             }
             R.id.btn_save -> { // 保存
                 if(!checkSave()) return
                 icStockBill.fdate = getValues(tv_inDateSel)
-                icStockBill.custOutStockDate = if(getValues(tv_custOutStockDate).length == 0) null else getValues(tv_custOutStockDate)
-                run_save()
+                run_save();
             }
             R.id.btn_clone -> { // 重置
                 if (parent!!.isChange) {
@@ -368,16 +373,12 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
      * 保存检查数据判断
      */
     fun checkSave() : Boolean {
-//        if (icStockBill.fsupplyId == 0) {
-//            Comm.showWarnDialog(mContext, "请选择供应商！")
-//            return false;
-//        }
-        if(f103 == 990662 && isNULLS(icStockBill.custOutStockNo).length == 0) {
-            Comm.showWarnDialog(mContext, "请扫描客户出库单号！")
-            return false
+        if (icStockBill.fcustId == 0 && icStockBill.fdeptId == 0) {
+            Comm.showWarnDialog(mContext, "请选择客户或领料部门！")
+            return false;
         }
         if(icStockBill.fsmanagerId == 0) {
-            Comm.showWarnDialog(mContext, "请选择保管人！")
+            Comm.showWarnDialog(mContext, "请选择领料人！")
             return false
         }
         if(icStockBill.ffmanagerId == 0) {
@@ -388,44 +389,24 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     }
 
     override fun setListener() {
-        val click = View.OnClickListener { v ->
-            setFocusable(et_getFocus)
-            when (v.id) {
-                R.id.et_custOutSotckNo -> setFocusable(et_custOutSotckNo)
-            }
-        }
-        et_custOutSotckNo!!.setOnClickListener(click)
 
-        // 客户出库单号---数据变化
-        et_custOutSotckNo!!.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                if (s.length == 0) return
-                if (!isTextChange) {
-                    isTextChange = true
-                    mHandler.sendEmptyMessageDelayed(SAOMA, 300)
-                }
-            }
-        })
-        // 客户出库单号---长按输入条码
-        et_custOutSotckNo!!.setOnLongClickListener {
-            showInputDialog("客户出库单号", isNULLS(icStockBill.custOutStockNo), "none", WRITE_CODE)
-            true
-        }
     }
 
     fun reset() {
+        setEnables(tv_custSel, R.drawable.back_style_blue2, true)
+        setEnables(tv_deptSel, R.drawable.back_style_blue2, true)
         parent!!.isMainSave = false
         parent!!.viewPager.setScanScroll(false) // 禁止滑动
         tv_pdaNo.text = ""
         tv_inDateSel.text = Comm.getSysDate(7)
-        et_custOutSotckNo.setText("")
-        tv_custOutStockDate.text = ""
+        tv_custSel.text = ""
+        tv_deptSel.text = ""
+        tv_roughWeight.text = ""
+        tv_netWeight.text = ""
         icStockBill.id = 0
         icStockBill.fselTranType = 0
         icStockBill.pdaNo = ""
-        icStockBill.fsupplyId = 0
+        icStockBill.fcustId = 0
         icStockBill.fdeptId = 0
 //        icStockBill.fempId = 0
 //        icStockBill.fsmanagerId = 0
@@ -440,19 +421,75 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         icStockBill.roughWeight = 0.0
 //        icStockBill.weightUnitType = 1
         icStockBill.netWeight = 0.0
-        icStockBill.custOutStockNo = ""
-        icStockBill.custOutStockDate = ""
         icStockBill.stock = null
 
         icStockBillId = 0
         timesTamp = user!!.getId().toString() + "-" + Comm.randomUUID()
         parent!!.isChange = false
-        EventBus.getDefault().post(EventBusEntity(11)) // 发送指令到fragment2，告其清空
+
+        EventBus.getDefault().post(EventBusEntity(1)) // 发送指令到fragment2，告其清空
+    }
+
+    /**
+     * 创建PopupWindow 【 来源类型选择 】
+     */
+    private var popWindow: PopupWindow? = null
+    private fun pop_unitType(v: View) {
+        if (null != popWindow) {//不为空就隐藏
+            popWindow!!.dismiss()
+            return
+        }
+        // 获取自定义布局文件popupwindow_left.xml的视图
+        val popV = layoutInflater.inflate(R.layout.weight_unitname_popwindow, null)
+        // 创建PopupWindow实例,200,LayoutParams.MATCH_PARENT分别是宽度和高度
+        popWindow = PopupWindow(popV, v.width, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        // 设置动画效果
+        // popWindow.setAnimationStyle(R.style.AnimationFade);
+        popWindow!!.setBackgroundDrawable(BitmapDrawable())
+        popWindow!!.isOutsideTouchable = true
+        popWindow!!.isFocusable = true
+
+        // 点击其他地方消失
+        val click = View.OnClickListener { v ->
+            when (v.id) {
+                R.id.tv1 -> { // 千克（kg）
+                    tv_weightUnitType.text = "千克（kg）"
+                    icStockBill.weightUnitType = 1
+                }
+                R.id.tv2 -> { // 克（g）
+                    tv_weightUnitType.text = "克（g）"
+                    icStockBill.weightUnitType = 2
+                }
+                R.id.tv3 -> { // 磅（lb）
+                    tv_weightUnitType.text = "磅（lb）"
+                    icStockBill.weightUnitType = 3
+                }
+            }
+            popWindow!!.dismiss()
+        }
+        popV.findViewById<View>(R.id.tv1).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv2).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv3).setOnClickListener(click)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
+            SEL_SUPP -> {//查询客户	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val cust = data!!.getSerializableExtra("obj") as Customer
+                    tv_custSel.text = cust.fname
+                    icStockBill.fcustId = cust.fitemId
+                }
+            }
+            SEL_DEPT -> {//查询部门	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val dept = data!!.getSerializableExtra("obj") as Department
+                    tv_deptSel.text = dept!!.departmentName
+                    icStockBill.fdeptId = dept.fitemID
+                    icStockBill.deptName = dept.departmentName
+                }
+            }
             SEL_EMP1 -> {//查询业务员	返回
                 if (resultCode == Activity.RESULT_OK) {
                     val emp = data!!.getSerializableExtra("obj") as Emp
@@ -485,24 +522,14 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                     icStockBill.yanshouMan = emp.fname
                 }
             }
-            BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
+            RESULT_NUM -> { // 数量	返回
                 if (resultCode == Activity.RESULT_OK) {
-                    val bundle = data!!.extras
-                    if (bundle != null) {
-                        val code = bundle.getString(BaseFragment.DECODED_CONTENT_KEY, "")
-                        setTexts(et_custOutSotckNo, code)
-                    }
-                }
-            }
-            WRITE_CODE -> {// 输入条码  返回
-                if (resultCode == Activity.RESULT_OK) {
-                    val bundle = data!!.extras
+                    val bundle = data!!.getExtras()
                     if (bundle != null) {
                         val value = bundle.getString("resultValue", "")
-                        isTextChange = true
-                        setTexts(et_custOutSotckNo, value)
-                        icStockBill.custOutStockNo = value
-                        isTextChange = false
+                        val num = parseDouble(value)
+                        tv_roughWeight.text = df.format(num)
+                        icStockBill.roughWeight = num
                     }
                 }
             }
@@ -550,13 +577,13 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     }
 
     /**
-     * 根据任务单查询发货通知单
+     *  查询主表信息
      */
-    private fun run_findList(finterid: Int) {
-        val mUrl = getURL("seoutStock/findList")
+    private fun run_findStockBill(id: Int) {
+        val mUrl = getURL("stockBill_WMS/findStockBill")
 
         val formBody = FormBody.Builder()
-                .add("finterid", finterid.toString())
+                .add("id", id.toString())
                 .build()
 
         val request = Request.Builder()
@@ -568,7 +595,7 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         val call = okHttpClient!!.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mHandler.sendEmptyMessage(UNFIND_SOURCE)
+                mHandler.sendEmptyMessage(UNFIND_ICSTOCKBILL)
             }
 
             @Throws(IOException::class)
@@ -576,12 +603,12 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                 val body = response.body()
                 val result = body.string()
                 if (!JsonUtil.isSuccess(result)) {
-                    val msg = mHandler.obtainMessage(UNFIND_SOURCE, result)
+                    val msg = mHandler.obtainMessage(UNFIND_ICSTOCKBILL, result)
                     mHandler.sendMessage(msg)
                     return
                 }
-                val msg = mHandler.obtainMessage(FIND_SOURCE, result)
-                LogUtil.e("run_findList --> onResponse", result)
+                val msg = mHandler.obtainMessage(FIND_ICSTOCKBILL, result)
+                LogUtil.e("run_missionBillModifyStatus --> onResponse", result)
                 mHandler.sendMessage(msg)
             }
         })
@@ -629,13 +656,14 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
     }
 
     /**
-     *  查询主表信息
+     * 根据任务单查询出入库单据
      */
-    private fun run_findStockBill(id: Int) {
-        val mUrl = getURL("stockBill_WMS/findStockBill")
+    private fun run_findICSotckBill_K3(finterid: Int) {
+        showLoadDialog("保存中...", false)
+        val mUrl = getURL("stockBill_K3/findEntryList")
 
         val formBody = FormBody.Builder()
-                .add("id", id.toString())
+                .add("finterid", finterid.toString())
                 .build()
 
         val request = Request.Builder()
@@ -647,7 +675,7 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
         val call = okHttpClient!!.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mHandler.sendEmptyMessage(UNFIND_ICSTOCKBILL)
+                mHandler.sendEmptyMessage(UNFIND_SOURCE)
             }
 
             @Throws(IOException::class)
@@ -655,50 +683,12 @@ class Sal_ReCheck_Fragment1 : BaseFragment() {
                 val body = response.body()
                 val result = body.string()
                 if (!JsonUtil.isSuccess(result)) {
-                    val msg = mHandler.obtainMessage(UNFIND_ICSTOCKBILL, result)
+                    val msg = mHandler.obtainMessage(UNFIND_SOURCE, result)
                     mHandler.sendMessage(msg)
                     return
                 }
-                val msg = mHandler.obtainMessage(FIND_ICSTOCKBILL, result)
-                LogUtil.e("run_missionBillModifyStatus --> onResponse", result)
-                mHandler.sendMessage(msg)
-            }
-        })
-    }
-
-    /**
-     *  查询k3,WMS销售出库时，客户单号是否必填(是：990662，否：990663)
-     */
-    private fun run_findF103(fitemId: Int) {
-        val mUrl = getURL("customer/findF103")
-
-        val formBody = FormBody.Builder()
-                .add("fitemId", fitemId.toString())
-                .build()
-
-        val request = Request.Builder()
-                .addHeader("cookie", getSession())
-                .url(mUrl)
-                .post(formBody)
-                .build()
-
-        val call = okHttpClient!!.newCall(request)
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                mHandler.sendEmptyMessage(UNFIND_103)
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body()
-                val result = body.string()
-                if (!JsonUtil.isSuccess(result)) {
-                    val msg = mHandler.obtainMessage(UNFIND_103, result)
-                    mHandler.sendMessage(msg)
-                    return
-                }
-                val msg = mHandler.obtainMessage(FIND_103, result)
-                LogUtil.e("run_missionBillModifyStatus --> onResponse", result)
+                val msg = mHandler.obtainMessage(FIND_SOURCE, result)
+                LogUtil.e("run_save --> onResponse", result)
                 mHandler.sendMessage(msg)
             }
         })

@@ -56,6 +56,8 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         private val UNSUBMIT = 502
         private val SAVE = 203
         private val UNSAVE = 503
+        private val FIND_AVGQTY = 204
+        private val UNFIND_AVGQTY = 504
         private val SETFOCUS = 1
         private val RESULT_NUM = 2
         private val RESULT_BATCH = 3
@@ -82,6 +84,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
     private var icStockCheckProcess: ICStockCheckProcess? = null
     private var curPos:Int = 0 // 当前行
     private var smqFlag = '1' // 使用扫码枪扫码（1：仓库位置扫码，2：容器扫码，3：物料扫码）
+    var mapMtlQty = HashMap<Int, Double>()
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -162,6 +165,16 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "保存失败！"
                         Comm.showWarnDialog(m.mContext, errMsg)
+                    }
+                    FIND_AVGQTY -> { // 查询库存    成功
+                        val listAvbQty = JsonUtil.strToList(msgObj, InventoryNow::class.java)
+                        m.mapMtlQty.clear()
+                        listAvbQty.forEach {
+                            m.mapMtlQty.put(it.icItemId, it.avbQty)
+                        }
+                    }
+                    UNFIND_AVGQTY -> { // 查询库存  失败
+                        m.mapMtlQty.clear()
                     }
                     SUBMIT -> { // 提交成功 返回
                         m.reset()
@@ -384,10 +397,10 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                 recyclerView.post(Runnable { recyclerView.smoothScrollToPosition(index) })
                 return null
             }
-            if(icItem.realQty == 0.0) {
-                Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请输入盘点数！")
-                return null
-            }
+//            if(icItem.realQty == 0.0) {
+//                Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请输入盘点数！")
+//                return null
+//            }
             if(icItem.batchManager.equals("Y") && Comm.isNULLS(icItem.batchCode).length == 0) {
                 Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请长按数字框输入批次！")
                 return null
@@ -396,7 +409,7 @@ class ICInvBackup_Fragment2 : BaseFragment() {
             m.finterId = 0
             m.stockId = icItem.stock.fitemId
             m.mtlId = icItem.fitemid
-            m.fauxQty = 0.0
+            m.fauxQty = (if(mapMtlQty.containsKey(icItem.fitemid)) mapMtlQty.getValue(icItem.fitemid) else 0.0)
             m.fauxQtyAct = 0.0
             m.fauxCheckQty = 0.0
             m.realQty = icItem.realQty
@@ -674,6 +687,8 @@ class ICInvBackup_Fragment2 : BaseFragment() {
         // 自动跳到物料焦点
         smqFlag = '3'
         mHandler.sendEmptyMessage(SETFOCUS)
+        // 查询库存数
+        run_findAvgQtyList()
     }
 
     /**
@@ -879,6 +894,8 @@ class ICInvBackup_Fragment2 : BaseFragment() {
             recyclerView.post(Runnable { recyclerView.smoothScrollToPosition(checkDatas.size - 1) })
         }
         mAdapter!!.notifyDataSetChanged()
+
+        run_findAvgQtyList()
     }
 
     /**
@@ -1054,6 +1071,52 @@ class ICInvBackup_Fragment2 : BaseFragment() {
                     return
                 }
                 val msg = mHandler.obtainMessage(SUCC2, result)
+                mHandler.sendMessage(msg)
+            }
+        })
+    }
+
+    /**
+     * 可用库存查询
+     */
+    private fun run_findAvgQtyList() {
+        showLoadDialog("加载中...", false)
+        val mUrl = getURL("inventoryNow/findAvbQty")
+        val strStockGroup = stock!!.fitemId.toString() +","+ (if(stockArea != null) stockArea!!.id else 0) +","+
+                (if(storageRack != null) storageRack!!.id else 0) +","+ (if(stockPos != null) stockPos!!.id else 0)
+        var strMtlId = StringBuffer()
+        checkDatas.forEach {
+            strMtlId.append((if(strMtlId.length > 0) "," else "" )+it.fitemid)
+        }
+
+        val formBody = FormBody.Builder()
+                .add("strMtlId", strMtlId.toString())
+                .add("strStockGroup", strStockGroup)
+                .build()
+
+        val request = Request.Builder()
+                .addHeader("cookie", getSession())
+                .url(mUrl)
+                .post(formBody)
+                .build()
+
+        val call = okHttpClient!!.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                mHandler.sendEmptyMessage(UNFIND_AVGQTY)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()
+                val result = body.string()
+                LogUtil.e("run_findListByParamWms --> onResponse", result)
+                if (!JsonUtil.isSuccess(result)) {
+                    val msg = mHandler.obtainMessage(UNFIND_AVGQTY, result)
+                    mHandler.sendMessage(msg)
+                    return
+                }
+                val msg = mHandler.obtainMessage(FIND_AVGQTY, result)
                 mHandler.sendMessage(msg)
             }
         })

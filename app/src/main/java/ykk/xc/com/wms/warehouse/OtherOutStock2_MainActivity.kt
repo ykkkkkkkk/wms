@@ -17,9 +17,9 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.ware_transfer_fragment1.*
-import kotlinx.android.synthetic.main.ware_transfer_fragment2.*
-import kotlinx.android.synthetic.main.ware_transfer_main.*
+import kotlinx.android.synthetic.main.ware_other_out_stock2_fragment1.*
+import kotlinx.android.synthetic.main.ware_other_out_stock2_fragment2.*
+import kotlinx.android.synthetic.main.ware_other_out_stock2_main.*
 import ykk.xc.com.wms.R
 import ykk.xc.com.wms.comm.BaseActivity
 import ykk.xc.com.wms.comm.Comm
@@ -31,16 +31,18 @@ import java.io.InputStream
 import java.util.*
 
 /**
- * 仓库调拨
+ * 日期：2019-10-16 09:14
+ * 描述：其它出库
+ * 作者：ykk
  */
-class Ware_Transfer_MainActivity : BaseActivity() {
+class OtherOutStock2_MainActivity : BaseActivity() {
 
-    private val REFRESH = 10
+    private val REFRESH = 1
     private val BLUETOOTH_REC = 11
     private val RESET_TEXT = 12
 
     private val context = this
-    private val TAG = "Ware_Picking_MainActivity"
+    private val TAG = "OtherOutStock2_MainActivity"
     private var curRadio: View? = null
     private var curRadioName: TextView? = null
     var isChange: Boolean = false // 返回的时候是否需要判断数据是否保存了
@@ -54,14 +56,14 @@ class Ware_Transfer_MainActivity : BaseActivity() {
     internal var bThread = false
     var smsg = StringBuffer()    //显示称重数据缓存
 
-    val fragment1 = Ware_Transfer_Fragment1()
-    val fragment2 = Ware_Transfer_Fragment2()
-    val fragment3 = Ware_Transfer_Fragment3()
+    val fragment1 = OtherOutStock2_Fragment1()
+    val fragment2 = OtherOutStock2_Fragment2()
+    val fragment3 = OtherOutStock2_Fragment3()
     var isMainSave = false // 主表信息是否保存
     var pageId = 0
 
     override fun setLayoutResID(): Int {
-        return R.layout.ware_transfer_main;
+        return R.layout.ware_other_out_stock2_main;
     }
 
     override fun initData() {
@@ -78,13 +80,13 @@ class Ware_Transfer_MainActivity : BaseActivity() {
 //        Sal_OutFragment3 fragment3 = new Sal_OutFragment3();
 
         listFragment.add(fragment1)
-        listFragment.add(fragment2)
-        listFragment.add(fragment3)
+        listFragment.add(fragment2);
+        listFragment.add(fragment3);
         viewPager.setScanScroll(false); // 禁止左右滑动
         //ViewPager设置适配器
         viewPager.setAdapter(BaseFragmentAdapter(supportFragmentManager, listFragment))
         //设置ViewPage缓存界面数，默认为1
-        viewPager.offscreenPageLimit = 3
+        viewPager!!.offscreenPageLimit = 3
         //ViewPager显示第一个Fragment
         viewPager!!.setCurrentItem(0)
 
@@ -115,7 +117,7 @@ class Ware_Transfer_MainActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.btn_close, R.id.lin_tab1, R.id.lin_tab2, R.id.lin_tab3, R.id.lin_tab4, R.id.btn_search)
+    @OnClick(R.id.btn_close, R.id.lin_tab1, R.id.lin_tab2, R.id.lin_tab3, R.id.btn_search)
     fun onViewClicked(view: View) {
         // setCurrentItem第二个参数控制页面切换动画
         //  true:打开/false:关闭
@@ -131,7 +133,6 @@ class Ware_Transfer_MainActivity : BaseActivity() {
                     build.setMessage("您有未保存的数据，继续关闭吗？")
                     build.setPositiveButton("是", object : DialogInterface.OnClickListener {
                         override fun onClick(dialog: DialogInterface, which: Int) {
-                            closeBlueTooth(true)
                             context.finish()
                         }
                     })
@@ -140,14 +141,13 @@ class Ware_Transfer_MainActivity : BaseActivity() {
                     build.show()
 
                 } else {
-                    closeBlueTooth(true)
                     context.finish()
                 }
             }
             R.id.btn_search -> { // 查询
                 val bundle = Bundle()
-                bundle.putInt("pageId", 5)
-                bundle.putString("billType", "CGSHRK")
+                bundle.putInt("pageId", 1)
+                bundle.putString("billType", "QTCK")
                 showForResult(OutInStock_Search_MainActivity::class.java, REFRESH, bundle)
             }
             R.id.lin_tab1 -> {
@@ -163,13 +163,6 @@ class Ware_Transfer_MainActivity : BaseActivity() {
             R.id.lin_tab3 -> {
                 if(isMainSave) {
                     tabChange(viewRadio3!!, tv_radioName3, "表体", 2)
-                } else {
-                    Comm.showWarnDialog(context,"请先完善（表头）信息！")
-                }
-            }
-            R.id.lin_tab4 -> {
-                if(isMainSave) {
-                    tabChange(viewRadio4!!, tv_radioName4, "条码", 3)
                 } else {
                     Comm.showWarnDialog(context,"请先完善（表头）信息！")
                 }

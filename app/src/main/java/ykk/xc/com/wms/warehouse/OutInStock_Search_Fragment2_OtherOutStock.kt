@@ -137,7 +137,8 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
             override fun onSearch(entity: ICStockBill, position: Int) {
                 val bundle = Bundle()
                 bundle.putInt("id", entity.id)
-                show(OtherOutStock_MainActivity::class.java, bundle)
+//                show(OtherOutStock_MainActivity::class.java, bundle)
+                show(OtherOutStock2_MainActivity::class.java, bundle)
             }
             override fun onUpload(entity: ICStockBill, position: Int) {
                 val list = ArrayList<ICStockBill>()
@@ -183,7 +184,6 @@ class OutInStock_Search_Fragment2_OtherOutStock : BaseFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
-            // 显示上传按钮
             // 显示上传按钮
             mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
             if( isInit && !isLoadData) {

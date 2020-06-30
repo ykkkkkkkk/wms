@@ -1,4 +1,4 @@
-package ykk.xc.com.wms.produce.adapter
+package ykk.xc.com.wms.warehouse.adapter
 
 import android.app.Activity
 import android.text.Html
@@ -11,12 +11,12 @@ import ykk.xc.com.wms.util.basehelper.BaseArrayRecyclerAdapter
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import java.text.DecimalFormat
 
-class Prod_InStock_Fragment3_Adapter(private val context: Activity, datas: List<ICStockBillEntry>) : BaseArrayRecyclerAdapter<ICStockBillEntry>(datas) {
+class OtherInStock2Fragment3Adapter(private val context: Activity, datas: List<ICStockBillEntry>) : BaseArrayRecyclerAdapter<ICStockBillEntry>(datas) {
     private val df = DecimalFormat("#.######")
     private var callBack: MyCallBack? = null
 
     override fun bindView(viewtype: Int): Int {
-        return R.layout.prod_in_stock_fragment3_item
+        return R.layout.ware_other_in_stock2_fragment3_item
     }
 
     override fun onBindHoder(holder: BaseRecyclerAdapter.RecyclerHolder, entity: ICStockBillEntry, pos: Int) {
@@ -35,8 +35,6 @@ class Prod_InStock_Fragment3_Adapter(private val context: Activity, datas: List<
         val tv_stockAreaName = holder.obtainView<TextView>(R.id.tv_stockAreaName)
         val tv_storageRackName = holder.obtainView<TextView>(R.id.tv_storageRackName)
         val tv_stockPosName = holder.obtainView<TextView>(R.id.tv_stockPosName)
-        val tv_boxBarcode = holder.obtainView<TextView>(R.id.tv_boxBarcode)
-        val tv_prodNo = holder.obtainView<TextView>(R.id.tv_prodNo)
 
         // 赋值
         tv_row.text = (pos+1).toString()
@@ -54,14 +52,6 @@ class Prod_InStock_Fragment3_Adapter(private val context: Activity, datas: List<
         tv_sourceQty.text = Html.fromHtml("来源数:&nbsp;<font color='#6a5acd'>"+ df.format(entity.fsourceQty) +"</font>&nbsp;<font color='#666666'>"+ entity.unitName +"</font>")
         tv_weight.text = Html.fromHtml("称重数:&nbsp;<font color='#6a5acd'>"+ (if(entity.weight > 0) df.format(entity.weight) else "") +"</font>")
         tv_referenceNum.text = Html.fromHtml("参考数:&nbsp;<font color='#6a5acd'>"+ (if(entity.referenceNum > 0) df.format(entity.referenceNum) else "")+"</font>")
-        tv_prodNo.text = Html.fromHtml("生产订单:&nbsp;<font color='#6a5acd'>"+ entity.fsourceBillNo +"</font>")
-        if(entity.boxBarCode != null) {
-            tv_boxBarcode.visibility = View.VISIBLE
-            tv_boxBarcode.text = Html.fromHtml("箱码:&nbsp;<font color='#6a5acd'>"+ entity.boxBarCode.barCode +"</font>")
-        } else {
-            tv_boxBarcode.visibility = View.INVISIBLE
-            tv_boxBarcode.text = ""
-        }
 
         // 显示仓库组信息
         if(entity.stock != null ) {

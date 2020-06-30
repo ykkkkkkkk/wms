@@ -49,7 +49,8 @@ class ICInvBackup_Fragment2_Adapter(private val context: Activity, datas: List<I
 //        tv_num!!.setText(Html.fromHtml("<small><font color='#777777'>已盘</font>" + df.format(entity.fauxCheckQty) + "</small><br><font color='#009900'>" + df.format(entity.realQty) + "</font>"))
         tv_unitName.text = entity.unit.unitName
         tv_weight.text = if(entity.weight > 0) df.format(entity.weight) else ""
-        tv_num.text = if(entity.realQty > 0) df.format(entity.realQty) else ""
+//        tv_num.text = if(entity.realQty > 0) df.format(entity.realQty) else ""
+        tv_num.text = df.format(entity.realQty)
         tv_minPackQty.text = if(entity.minPackQty > 0) df.format(entity.minPackQty) else ""
 
         if(entity.batchManager.equals("Y")) {

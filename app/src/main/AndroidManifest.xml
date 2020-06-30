@@ -194,6 +194,12 @@
         <activity
             android:name=".warehouse.Ware_Box_MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.OtherInStock2_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.OtherOutStock2_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
 
         <!-- 采购模块 -->

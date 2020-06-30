@@ -12,8 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.ware_transfer_fragment1.*
-import kotlinx.android.synthetic.main.ware_transfer_main.*
+import kotlinx.android.synthetic.main.ware_other_in_stock2_fragment1.*
+import kotlinx.android.synthetic.main.ware_other_in_stock2_main.*
 import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import ykk.xc.com.wms.R
@@ -22,6 +22,7 @@ import ykk.xc.com.wms.basics.Emp_DialogActivity
 import ykk.xc.com.wms.basics.Supplier_DialogActivity
 import ykk.xc.com.wms.bean.*
 import ykk.xc.com.wms.bean.k3Bean.Emp
+import ykk.xc.com.wms.bean.k3Bean.ICStockBillEntry_K3
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.util.JsonUtil
@@ -33,10 +34,10 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：仓库调拨
+ * 描述：其他入库
  * 作者：ykk
  */
-class Ware_Transfer_Fragment1 : BaseFragment() {
+class OtherInStock2_Fragment1 : BaseFragment() {
 
     companion object {
         private val SEL_DEPT = 10
@@ -61,19 +62,19 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
     private var okHttpClient: OkHttpClient? = null
     private var user: User? = null
     private var mContext: Activity? = null
-    private var parent: Ware_Transfer_MainActivity? = null
+    private var parent: OtherInStock2_MainActivity? = null
     private val df = DecimalFormat("#.###")
     private var timesTamp:String? = null // 时间戳
     var icStockBill = ICStockBill() // 保存的对象
-//    var isReset = false // 是否点击了重置按钮.
-    var ppBomTransferEntryList:List<PPBomTransferEntry>? = null
+    //    var isReset = false // 是否点击了重置按钮.
+    var icstockEntry_K3List:List<ICStockBillEntry_K3>? = null
     private var icStockBillId = 0 // 上个页面传来的id
 
     // 消息处理
     private val mHandler = MyHandler(this)
 
-    private class MyHandler(activity: Ware_Transfer_Fragment1) : Handler() {
-        private val mActivity: WeakReference<Ware_Transfer_Fragment1>
+    private class MyHandler(activity: OtherInStock2_Fragment1) : Handler() {
+        private val mActivity: WeakReference<OtherInStock2_Fragment1>
 
         init {
             mActivity = WeakReference(activity)
@@ -111,32 +112,29 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext, errMsg)
                     }
                     FIND_SOURCE ->{ // 查询源单 返回
-                        val list = JsonUtil.strToList(msgObj, PPBomTransferEntry::class.java)
-                        m.ppBomTransferEntryList = list
-                        val ppBomTransfer = list[0].ppBomTransfer
-                        when(ppBomTransfer.sourceBillType) {
-                            1 -> { // 显示部门
-                                if(ppBomTransfer.dept != null) {
-                                    m.icStockBill.fdeptId = ppBomTransfer.dept.fitemID
-                                    m.icStockBill.deptName = ppBomTransfer.dept.departmentName
-                                    m.tv_deptSel.text = m.icStockBill.deptName
-                                    m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
-                                }
-                            }
-                            2 -> { // 显示供应商
-                                if(ppBomTransfer.supplier != null) {
-                                    m.icStockBill.fsupplyId = ppBomTransfer.supplier.supplierId
-                                    m.icStockBill.suppName = ppBomTransfer.supplier.fname
-                                    m.tv_suppSel.text = m.icStockBill.deptName
-                                    m.setEnables(m.tv_suppSel, R.drawable.back_style_gray3b, false)
-                                }
-                            }
+                        val list = JsonUtil.strToList(msgObj, ICStockBillEntry_K3::class.java)
+                        m.icstockEntry_K3List = list
+                        if(list[0].stockBill.supplier != null) {
+                            m.icStockBill.fsupplyId = list[0].stockBill.supplier.supplierId
+                            m.icStockBill.suppName = list[0].stockBill.supplier.fname
+
+                            m.tv_suppSel.text = list[0].stockBill.supplier.fname
+                            m.setEnables(m.tv_suppSel, R.drawable.back_style_gray3b, false)
                         }
+                        if(list[0].stockBill.department != null) {
+                            m.icStockBill.fdeptId = list[0].stockBill.department.fitemID
+                            m.icStockBill.deptName = list[0].stockBill.department.departmentName
+
+                            m.tv_deptSel.text = list[0].stockBill.department.departmentName
+                            m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
+                        }
+
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         errMsg = JsonUtil.strToString(msgObj)
                         if (m.isNULLS(errMsg).length == 0) errMsg = "该页面有错误！2秒后自动关闭..."
-                        m.toasts(errMsg)
+                        Comm.showWarnDialog(m.mContext, errMsg)
                         m.mHandler.postDelayed(Runnable {
                             m.mContext!!.finish()
                         },2000)
@@ -144,6 +142,7 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
                     FIND_ICSTOCKBILL -> { // 查询主表信息 成功
                         val icsBill = JsonUtil.strToObject(msgObj, ICStockBill::class.java)
                         m.setICStockBill(icsBill)
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
                         errMsg = JsonUtil.strToString(msgObj)
@@ -224,12 +223,13 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
     }
 
     override fun setLayoutResID(inflater: LayoutInflater, container: ViewGroup): View {
-        return inflater.inflate(R.layout.ware_transfer_fragment1, container, false)
+        return inflater.inflate(R.layout.ware_other_in_stock2_fragment1, container, false)
     }
 
     override fun initView() {
         mContext = getActivity()
-        parent = mContext as Ware_Transfer_MainActivity
+        parent = mContext as OtherInStock2_MainActivity
+
     }
 
     override fun initData() {
@@ -250,8 +250,8 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
         tv_emp3Sel.text = user!!.empName
         tv_emp4Sel.text = user!!.empName
 
-        icStockBill.billType = "SCDB" // 生产调拨
-        icStockBill.ftranType = 1
+        icStockBill.billType = "QTRK" // 采购收货入库
+        icStockBill.ftranType = 10
         icStockBill.frob = 1
         icStockBill.weightUnitType = 1
         icStockBill.fempId = user!!.empId
@@ -276,7 +276,7 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
             if(bundle.containsKey("missionBill")) {
                 val missionBill = bundle.getSerializable("missionBill") as MissionBill
                 icStockBill.missionBillId = missionBill.id // 记录任务单的id
-                run_ppBomTransferList(missionBill.sourceBillId)
+                run_findICSotckBill_K3(missionBill.sourceBillId)
                 if (missionBill.sourceBillId > 0) {
                     // 修改任务单状态
                     run_missionBillModifyStatus(missionBill.id)
@@ -303,7 +303,7 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
     }
 
     @OnClick(R.id.tv_inDateSel, R.id.tv_suppSel, R.id.tv_deptSel, R.id.tv_emp1Sel, R.id.tv_emp2Sel, R.id.tv_emp3Sel, R.id.tv_emp4Sel,
-             R.id.btn_save, R.id.btn_clone, R.id.tv_weightUnitType, R.id.tv_connBlueTooth, R.id.tv_roughWeight)
+            R.id.btn_save, R.id.btn_clone, R.id.tv_weightUnitType, R.id.tv_connBlueTooth, R.id.tv_roughWeight)
     fun onViewClicked(view: View) {
         var bundle: Bundle? = null
         when (view.id) {
@@ -373,10 +373,10 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
      * 保存检查数据判断
      */
     fun checkSave() : Boolean {
-//        if (icStockBill.fsupplyId == 0) {
-//            Comm.showWarnDialog(mContext, "请选择供应商！")
-//            return false;
-//        }
+        if (icStockBill.fsupplyId == 0 && icStockBill.fdeptId == 0) {
+            Comm.showWarnDialog(mContext, "请选择供应商或部门！")
+            return false;
+        }
         if(icStockBill.fsmanagerId == 0) {
             Comm.showWarnDialog(mContext, "请选择保管人！")
             return false
@@ -401,10 +401,6 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
         tv_inDateSel.text = Comm.getSysDate(7)
         tv_suppSel.text = ""
         tv_deptSel.text = ""
-//        tv_emp1Sel.text = ""
-//        tv_emp2Sel.text = ""
-//        tv_emp3Sel.text = ""
-//        tv_emp4Sel.text = ""
         tv_roughWeight.text = ""
         tv_netWeight.text = ""
         icStockBill.id = 0
@@ -581,16 +577,13 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
     }
 
     /**
-     * 根据任务单查询投料调拨单
+     *  查询主表信息
      */
-    private fun run_ppBomTransferList(ppBomTransferId: Int) {
-        showLoadDialog("保存中...", false)
-        val mUrl = getURL("ppBomTransfer/findListByParam")
+    private fun run_findStockBill(id: Int) {
+        val mUrl = getURL("stockBill_WMS/findStockBill")
 
         val formBody = FormBody.Builder()
-                .add("ppBomTransferId", ppBomTransferId.toString())
-                .add("entryType", "1") // 分录类型 1：仓库调车间，2：车间内调拨
-                .add("mustQtyGt0", "1") // 只查询应发数大于0的
+                .add("id", id.toString())
                 .build()
 
         val request = Request.Builder()
@@ -602,7 +595,7 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
         val call = okHttpClient!!.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mHandler.sendEmptyMessage(UNFIND_SOURCE)
+                mHandler.sendEmptyMessage(UNFIND_ICSTOCKBILL)
             }
 
             @Throws(IOException::class)
@@ -610,12 +603,12 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
                 val body = response.body()
                 val result = body.string()
                 if (!JsonUtil.isSuccess(result)) {
-                    val msg = mHandler.obtainMessage(UNFIND_SOURCE, result)
+                    val msg = mHandler.obtainMessage(UNFIND_ICSTOCKBILL, result)
                     mHandler.sendMessage(msg)
                     return
                 }
-                val msg = mHandler.obtainMessage(FIND_SOURCE, result)
-                LogUtil.e("run_save --> onResponse", result)
+                val msg = mHandler.obtainMessage(FIND_ICSTOCKBILL, result)
+                LogUtil.e("run_missionBillModifyStatus --> onResponse", result)
                 mHandler.sendMessage(msg)
             }
         })
@@ -663,13 +656,14 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
     }
 
     /**
-     *  查询主表信息
+     * 根据任务单查询出入库单据
      */
-    private fun run_findStockBill(id: Int) {
-        val mUrl = getURL("stockBill_WMS/findStockBill")
+    private fun run_findICSotckBill_K3(finterid: Int) {
+        showLoadDialog("保存中...", false)
+        val mUrl = getURL("stockBill_K3/findEntryList")
 
         val formBody = FormBody.Builder()
-                .add("id", id.toString())
+                .add("finterid", finterid.toString())
                 .build()
 
         val request = Request.Builder()
@@ -681,7 +675,7 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
         val call = okHttpClient!!.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mHandler.sendEmptyMessage(UNFIND_ICSTOCKBILL)
+                mHandler.sendEmptyMessage(UNFIND_SOURCE)
             }
 
             @Throws(IOException::class)
@@ -689,12 +683,12 @@ class Ware_Transfer_Fragment1 : BaseFragment() {
                 val body = response.body()
                 val result = body.string()
                 if (!JsonUtil.isSuccess(result)) {
-                    val msg = mHandler.obtainMessage(UNFIND_ICSTOCKBILL, result)
+                    val msg = mHandler.obtainMessage(UNFIND_SOURCE, result)
                     mHandler.sendMessage(msg)
                     return
                 }
-                val msg = mHandler.obtainMessage(FIND_ICSTOCKBILL, result)
-                LogUtil.e("run_missionBillModifyStatus --> onResponse", result)
+                val msg = mHandler.obtainMessage(FIND_SOURCE, result)
+                LogUtil.e("run_save --> onResponse", result)
                 mHandler.sendMessage(msg)
             }
         })

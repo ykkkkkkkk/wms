@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class ICStockBillEntry_K3 implements Serializable {
     /* 单据内码 */
-    private Integer finterid;
+    private int finterid;
     /* 分录号 */
-    private Integer fentryid;
+    private int fentryid;
     /* 物料内码 */
-    private Integer fitemid;
+    private int fitemid;
     /* 申请数量 */
     private double fqtymust;
     /* 实际数量 */
@@ -22,11 +22,11 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 备注 */
     private String fnote;
     /* 原单内码 */
-    private Integer fscbillinterid;
+    private int fscbillinterid;
     /* 原单单号 */
     private String fscbillno;
     /* 单位内码 */
-    private Integer funitid;
+    private int funitid;
     /* 单位成本 */
     private double fauxprice;
     /* 辅助实际数量 */
@@ -42,7 +42,7 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 辅助计划价 */
     private double fauxplanprice;
     /* 原分录号 */
-    private Integer fsourceentryid;
+    private int fsourceentryid;
     /* 提交数量 */
     private double fcommitqty;
     /* 辅助提交数量 */
@@ -50,11 +50,11 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 生产/采购日期 */
     private String fkfdate;
     /* 保质期 */
-    private Integer fkfperiod;
+    private int fkfperiod;
     /* 目标仓位 */
-    private Integer fdcspid;
+    private int fdcspid;
     /* 源仓位 */
-    private Integer fscspid;
+    private int fscspid;
     /* 代销单价 */
     private double fconsignprice;
     /* 代销金额 */
@@ -70,9 +70,9 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 对应名称 */
     private String fmapname;
     /* 拆单源单行号 */
-    private Integer forgbillentryid;
+    private int forgbillentryid;
     /* 工序 */
-    private Integer foperid;
+    private int foperid;
     /* 计划价金额 */
     private double fplanamount;
     /* 委外加工入库单增加加工单价 */
@@ -80,11 +80,11 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 税率 */
     private double ftaxrate;
     /* 序列号 */
-    private Integer fsnlistid;
+    private int fsnlistid;
     /* 调拨金额 */
     private double famtref;
     /* 辅助属性 */
-    private Integer fauxpropid;
+    private int fauxpropid;
     /* 基本调拨单价 */
     private double fpriceref;
     /* 调拨单价 */
@@ -102,27 +102,27 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 辅助执行数量 */
     private double fseccommitqty;
     /* 源单类型 */
-    private Integer fsourcetrantype;
+    private int fsourcetrantype;
     /* 源单内码 */
-    private Integer fsourceinterid;
+    private int fsourceinterid;
     /* 源单单号 */
     private String fsourcebillno;
     /* 合同内码 */
-    private Integer fcontractinterid;
+    private int fcontractinterid;
     /* 合同分录 */
-    private Integer fcontractentryid;
+    private int fcontractentryid;
     /* 合同单号 */
     private String fcontractbillno;
     /* 生产任务单号 */
     private String ficmobillno;
     /* 领料单=任务单内码；委外出入库单=投料单内码 */
-    private Integer ficmointerid;
+    private int ficmointerid;
     /* 投料单分录号 */
-    private Integer fppbomentryid;
+    private int fppbomentryid;
     /* 订单内码 */
-    private Integer forderinterid;
+    private int forderinterid;
     /* 订单分录 */
-    private Integer forderentryid;
+    private int forderentryid;
     /* 订单单号 */
     private String forderbillno;
     /* 已钩稽数量 */
@@ -138,27 +138,27 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 本期钩稽金额(本位币) */
     private double fstdcurrenthookamount;
     /* 调出仓库 */
-    private Integer fscstockid;
+    private int fscstockid;
     /* 调入仓库 */
-    private Integer fdcstockid;
+    private int fdcstockid;
     /* 有效期至 */
     private String fperioddate;
     /* 成本对象组 */
-    private Integer fcostobjgroupid;
+    private int fcostobjgroupid;
     /* 成本对象 */
-    private Integer fcostobjid;
+    private int fcostobjid;
     /* 分录内码 */
-    private Integer fdetailid;
+    private int fdetailid;
     /* 是否返工 */
-    private Integer freproducetype;
+    private int freproducetype;
     /* 客户BOM */
-    private Integer fbominterid;
+    private int fbominterid;
     /* 折扣率 */
     private double fdiscountrate;
     /* 折扣额 */
     private double fdiscountamount;
     /* 特价ID */
-    private Integer fsepcialsaleid;
+    private int fsepcialsaleid;
     /* 基本出库数量 */
     private double foutcommitqty;
     /* 辅助出库数量 */
@@ -170,13 +170,13 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 开票数量 */
     private double fauxqtyinvoice;
     /* 工序号 */
-    private Integer fopersn;
+    private int fopersn;
     /* 审核标志 */
     private Short fcheckstatus;
     /* 拆分辅助数量 */
     private double fsplitsecqty;
     /* 计划模式 */
-    private Integer fplanmode;
+    private int fplanmode;
     /* 计划跟踪号 */
     private String fmtono;
     /* 辅助计量单位实存数量 */
@@ -186,7 +186,7 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 客户订单号 */
     private String fclientorderno;
     /* 订单行号 */
-    private Integer fcliententryid;
+    private int fcliententryid;
     /* 拆卸成本拆分比例(%) */
     private double fcostpercentage;
     /* 坯料尺寸 */
@@ -200,29 +200,29 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 结算标志 */
     private Byte fclosing;
     /* 是否VMI */
-    private Integer fisvmi;
+    private int fisvmi;
     /* 供应商 */
-    private Integer fentrysupply;
+    private int fentrysupply;
     /* 检验是否良品 */
-    private Integer fchkpassitem;
+    private int fchkpassitem;
     /* 发货通知内码 */
-    private Integer fseoutinterid;
+    private int fseoutinterid;
     /* 发货通知分录 */
-    private Integer fseoutentryid;
+    private int fseoutentryid;
     /* 发货通知单号 */
     private String fseoutbillno;
     /* 对账确认意见（表体） */
     private String fconfirmmementry;
     /* 产品内码 */
-    private Integer ffatherproductid;
+    private int ffatherproductid;
     /* 网上订单号 */
     private String folorderbillno;
     /* 退货通知单号 */
     private String freturnnoticebillno;
     /* 退货通知分录 */
-    private Integer freturnnoticeentryid;
+    private int freturnnoticeentryid;
     /* 退货通知内码 */
-    private Integer freturnnoticeinterid;
+    private int freturnnoticeinterid;
     /* 产品档案数量 */
     private double fproductfileqty;
     /* 采购单价 */
@@ -232,11 +232,11 @@ public class ICStockBillEntry_K3 implements Serializable {
     /* 采购金额钩稽金额 */
     private double fcheckamount;
     /* 发送内码 */
-    private Integer foutsourceinterid;
+    private int foutsourceinterid;
     /* 发送分录 */
-    private Integer foutsourceentryid;
+    private int foutsourceentryid;
     /* 发送类型 */
-    private Integer foutsourcetrantype;
+    private int foutsourcetrantype;
     /* 店铺名称 */
     private String fshopname;
     /* 物流费用 */
@@ -250,19 +250,21 @@ public class ICStockBillEntry_K3 implements Serializable {
     private String fname;
     /* 物流代码 ，不存库 */
     private String fnumber;
+    /* 临时字段，单位名称，跨库单据传递需用到 */
+    private String unitName;
 
     /* 以下六个字段由销售订单下推携带过来，采购订单内码 */
-    private int fentryselfb0179;
+    private String fentryselfb0179;
     /* 采购订单号 */
     private String fentryselfb0180;
     /* 采购订单分录码 */
-    private int fentryselfb0181;
+    private String fentryselfb0181;
     /* 销售订单号 */
     private String fentryselfb0182;
     /* 销售订单内码 */
-    private int fentryselfb0183;
+    private String fentryselfb0183;
     /* 销售订单分录码 */
-    private int fentryselfb0184;
+    private String fentryselfb0184;
     /* 退货理由id */
     private int returnReasonId;
     /* (生产帐号)退货理由id */
@@ -280,17 +282,19 @@ public class ICStockBillEntry_K3 implements Serializable {
     private double realQty; // 实际出入库数量
     private double useableQty; // 可用数
     private int isCheck; // 是否选中
+    private String reason; // 退货原因
+    private double logPrice; // 快递费
 
 
-    public Integer getFinterid() {
+    public int getFinterid() {
         return finterid;
     }
 
-    public Integer getFentryid() {
+    public int getFentryid() {
         return fentryid;
     }
 
-    public Integer getFitemid() {
+    public int getFitemid() {
         return fitemid;
     }
 
@@ -318,7 +322,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fnote;
     }
 
-    public Integer getFscbillinterid() {
+    public int getFscbillinterid() {
         return fscbillinterid;
     }
 
@@ -326,7 +330,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fscbillno;
     }
 
-    public Integer getFunitid() {
+    public int getFunitid() {
         return funitid;
     }
 
@@ -358,7 +362,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fauxplanprice;
     }
 
-    public Integer getFsourceentryid() {
+    public int getFsourceentryid() {
         return fsourceentryid;
     }
 
@@ -374,15 +378,15 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fkfdate;
     }
 
-    public Integer getFkfperiod() {
+    public int getFkfperiod() {
         return fkfperiod;
     }
 
-    public Integer getFdcspid() {
+    public int getFdcspid() {
         return fdcspid;
     }
 
-    public Integer getFscspid() {
+    public int getFscspid() {
         return fscspid;
     }
 
@@ -414,11 +418,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fmapname;
     }
 
-    public Integer getForgbillentryid() {
+    public int getForgbillentryid() {
         return forgbillentryid;
     }
 
-    public Integer getFoperid() {
+    public int getFoperid() {
         return foperid;
     }
 
@@ -434,7 +438,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return ftaxrate;
     }
 
-    public Integer getFsnlistid() {
+    public int getFsnlistid() {
         return fsnlistid;
     }
 
@@ -442,7 +446,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return famtref;
     }
 
-    public Integer getFauxpropid() {
+    public int getFauxpropid() {
         return fauxpropid;
     }
 
@@ -478,11 +482,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fseccommitqty;
     }
 
-    public Integer getFsourcetrantype() {
+    public int getFsourcetrantype() {
         return fsourcetrantype;
     }
 
-    public Integer getFsourceinterid() {
+    public int getFsourceinterid() {
         return fsourceinterid;
     }
 
@@ -490,11 +494,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fsourcebillno;
     }
 
-    public Integer getFcontractinterid() {
+    public int getFcontractinterid() {
         return fcontractinterid;
     }
 
-    public Integer getFcontractentryid() {
+    public int getFcontractentryid() {
         return fcontractentryid;
     }
 
@@ -506,19 +510,19 @@ public class ICStockBillEntry_K3 implements Serializable {
         return ficmobillno;
     }
 
-    public Integer getFicmointerid() {
+    public int getFicmointerid() {
         return ficmointerid;
     }
 
-    public Integer getFppbomentryid() {
+    public int getFppbomentryid() {
         return fppbomentryid;
     }
 
-    public Integer getForderinterid() {
+    public int getForderinterid() {
         return forderinterid;
     }
 
-    public Integer getForderentryid() {
+    public int getForderentryid() {
         return forderentryid;
     }
 
@@ -550,11 +554,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fstdcurrenthookamount;
     }
 
-    public Integer getFscstockid() {
+    public int getFscstockid() {
         return fscstockid;
     }
 
-    public Integer getFdcstockid() {
+    public int getFdcstockid() {
         return fdcstockid;
     }
 
@@ -562,23 +566,23 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fperioddate;
     }
 
-    public Integer getFcostobjgroupid() {
+    public int getFcostobjgroupid() {
         return fcostobjgroupid;
     }
 
-    public Integer getFcostobjid() {
+    public int getFcostobjid() {
         return fcostobjid;
     }
 
-    public Integer getFdetailid() {
+    public int getFdetailid() {
         return fdetailid;
     }
 
-    public Integer getFreproducetype() {
+    public int getFreproducetype() {
         return freproducetype;
     }
 
-    public Integer getFbominterid() {
+    public int getFbominterid() {
         return fbominterid;
     }
 
@@ -590,7 +594,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fdiscountamount;
     }
 
-    public Integer getFsepcialsaleid() {
+    public int getFsepcialsaleid() {
         return fsepcialsaleid;
     }
 
@@ -614,7 +618,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fauxqtyinvoice;
     }
 
-    public Integer getFopersn() {
+    public int getFopersn() {
         return fopersn;
     }
 
@@ -626,7 +630,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fsplitsecqty;
     }
 
-    public Integer getFplanmode() {
+    public int getFplanmode() {
         return fplanmode;
     }
 
@@ -646,7 +650,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fclientorderno;
     }
 
-    public Integer getFcliententryid() {
+    public int getFcliententryid() {
         return fcliententryid;
     }
 
@@ -674,23 +678,23 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fclosing;
     }
 
-    public Integer getFisvmi() {
+    public int getFisvmi() {
         return fisvmi;
     }
 
-    public Integer getFentrysupply() {
+    public int getFentrysupply() {
         return fentrysupply;
     }
 
-    public Integer getFchkpassitem() {
+    public int getFchkpassitem() {
         return fchkpassitem;
     }
 
-    public Integer getFseoutinterid() {
+    public int getFseoutinterid() {
         return fseoutinterid;
     }
 
-    public Integer getFseoutentryid() {
+    public int getFseoutentryid() {
         return fseoutentryid;
     }
 
@@ -702,7 +706,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fconfirmmementry;
     }
 
-    public Integer getFfatherproductid() {
+    public int getFfatherproductid() {
         return ffatherproductid;
     }
 
@@ -714,11 +718,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         return freturnnoticebillno;
     }
 
-    public Integer getFreturnnoticeentryid() {
+    public int getFreturnnoticeentryid() {
         return freturnnoticeentryid;
     }
 
-    public Integer getFreturnnoticeinterid() {
+    public int getFreturnnoticeinterid() {
         return freturnnoticeinterid;
     }
 
@@ -738,15 +742,15 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fcheckamount;
     }
 
-    public Integer getFoutsourceinterid() {
+    public int getFoutsourceinterid() {
         return foutsourceinterid;
     }
 
-    public Integer getFoutsourceentryid() {
+    public int getFoutsourceentryid() {
         return foutsourceentryid;
     }
 
-    public Integer getFoutsourcetrantype() {
+    public int getFoutsourcetrantype() {
         return foutsourcetrantype;
     }
 
@@ -774,28 +778,36 @@ public class ICStockBillEntry_K3 implements Serializable {
         return fnumber;
     }
 
-    public int getFentryselfb0179() {
-        return fentryselfb0179;
-    }
-
     public String getFentryselfb0180() {
         return fentryselfb0180;
-    }
-
-    public int getFentryselfb0181() {
-        return fentryselfb0181;
     }
 
     public String getFentryselfb0182() {
         return fentryselfb0182;
     }
 
-    public int getFentryselfb0183() {
+    public String getFentryselfb0183() {
         return fentryselfb0183;
     }
 
-    public int getFentryselfb0184() {
+    public void setFentryselfb0183(String fentryselfb0183) {
+        this.fentryselfb0183 = fentryselfb0183;
+    }
+
+    public String getFentryselfb0184() {
         return fentryselfb0184;
+    }
+
+    public void setFentryselfb0184(String fentryselfb0184) {
+        this.fentryselfb0184 = fentryselfb0184;
+    }
+
+    public String getFentryselfb0179() {
+        return fentryselfb0179;
+    }
+
+    public void setFentryselfb0179(String fentryselfb0179) {
+        this.fentryselfb0179 = fentryselfb0179;
     }
 
     public ICStockBill_K3 getStockBill() {
@@ -806,15 +818,15 @@ public class ICStockBillEntry_K3 implements Serializable {
         return icItem;
     }
 
-    public void setFinterid(Integer finterid) {
+    public void setFinterid(int finterid) {
         this.finterid = finterid;
     }
 
-    public void setFentryid(Integer fentryid) {
+    public void setFentryid(int fentryid) {
         this.fentryid = fentryid;
     }
 
-    public void setFitemid(Integer fitemid) {
+    public void setFitemid(int fitemid) {
         this.fitemid = fitemid;
     }
 
@@ -842,7 +854,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fnote = fnote;
     }
 
-    public void setFscbillinterid(Integer fscbillinterid) {
+    public void setFscbillinterid(int fscbillinterid) {
         this.fscbillinterid = fscbillinterid;
     }
 
@@ -850,7 +862,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fscbillno = fscbillno;
     }
 
-    public void setFunitid(Integer funitid) {
+    public void setFunitid(int funitid) {
         this.funitid = funitid;
     }
 
@@ -882,7 +894,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fauxplanprice = fauxplanprice;
     }
 
-    public void setFsourceentryid(Integer fsourceentryid) {
+    public void setFsourceentryid(int fsourceentryid) {
         this.fsourceentryid = fsourceentryid;
     }
 
@@ -898,15 +910,15 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fkfdate = fkfdate;
     }
 
-    public void setFkfperiod(Integer fkfperiod) {
+    public void setFkfperiod(int fkfperiod) {
         this.fkfperiod = fkfperiod;
     }
 
-    public void setFdcspid(Integer fdcspid) {
+    public void setFdcspid(int fdcspid) {
         this.fdcspid = fdcspid;
     }
 
-    public void setFscspid(Integer fscspid) {
+    public void setFscspid(int fscspid) {
         this.fscspid = fscspid;
     }
 
@@ -938,11 +950,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fmapname = fmapname;
     }
 
-    public void setForgbillentryid(Integer forgbillentryid) {
+    public void setForgbillentryid(int forgbillentryid) {
         this.forgbillentryid = forgbillentryid;
     }
 
-    public void setFoperid(Integer foperid) {
+    public void setFoperid(int foperid) {
         this.foperid = foperid;
     }
 
@@ -958,7 +970,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.ftaxrate = ftaxrate;
     }
 
-    public void setFsnlistid(Integer fsnlistid) {
+    public void setFsnlistid(int fsnlistid) {
         this.fsnlistid = fsnlistid;
     }
 
@@ -966,7 +978,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.famtref = famtref;
     }
 
-    public void setFauxpropid(Integer fauxpropid) {
+    public void setFauxpropid(int fauxpropid) {
         this.fauxpropid = fauxpropid;
     }
 
@@ -1002,11 +1014,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fseccommitqty = fseccommitqty;
     }
 
-    public void setFsourcetrantype(Integer fsourcetrantype) {
+    public void setFsourcetrantype(int fsourcetrantype) {
         this.fsourcetrantype = fsourcetrantype;
     }
 
-    public void setFsourceinterid(Integer fsourceinterid) {
+    public void setFsourceinterid(int fsourceinterid) {
         this.fsourceinterid = fsourceinterid;
     }
 
@@ -1014,11 +1026,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fsourcebillno = fsourcebillno;
     }
 
-    public void setFcontractinterid(Integer fcontractinterid) {
+    public void setFcontractinterid(int fcontractinterid) {
         this.fcontractinterid = fcontractinterid;
     }
 
-    public void setFcontractentryid(Integer fcontractentryid) {
+    public void setFcontractentryid(int fcontractentryid) {
         this.fcontractentryid = fcontractentryid;
     }
 
@@ -1030,19 +1042,19 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.ficmobillno = ficmobillno;
     }
 
-    public void setFicmointerid(Integer ficmointerid) {
+    public void setFicmointerid(int ficmointerid) {
         this.ficmointerid = ficmointerid;
     }
 
-    public void setFppbomentryid(Integer fppbomentryid) {
+    public void setFppbomentryid(int fppbomentryid) {
         this.fppbomentryid = fppbomentryid;
     }
 
-    public void setForderinterid(Integer forderinterid) {
+    public void setForderinterid(int forderinterid) {
         this.forderinterid = forderinterid;
     }
 
-    public void setForderentryid(Integer forderentryid) {
+    public void setForderentryid(int forderentryid) {
         this.forderentryid = forderentryid;
     }
 
@@ -1074,11 +1086,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fstdcurrenthookamount = fstdcurrenthookamount;
     }
 
-    public void setFscstockid(Integer fscstockid) {
+    public void setFscstockid(int fscstockid) {
         this.fscstockid = fscstockid;
     }
 
-    public void setFdcstockid(Integer fdcstockid) {
+    public void setFdcstockid(int fdcstockid) {
         this.fdcstockid = fdcstockid;
     }
 
@@ -1086,23 +1098,23 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fperioddate = fperioddate;
     }
 
-    public void setFcostobjgroupid(Integer fcostobjgroupid) {
+    public void setFcostobjgroupid(int fcostobjgroupid) {
         this.fcostobjgroupid = fcostobjgroupid;
     }
 
-    public void setFcostobjid(Integer fcostobjid) {
+    public void setFcostobjid(int fcostobjid) {
         this.fcostobjid = fcostobjid;
     }
 
-    public void setFdetailid(Integer fdetailid) {
+    public void setFdetailid(int fdetailid) {
         this.fdetailid = fdetailid;
     }
 
-    public void setFreproducetype(Integer freproducetype) {
+    public void setFreproducetype(int freproducetype) {
         this.freproducetype = freproducetype;
     }
 
-    public void setFbominterid(Integer fbominterid) {
+    public void setFbominterid(int fbominterid) {
         this.fbominterid = fbominterid;
     }
 
@@ -1114,7 +1126,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fdiscountamount = fdiscountamount;
     }
 
-    public void setFsepcialsaleid(Integer fsepcialsaleid) {
+    public void setFsepcialsaleid(int fsepcialsaleid) {
         this.fsepcialsaleid = fsepcialsaleid;
     }
 
@@ -1138,7 +1150,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fauxqtyinvoice = fauxqtyinvoice;
     }
 
-    public void setFopersn(Integer fopersn) {
+    public void setFopersn(int fopersn) {
         this.fopersn = fopersn;
     }
 
@@ -1150,7 +1162,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fsplitsecqty = fsplitsecqty;
     }
 
-    public void setFplanmode(Integer fplanmode) {
+    public void setFplanmode(int fplanmode) {
         this.fplanmode = fplanmode;
     }
 
@@ -1170,7 +1182,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fclientorderno = fclientorderno;
     }
 
-    public void setFcliententryid(Integer fcliententryid) {
+    public void setFcliententryid(int fcliententryid) {
         this.fcliententryid = fcliententryid;
     }
 
@@ -1198,23 +1210,23 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fclosing = fclosing;
     }
 
-    public void setFisvmi(Integer fisvmi) {
+    public void setFisvmi(int fisvmi) {
         this.fisvmi = fisvmi;
     }
 
-    public void setFentrysupply(Integer fentrysupply) {
+    public void setFentrysupply(int fentrysupply) {
         this.fentrysupply = fentrysupply;
     }
 
-    public void setFchkpassitem(Integer fchkpassitem) {
+    public void setFchkpassitem(int fchkpassitem) {
         this.fchkpassitem = fchkpassitem;
     }
 
-    public void setFseoutinterid(Integer fseoutinterid) {
+    public void setFseoutinterid(int fseoutinterid) {
         this.fseoutinterid = fseoutinterid;
     }
 
-    public void setFseoutentryid(Integer fseoutentryid) {
+    public void setFseoutentryid(int fseoutentryid) {
         this.fseoutentryid = fseoutentryid;
     }
 
@@ -1226,7 +1238,7 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fconfirmmementry = fconfirmmementry;
     }
 
-    public void setFfatherproductid(Integer ffatherproductid) {
+    public void setFfatherproductid(int ffatherproductid) {
         this.ffatherproductid = ffatherproductid;
     }
 
@@ -1238,11 +1250,11 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.freturnnoticebillno = freturnnoticebillno;
     }
 
-    public void setFreturnnoticeentryid(Integer freturnnoticeentryid) {
+    public void setFreturnnoticeentryid(int freturnnoticeentryid) {
         this.freturnnoticeentryid = freturnnoticeentryid;
     }
 
-    public void setFreturnnoticeinterid(Integer freturnnoticeinterid) {
+    public void setFreturnnoticeinterid(int freturnnoticeinterid) {
         this.freturnnoticeinterid = freturnnoticeinterid;
     }
 
@@ -1262,15 +1274,15 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fcheckamount = fcheckamount;
     }
 
-    public void setFoutsourceinterid(Integer foutsourceinterid) {
+    public void setFoutsourceinterid(int foutsourceinterid) {
         this.foutsourceinterid = foutsourceinterid;
     }
 
-    public void setFoutsourceentryid(Integer foutsourceentryid) {
+    public void setFoutsourceentryid(int foutsourceentryid) {
         this.foutsourceentryid = foutsourceentryid;
     }
 
-    public void setFoutsourcetrantype(Integer foutsourcetrantype) {
+    public void setFoutsourcetrantype(int foutsourcetrantype) {
         this.foutsourcetrantype = foutsourcetrantype;
     }
 
@@ -1298,28 +1310,12 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fnumber = fnumber;
     }
 
-    public void setFentryselfb0179(int fentryselfb0179) {
-        this.fentryselfb0179 = fentryselfb0179;
-    }
-
     public void setFentryselfb0180(String fentryselfb0180) {
         this.fentryselfb0180 = fentryselfb0180;
     }
 
-    public void setFentryselfb0181(int fentryselfb0181) {
-        this.fentryselfb0181 = fentryselfb0181;
-    }
-
     public void setFentryselfb0182(String fentryselfb0182) {
         this.fentryselfb0182 = fentryselfb0182;
-    }
-
-    public void setFentryselfb0183(int fentryselfb0183) {
-        this.fentryselfb0183 = fentryselfb0183;
-    }
-
-    public void setFentryselfb0184(int fentryselfb0184) {
-        this.fentryselfb0184 = fentryselfb0184;
     }
 
     public void setStockBill(ICStockBill_K3 stockBill) {
@@ -1328,6 +1324,14 @@ public class ICStockBillEntry_K3 implements Serializable {
 
     public void setIcItem(ICItem icItem) {
         this.icItem = icItem;
+    }
+
+    public String getFentryselfb0181() {
+        return fentryselfb0181;
+    }
+
+    public void setFentryselfb0181(String fentryselfb0181) {
+        this.fentryselfb0181 = fentryselfb0181;
     }
 
     public int getScanningRecordId() {
@@ -1346,6 +1350,14 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.salOrderNo = salOrderNo;
     }
 
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
     public double getSumRealQty() {
         return sumRealQty;
     }
@@ -1354,12 +1366,12 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.sumRealQty = sumRealQty;
     }
 
-    public int getReturnReasonrId() {
+    public int getReturnReasonId() {
         return returnReasonId;
     }
 
-    public void setReturnReasonrId(int returnReasonId) {
-        this.returnReasonId = returnReasonId;
+    public void setReturnReasonId(int returnReasonrId) {
+        this.returnReasonId = returnReasonrId;
     }
 
     public double getRealQty() {
@@ -1394,64 +1406,28 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.fentryselfb0185 = fentryselfb0185;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public double getLogPrice() {
+        return logPrice;
+    }
+
+    public void setLogPrice(double logPrice) {
+        this.logPrice = logPrice;
+    }
+
     public double getCustSalesPrice() {
         return custSalesPrice;
     }
 
     public void setCustSalesPrice(double custSalesPrice) {
         this.custSalesPrice = custSalesPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "Icstockbillentry [finterid=" + finterid + ", fentryid=" + fentryid + ", fitemid=" + fitemid
-                + ", fqtymust=" + fqtymust + ", fqty=" + fqty + ", fprice=" + fprice + ", fbatchno=" + fbatchno
-                + ", famount=" + famount + ", fnote=" + fnote + ", fscbillinterid=" + fscbillinterid + ", fscbillno="
-                + fscbillno + ", funitid=" + funitid + ", fauxprice=" + fauxprice + ", fauxqty=" + fauxqty
-                + ", fauxqtymust=" + fauxqtymust + ", fqtyactual=" + fqtyactual + ", fauxqtyactual=" + fauxqtyactual
-                + ", fplanprice=" + fplanprice + ", fauxplanprice=" + fauxplanprice + ", fsourceentryid="
-                + fsourceentryid + ", fcommitqty=" + fcommitqty + ", fauxcommitqty=" + fauxcommitqty + ", fkfdate="
-                + fkfdate + ", fkfperiod=" + fkfperiod + ", fdcspid=" + fdcspid + ", fscspid=" + fscspid
-                + ", fconsignprice=" + fconsignprice + ", fconsignamount=" + fconsignamount + ", fprocesscost="
-                + fprocesscost + ", fmaterialcost=" + fmaterialcost + ", ftaxamount=" + ftaxamount + ", fmapnumber="
-                + fmapnumber + ", fmapname=" + fmapname + ", forgbillentryid=" + forgbillentryid + ", foperid="
-                + foperid + ", fplanamount=" + fplanamount + ", fprocessprice=" + fprocessprice + ", ftaxrate="
-                + ftaxrate + ", fsnlistid=" + fsnlistid + ", famtref=" + famtref + ", fauxpropid=" + fauxpropid
-                + ", fpriceref=" + fpriceref + ", fauxpriceref=" + fauxpriceref + ", ffetchdate=" + ffetchdate
-                + ", fqtyinvoice=" + fqtyinvoice + ", fqtyinvoicebase=" + fqtyinvoicebase + ", fseccoefficient="
-                + fseccoefficient + ", fsecqty=" + fsecqty + ", fseccommitqty=" + fseccommitqty + ", fsourcetrantype="
-                + fsourcetrantype + ", fsourceinterid=" + fsourceinterid + ", fsourcebillno=" + fsourcebillno
-                + ", fcontractinterid=" + fcontractinterid + ", fcontractentryid=" + fcontractentryid
-                + ", fcontractbillno=" + fcontractbillno + ", ficmobillno=" + ficmobillno + ", ficmointerid="
-                + ficmointerid + ", fppbomentryid=" + fppbomentryid + ", forderinterid=" + forderinterid
-                + ", forderentryid=" + forderentryid + ", forderbillno=" + forderbillno + ", fallhookqty=" + fallhookqty
-                + ", fallhookamount=" + fallhookamount + ", fcurrenthookqty=" + fcurrenthookqty
-                + ", fcurrenthookamount=" + fcurrenthookamount + ", fstdallhookamount=" + fstdallhookamount
-                + ", fstdcurrenthookamount=" + fstdcurrenthookamount + ", fscstockid=" + fscstockid + ", fdcstockid="
-                + fdcstockid + ", fperioddate=" + fperioddate + ", fcostobjgroupid=" + fcostobjgroupid + ", fcostobjid="
-                + fcostobjid + ", fdetailid=" + fdetailid + ", freproducetype=" + freproducetype + ", fbominterid="
-                + fbominterid + ", fdiscountrate=" + fdiscountrate + ", fdiscountamount=" + fdiscountamount
-                + ", fsepcialsaleid=" + fsepcialsaleid + ", foutcommitqty=" + foutcommitqty + ", foutseccommitqty="
-                + foutseccommitqty + ", fdbcommitqty=" + fdbcommitqty + ", fdbseccommitqty=" + fdbseccommitqty
-                + ", fauxqtyinvoice=" + fauxqtyinvoice + ", fopersn=" + fopersn + ", fcheckstatus=" + fcheckstatus
-                + ", fsplitsecqty=" + fsplitsecqty + ", fplanmode=" + fplanmode + ", fmtono=" + fmtono
-                + ", fsecqtyactual=" + fsecqtyactual + ", fsecqtymust=" + fsecqtymust + ", fclientorderno="
-                + fclientorderno + ", fcliententryid=" + fcliententryid + ", fcostpercentage=" + fcostpercentage
-                + ", fitemsize=" + fitemsize + ", fitemsuite=" + fitemsuite + ", fpositionno=" + fpositionno
-                + ", facctcheck=" + facctcheck + ", fclosing=" + fclosing + ", fisvmi=" + fisvmi + ", fentrysupply="
-                + fentrysupply + ", fchkpassitem=" + fchkpassitem + ", fseoutinterid=" + fseoutinterid
-                + ", fseoutentryid=" + fseoutentryid + ", fseoutbillno=" + fseoutbillno + ", fconfirmmementry="
-                + fconfirmmementry + ", ffatherproductid=" + ffatherproductid + ", folorderbillno=" + folorderbillno
-                + ", freturnnoticebillno=" + freturnnoticebillno + ", freturnnoticeentryid=" + freturnnoticeentryid
-                + ", freturnnoticeinterid=" + freturnnoticeinterid + ", fproductfileqty=" + fproductfileqty
-                + ", fpurchaseprice=" + fpurchaseprice + ", fpurchaseamount=" + fpurchaseamount + ", fcheckamount="
-                + fcheckamount + ", foutsourceinterid=" + foutsourceinterid + ", foutsourceentryid=" + foutsourceentryid
-                + ", foutsourcetrantype=" + foutsourcetrantype + ", fshopname=" + fshopname + ", fpostfee=" + fpostfee
-                + ", fbillNo=" + fbillNo + ", fdcstockcode=" + fdcstockcode + ", fname=" + fname + ", fnumber="
-                + fnumber + ", fentryselfb0179=" + fentryselfb0179 + ", fentryselfb0180=" + fentryselfb0180
-                + ", fentryselfb0181=" + fentryselfb0181 + ", fentryselfb0182=" + fentryselfb0182 + ", fentryselfb0183="
-                + fentryselfb0183 + ", fentryselfb0184=" + fentryselfb0184 + ", stockBill=" + stockBill + ", icItem="
-                + icItem + "]";
     }
 
 
