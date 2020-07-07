@@ -280,6 +280,10 @@
             android:name=".sales.Sal_OutStock_RED_MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <!-- 设置 -->
+        <activity
+            android:name=".set.Set_NetworkErrorData_MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- 图表 -->
         <activity

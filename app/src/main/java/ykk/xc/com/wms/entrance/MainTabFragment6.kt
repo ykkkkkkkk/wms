@@ -31,6 +31,7 @@ import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.entrance.page5.PrintMainActivity
 import ykk.xc.com.wms.entrance.page5.ServiceSetActivity
+import ykk.xc.com.wms.set.Set_NetworkErrorData_MainActivity
 import ykk.xc.com.wms.util.IDownloadContract
 import ykk.xc.com.wms.util.IDownloadPresenter
 import ykk.xc.com.wms.util.JsonUtil
@@ -111,21 +112,28 @@ class MainTabFragment6 : BaseFragment(), IDownloadContract.View {
         requestPermission()
     }
 
-    @OnClick(R.id.lin_item1, R.id.lin_item2, R.id.lin_item3, R.id.lin_item4, R.id.lin_item5, R.id.lin_item6)
+    @OnClick(R.id.lin_item1, R.id.lin_item2, R.id.lin_item3, R.id.lin_item4, R.id.lin_item5, R.id.lin_item6, R.id.lin_item7)
     fun onViewClicked(view: View) {
         when (view.id) {
-            R.id.lin_item1 // wifi设置
-            -> startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-            R.id.lin_item2 // 服务器设置
-            -> show(ServiceSetActivity::class.java, null)
-            R.id.lin_item3 // 网络测试
-            -> toasts("网络通畅！！！")
-            R.id.lin_item4 // 更新版本
-            -> run_findAppInfo()
-            R.id.lin_item5 // 打印
-            -> show(PrintMainActivity::class.java, null)
-            R.id.lin_item6 // 退出
-            -> {
+            R.id.lin_item1 -> { // wifi设置
+                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+            }
+            R.id.lin_item2 -> { // 服务器设置
+                show(ServiceSetActivity::class.java, null)
+            }
+            R.id.lin_item3 ->{// 网络测试
+                toasts("网络通畅！！！")
+            }
+            R.id.lin_item4 ->{// 更新版本
+                run_findAppInfo()
+            }
+            R.id.lin_item5 ->{ // 打印
+                show(PrintMainActivity::class.java, null)
+            }
+            R.id.lin_item6 ->{ // 网络异常数据
+                show(Set_NetworkErrorData_MainActivity::class.java, null)
+            }
+            R.id.lin_item7 ->{ // 退出
                 ActivityCollector.finishAll()
                 System.exit(0) //凡是非零都表示异常退出!0表示正常退出!
             }

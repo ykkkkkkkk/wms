@@ -384,10 +384,10 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请输入实发数！")
             return false
         }
-        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
-            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
-            return false
-        }
+//        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
+//            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
+//            return false
+//        }
 //        if (minQty > icStockBillEntry.fqty) {
 //            Comm.showWarnDialog(mContext, "实发数不能小于最小领用数（"+minQty+"）！")
 //            return false
