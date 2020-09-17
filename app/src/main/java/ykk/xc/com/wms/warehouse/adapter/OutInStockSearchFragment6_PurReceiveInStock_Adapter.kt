@@ -23,6 +23,7 @@ class OutInStockSearchFragment6_PurReceiveInStock_Adapter(private val context: A
         // 初始化id
         val tv_pdaNo = holder.obtainView<TextView>(R.id.tv_pdaNo)
         val tv_missionBillNo = holder.obtainView<TextView>(R.id.tv_missionBillNo)
+        val tv_strSourceNo = holder.obtainView<TextView>(R.id.tv_strSourceNo)
         val tv_fdate = holder.obtainView<TextView>(R.id.tv_fdate)
         val tv_deptName = holder.obtainView<TextView>(R.id.tv_deptName)
         val tv_suppName = holder.obtainView<TextView>(R.id.tv_suppName)
@@ -39,6 +40,12 @@ class OutInStockSearchFragment6_PurReceiveInStock_Adapter(private val context: A
             tv_missionBillNo.visibility = View.VISIBLE
         } else {
             tv_missionBillNo.visibility = View.INVISIBLE
+        }
+        if(entity.strSourceNo != null) {
+            tv_strSourceNo.text = Html.fromHtml("源单:&nbsp;<font color='#6a5acd'>" +entity.strSourceNo+ "</font>")
+            tv_strSourceNo.visibility = View.VISIBLE
+        } else {
+            tv_strSourceNo.visibility = View.INVISIBLE
         }
         tv_fdate.text = Html.fromHtml("入库日期:&nbsp;<font color='#000000'>"+entity.fdate+"</font>")
         tv_deptName?.text = Html.fromHtml("部门:&nbsp;<font color='#000000'>"+entity.deptName+"</font>")

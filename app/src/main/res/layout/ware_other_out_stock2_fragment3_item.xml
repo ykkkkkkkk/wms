@@ -182,6 +182,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/btn_purple_selector"
             android:gravity="center"
+            android:visibility="gone"
             android:text="删除"
             android:textColor="@color/white"
             android:textSize="@dimen/_14sp" />

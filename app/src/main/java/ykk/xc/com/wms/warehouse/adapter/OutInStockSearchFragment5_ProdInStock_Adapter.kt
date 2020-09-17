@@ -23,6 +23,7 @@ class OutInStockSearchFragment5_ProdInStock_Adapter(private val context: Activit
         // 初始化id
         val tv_pdaNo = holder.obtainView<TextView>(R.id.tv_pdaNo)
         val tv_fdate = holder.obtainView<TextView>(R.id.tv_fdate)
+        val tv_strSourceNo = holder.obtainView<TextView>(R.id.tv_strSourceNo)
         val tv_deptName = holder.obtainView<TextView>(R.id.tv_deptName)
         val tv_baoguanMan = holder.obtainView<TextView>(R.id.tv_baoguanMan)
         val tv_search = holder.obtainView<TextView>(R.id.tv_search)
@@ -33,6 +34,12 @@ class OutInStockSearchFragment5_ProdInStock_Adapter(private val context: Activit
         // 赋值
         tv_pdaNo.text = Html.fromHtml("PDA单号:&nbsp;<font color='#000000'>"+entity.pdaNo+"</font>")
         tv_fdate.text = Html.fromHtml("入库日期:&nbsp;<font color='#000000'>"+entity.fdate+"</font>")
+        if(entity.strSourceNo != null) {
+            tv_strSourceNo.text = Html.fromHtml("源单:&nbsp;<font color='#6a5acd'>" +entity.strSourceNo+ "</font>")
+            tv_strSourceNo.visibility = View.VISIBLE
+        } else {
+            tv_strSourceNo.visibility = View.INVISIBLE
+        }
         tv_deptName?.text = Html.fromHtml("部门:&nbsp;<font color='#FF4400'>"+entity.deptName+"</font>")
         tv_baoguanMan.text = Html.fromHtml("保管人:&nbsp;<font color='#000000'>"+entity.baoguanMan+"</font>")
 

@@ -110,13 +110,8 @@ class Pur_InStock_RED_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0 && retMsg.indexOf("succ") == -1) {
-                            Comm.showWarnDialog(m.mContext, retMsg)
-                        } else {
-                            m.toasts("上传成功")
-                            m.parent!!.finish()
-                        }
+                        m.toasts("上传成功")
+                        m.parent!!.finish()
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -332,6 +327,7 @@ class Pur_InStock_RED_Fragment3 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/uploadToK3")
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .build()
 
         val request = Request.Builder()

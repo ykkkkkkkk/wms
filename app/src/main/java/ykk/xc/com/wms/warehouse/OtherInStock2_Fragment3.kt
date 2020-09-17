@@ -110,13 +110,8 @@ class OtherInStock2_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0 && retMsg.indexOf("succ") == -1) {
-                            Comm.showWarnDialog(m.mContext, retMsg)
-                        } else {
-                            m.toasts("上传成功")
-                            m.parent!!.finish()
-                        }
+                        m.toasts("上传成功")
+                        m.parent!!.finish()
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -219,6 +214,10 @@ class OtherInStock2_Fragment3 : BaseFragment() {
                     }
                     if(it.fqty == 0.0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（入库数）！")
+                        return
+                    }
+                    if(it.fqty != it.fsourceQty) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，入库数和源单数不一致！")
                         return
                     }
                 }
@@ -332,6 +331,7 @@ class OtherInStock2_Fragment3 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/uploadToK3")
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .build()
 
         val request = Request.Builder()

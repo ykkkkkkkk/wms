@@ -380,10 +380,10 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             Comm.showWarnDialog(mContext, "请输入批次！")
             return false
         }
-        if (icStockBillEntry.fqty == 0.0) {
-            Comm.showWarnDialog(mContext, "请输入实发数！")
-            return false
-        }
+//        if (icStockBillEntry.fqty == 0.0) {
+//            Comm.showWarnDialog(mContext, "请输入实发数！")
+//            return false
+//        }
 //        if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
 //            Comm.showWarnDialog(mContext, "实发数不能大于应发数！")
 //            return false
@@ -1208,19 +1208,20 @@ class Prod_Transfer_Fragment2 : BaseFragment() {
             entry.icstockBillId = parent!!.fragment1.icStockBill.id
             entry.fitemId = it.icItemId
 //            entry.fentryId = it.fentryid
+            // 调入仓库
             entry.fdcStockId = it.inStockId
             entry.fdcSPId = 0
             entry.stockId_wms = it.inStock.id
             entry.stockAreaId_wms = it.inStockAreaId
             entry.storageRackId_wms = it.inStorageRackId
             entry.stockPosId_wms = it.inStockPositionId
-
-            entry.fscStockId = it.outStockId
+            // 调出仓库
+            /*entry.fscStockId = it.outStockId
             entry.fscSPId = 0
             entry.stockId2_wms = it.outStock.id
             entry.stockAreaId2_wms = it.outStockAreaId
             entry.storageRackId2_wms = it.outStorageRackId
-            entry.stockPosId2_wms = it.outStockPositionId
+            entry.stockPosId2_wms = it.outStockPositionId*/
 
 //            entry.fqty = it.useableQty
 //            entry.fprice = it.fprice

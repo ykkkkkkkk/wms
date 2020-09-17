@@ -381,7 +381,7 @@ class Pur_Receive_QC_Fragment2 : BaseFragment() {
             return false;
         }
         if (icStockBillEntry.qcPassQty > icStockBillEntry.fqty) {
-            Comm.showWarnDialog(mContext, "请输入合格数不能大于入库数！")
+            Comm.showWarnDialog(mContext, "合格数不能大于入库数！")
             return false;
         }
         if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y")) && !icStockBillEntry.icItem.snManager.equals("Y")) {

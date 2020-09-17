@@ -23,6 +23,7 @@ class OutInStockSearchFragment2_OtherOutStock_Adapter(private val context: Activ
     override fun onBindHoder(holder: BaseRecyclerAdapter.RecyclerHolder, entity: ICStockBill, pos: Int) {
         // 初始化id
         val tv_pdaNo = holder.obtainView<TextView>(R.id.tv_pdaNo)
+        val tv_missionBillNo = holder.obtainView<TextView>(R.id.tv_missionBillNo)
         val tv_fdate = holder.obtainView<TextView>(R.id.tv_fdate)
         val tv_deptName = holder.obtainView<TextView>(R.id.tv_deptName)
         val tv_suppName = holder.obtainView<TextView>(R.id.tv_suppName)
@@ -34,6 +35,12 @@ class OutInStockSearchFragment2_OtherOutStock_Adapter(private val context: Activ
 
         // 赋值
         tv_pdaNo.text = Html.fromHtml("PDA单号:&nbsp;<font color='#000000'>"+entity.pdaNo+"</font>")
+        if(entity.missionBill != null) {
+            tv_missionBillNo.text = Html.fromHtml("任务单:&nbsp;<font color='#FF4400'>"+entity.missionBill.billNo+"</font>")
+            tv_missionBillNo.visibility = View.VISIBLE
+        } else {
+            tv_missionBillNo.visibility = View.INVISIBLE
+        }
         tv_fdate.text = Html.fromHtml("出库日期:&nbsp;<font color='#000000'>"+entity.fdate+"</font>")
         tv_suppName.text = Html.fromHtml("客户:&nbsp;<font color='#FF4400'>"+ (if(entity.cust != null) entity.cust.fname else "") +"</font>")
         tv_deptName.text = Html.fromHtml("部门:&nbsp;<font color='#000000'>"+ Comm.isNULLS(entity.deptName)+"</font>")

@@ -175,7 +175,7 @@ class InventoryNowByStock_DialogActivity : BaseDialogActivity(), XRecyclerView.L
         showLoadDialog("加载中...", false)
         val mUrl = getURL("inventoryNow/findListByMtl")
         val formBody = FormBody.Builder()
-//                .add("fNumberAndName", getValues(etSearch).trim { it <= ' ' })
+                .add("icItemNumberOrName", getValues(et_search).trim())
                 .add("icItemId", icItemId.toString())
                 .add("stockId", stockId.toString())
                 .add("stockAreaId", stockAreaId.toString())

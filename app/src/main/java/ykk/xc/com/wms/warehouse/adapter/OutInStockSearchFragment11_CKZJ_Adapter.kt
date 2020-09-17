@@ -1,6 +1,7 @@
 package ykk.xc.com.wms.warehouse.adapter
 
 import android.app.Activity
+import android.text.Html
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,6 +23,7 @@ class OutInStockSearchFragment11_CKZJ_Adapter(private val context: Activity, dat
         // 初始化id
         val tv_pdaNo = holder.obtainView<TextView>(R.id.tv_pdaNo)
         val tv_fdate = holder.obtainView<TextView>(R.id.tv_fdate)
+        val tv_strSourceNo = holder.obtainView<TextView>(R.id.tv_strSourceNo)
         val tv_baoguanMan = holder.obtainView<TextView>(R.id.tv_baoguanMan)
         val tv_search = holder.obtainView<TextView>(R.id.tv_search)
         val tv_del = holder.obtainView<TextView>(R.id.tv_del)
@@ -31,6 +33,12 @@ class OutInStockSearchFragment11_CKZJ_Adapter(private val context: Activity, dat
         tv_pdaNo.text = entity.pdaNo
         tv_fdate.text = entity.fdate
         tv_baoguanMan.text = entity.baoguanMan
+        if(entity.strSourceNo != null) {
+            tv_strSourceNo.text = Html.fromHtml("源单:&nbsp;<font color='#6a5acd'>" +entity.strSourceNo+ "</font>")
+            tv_strSourceNo.visibility = View.VISIBLE
+        } else {
+            tv_strSourceNo.visibility = View.INVISIBLE
+        }
 
         if (entity.isShowButton) {
             lin_button!!.setVisibility(View.VISIBLE)

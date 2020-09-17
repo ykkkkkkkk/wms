@@ -14,7 +14,7 @@ public class SystemSet {
 	private EnumDict setItem;
 
 	/*设置项的值*/
-	private Integer value;
+	private String value;
 
 	/*设置项功能描述*/
 	private String describe;
@@ -35,11 +35,11 @@ public class SystemSet {
 		this.setItem = setItem;
 	}
 
-	public Integer getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Integer value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 

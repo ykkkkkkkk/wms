@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：出库质检
  * 作者：ykk
  */
 class Sal_QcPass_Fragment3 : BaseFragment() {
@@ -204,7 +204,27 @@ class Sal_QcPass_Fragment3 : BaseFragment() {
                     Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
                     return
                 }
+                var isGt0 = false
+                checkDatas.forEach {
+                    if(it.fqty > 0.0) {
+                        isGt0 = true
+                    }
+                }
+                if(!isGt0) {
+                    Comm.showWarnDialog(mContext,"请至少输入一行数量！")
+                    return
+                }
                 checkDatas.forEachIndexed { index, it ->
+                    if(it.fqty > 0 && it.stockId_wms == 0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
+                        return
+                    }
+                    if(it.fqty > it.fsourceQty) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，合格数不能大于拣货数！")
+                        return
+                    }
+                }
+                /*checkDatas.forEachIndexed { index, it ->
                     if(it.stockId_wms == 0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
                         return
@@ -217,7 +237,7 @@ class Sal_QcPass_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，合格数不能大于拣货数！")
                         return
                     }
-                }
+                }*/
 
                 run_saveToMissionBill()
             }

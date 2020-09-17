@@ -21,7 +21,7 @@ class MainTabFragment4 : BaseFragment() {
         return inflater.inflate(R.layout.aa_main_item4, container, false)
     }
 
-    @OnClick(R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5, R.id.relative6, R.id.relative7)
+    @OnClick(R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5, R.id.relative6, R.id.relative7, R.id.relative8, R.id.relative9)
     fun onViewClicked(view: View) {
         val bundle: Bundle? = null
         when (view.id) {
@@ -46,11 +46,17 @@ class MainTabFragment4 : BaseFragment() {
             R.id.relative5 -> { // 库内装箱
                 show(Ware_Box_MainActivity::class.java, null)
             }
-            R.id.relative6 -> {
-
+            R.id.relative6 -> { // 拣货位置
+                show(Ware_PickGoods_PositionActivity::class.java, null)
             }
-            R.id.relative7 -> {
-
+            R.id.relative7 -> { // 物料位置
+                show(Ware_Material_PositionActivity::class.java, null)
+            }
+            R.id.relative8 -> { // 自由调拨
+                show(Ware_Transfer_MainActivity::class.java, null)
+            }
+            R.id.relative9 -> { // 待确认
+                show(Ware_BillConfirmList_MainActivity::class.java, null)
             }
         }
     }

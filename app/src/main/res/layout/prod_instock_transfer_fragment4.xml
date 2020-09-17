@@ -24,6 +24,7 @@
             android:id="@+id/view_del"
             android:layout_width="@dimen/_38dp"
             android:layout_height="@dimen/_38dp"
+            android:visibility="invisible"
             android:layout_alignParentRight="true"
             android:background="@drawable/ico_del2" />
 

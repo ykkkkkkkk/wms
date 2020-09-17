@@ -8,10 +8,18 @@ package ykk.xc.com.wms.bean;
 public enum EnumDict {
 
 	/**
-	 * 系统设置项，仓库及库位默认值来源，
-	 * 值为1代表默认值来源于物料设置的默认仓库仓位，
-	 * 值为2代表默认值来源于用户或者岗位设置的默认仓库仓位。
+	 * 采购默认收料仓库
 	 */
-	STOCKANDPOSTIONTDEFAULTSOURCEOFVALUE;
+	POORDERFIXSTOCK,
+
+	/**
+	 * 系统设置项：系统使用期限
+	 */
+	PERIODOFUSE,
+
+	/**
+	 * 外购入库，入库数大于收料通知单数量（Y：是，N：否）
+	 */
+	POINSTOCK_INQTYGTSOURCEQTY
 
 }

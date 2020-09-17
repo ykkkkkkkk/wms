@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：仓管复核
  * 作者：ykk
  */
 class Sal_ReCheck_Fragment3 : BaseFragment() {
@@ -109,13 +109,8 @@ class Sal_ReCheck_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0 && retMsg.indexOf("succ") == -1) {
-                            Comm.showWarnDialog(m.mContext, retMsg)
-                        } else {
-                            m.toasts("操作成功")
-                            m.parent!!.finish()
-                        }
+                        m.toasts("操作成功")
+                        m.parent!!.finish()
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -217,7 +212,27 @@ class Sal_ReCheck_Fragment3 : BaseFragment() {
                     Comm.showWarnDialog(mContext,"没有分录信息，不能上传！")
                     return
                 }
+                var isGt0 = false
+                checkDatas.forEach {
+                    if(it.fqty > 0.0) {
+                        isGt0 = true
+                    }
+                }
+                if(!isGt0) {
+                    Comm.showWarnDialog(mContext,"请至少输入一行数量！")
+                    return
+                }
                 checkDatas.forEachIndexed { index, it ->
+                    if(it.fqty > 0 && it.stockId_wms == 0) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
+                        return
+                    }
+                    if(it.fqty > it.fsourceQty) {
+                        Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，复核数不能大于合格数！")
+                        return
+                    }
+                }
+                /*checkDatas.forEachIndexed { index, it ->
                     if(it.stockId_wms == 0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请选择仓库信息！")
                         return
@@ -230,7 +245,7 @@ class Sal_ReCheck_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，复核数不能大于合格数！")
                         return
                     }
-                }
+                }*/
 
                 run_upload()
             }
@@ -354,6 +369,7 @@ class Sal_ReCheck_Fragment3 : BaseFragment() {
         }
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .add("strIcstockBill", strIcstockBill)
                 .add("strIcstockBillEntry", strIcstockBillEntry)
                 .add("missionType", missionType) // 生成仓库复核任务单

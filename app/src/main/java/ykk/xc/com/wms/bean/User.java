@@ -60,6 +60,7 @@ public class User implements Serializable {
     private StockArea receiveStockArea;		// 采购默认的收料库区
     private StorageRack receiveStorageRack;	// 采购默认的收料货架
     private StockPosition receiveStockPos;	// 采购默认的收料库位
+    private List<SystemSet> sysSetList;		// 系统参数设置列表
 
     public User() {
         super();
@@ -255,6 +256,14 @@ public class User implements Serializable {
 
     public void setErpUserName(String erpUserName) {
         this.erpUserName = erpUserName;
+    }
+
+    public List<SystemSet> getSysSetList() {
+        return sysSetList;
+    }
+
+    public void setSysSetList(List<SystemSet> sysSetList) {
+        this.sysSetList = sysSetList;
     }
 
 }

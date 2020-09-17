@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单---添加明细
+ * 描述：销售拣货---添加明细
  * 作者：ykk
  */
 class Sal_PickGoods_Fragment2 : BaseFragment() {

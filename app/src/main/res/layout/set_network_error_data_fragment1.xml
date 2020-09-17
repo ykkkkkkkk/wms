@@ -19,6 +19,7 @@
         android:layout_height="@dimen/_38dp"
         android:textSize="@dimen/_16sp"
         android:text="一键清除"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:background="@drawable/btn_blue2_selector"/>
 </LinearLayout>

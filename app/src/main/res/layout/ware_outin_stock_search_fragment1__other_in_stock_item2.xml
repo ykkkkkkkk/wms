@@ -17,6 +17,17 @@
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/tv_strSourceNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_pdaNo"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        android:text="源单："
+        android:textColor="@color/c_666666"
+        android:textSize="12sp" />
+
+    <TextView
         android:id="@+id/tv_fdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,9 +40,7 @@
         android:id="@+id/tv_deptName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_pdaNo"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:layout_toRightOf="@+id/tv_fdate"
+        android:layout_below="@+id/tv_fdate"
         android:text="部门："
         android:textColor="@color/c_666666"
         android:textSize="12sp" />

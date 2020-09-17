@@ -22,6 +22,7 @@ class OutInStockSearchFragment3_PurInStock_Adapter(private val context: Activity
         // 初始化id
         val tv_pdaNo = holder.obtainView<TextView>(R.id.tv_pdaNo)
         val tv_fdate = holder.obtainView<TextView>(R.id.tv_fdate)
+        val tv_strSourceNo = holder.obtainView<TextView>(R.id.tv_strSourceNo)
         val tv_deptName = holder.obtainView<TextView>(R.id.tv_deptName)
         val tv_suppName = holder.obtainView<TextView>(R.id.tv_suppName)
         val tv_baoguanMan = holder.obtainView<TextView>(R.id.tv_baoguanMan)

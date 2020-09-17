@@ -2,6 +2,7 @@ package ykk.xc.com.wms.sales
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -453,7 +454,25 @@ class Sal_Box_Fragment1 : BaseFragment() {
                 run_save()
             }
             R.id.btn_upload -> { // 上传
-                run_uploadToK3_XSZX()
+                var isBool = false
+                checkDatas.forEachIndexed { index, it ->
+                    if(it.fqty < it.fsourceQty) {
+                        isBool = true
+                    }
+                }
+                if(isBool) {
+                    val build = AlertDialog.Builder(mContext)
+                    build.setIcon(R.drawable.caution)
+                    build.setTitle("系统提示")
+                    build.setMessage("有部分行数量未装完，是否继续上传？")
+                    build.setPositiveButton("是") { dialog, which -> run_uploadToK3_XSZX() }
+                    build.setNegativeButton("否", null)
+                    build.setCancelable(false)
+                    build.show()
+
+                } else {
+                    run_uploadToK3_XSZX()
+                }
             }
             R.id.btn_clone -> { // 重置
                 if (checkSaveHint()) {
@@ -481,15 +500,25 @@ class Sal_Box_Fragment1 : BaseFragment() {
             Comm.showWarnDialog(mContext,"请扫描物料条码！")
             return false
         }
+        var isGt0 = false
+        checkDatas.forEach {
+            if(it.fqty > 0.0) {
+                isGt0 = true
+            }
+        }
+        if(!isGt0) {
+            Comm.showWarnDialog(mContext,"请至少输入一行数量！")
+            return false
+        }
         checkDatas.forEachIndexed { index, it ->
-            if(it.fqty == 0.0) {
+            /*if(it.fqty == 0.0) {
                 Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，请扫描或输入数量！")
                 return false
-            }
-            if(it.fqty < it.fsourceQty) {
+            }*/
+            /*if(it.fqty < it.fsourceQty) {
                 Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，数量未装完！")
                 return false
-            }
+            }*/
             if(it.fqty > it.fsourceQty) {
                 Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，装箱数不能大于发货数！")
                 return false
@@ -1337,6 +1366,7 @@ class Sal_Box_Fragment1 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/uploadToK3_XSZX")
         val formBody = FormBody.Builder()
                 .add("strBoxBarCode", strBoxBarCode)
+                .add("timesTamp", timesTamp)
                 .add("expressCompanyId", checkDatas[0].expressCompanyId.toString()) // 快递公司
                 .add("expressNo", getValues(et_expressCode)) // 快递单号
                 .add("realWeight", getValues(tv_realWeight)) // 重量

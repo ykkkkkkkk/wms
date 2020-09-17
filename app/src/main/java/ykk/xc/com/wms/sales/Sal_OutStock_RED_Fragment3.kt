@@ -109,13 +109,8 @@ class Sal_OutStock_RED_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0 && retMsg.indexOf("succ") == -1) {
-                            Comm.showWarnDialog(m.mContext, retMsg)
-                        } else {
-                            m.toasts("操作成功")
-                            m.parent!!.finish()
-                        }
+                        m.toasts("操作成功")
+                        m.parent!!.finish()
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -348,6 +343,7 @@ class Sal_OutStock_RED_Fragment3 : BaseFragment() {
         }
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .add("strIcstockBill", strIcstockBill)
                 .add("strIcstockBillEntry", strIcstockBillEntry)
                 .add("missionType", missionType) // 生成仓库复核任务单

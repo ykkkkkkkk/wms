@@ -384,10 +384,10 @@ class Prod_InStock_Transfer_Fragment2 : BaseFragment() {
 //            Comm.showWarnDialog(mContext, "请输入批次！")
 //            return false
 //        }
-        if (icStockBillEntry.fqty == 0.0) {
-            Comm.showWarnDialog(mContext, "请输入数量！")
-            return false
-        }
+//        if (icStockBillEntry.fqty == 0.0) {
+//            Comm.showWarnDialog(mContext, "请输入数量！")
+//            return false
+//        }
         if (icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
             Comm.showWarnDialog(mContext, "调拨数量不能大于可调拨数！")
             return false

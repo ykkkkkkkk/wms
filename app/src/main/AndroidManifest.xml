@@ -136,6 +136,10 @@
             android:name=".basics.ExpressCompany_DialogActivity"
             android:theme="@style/dialogStyle"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".basics.User_DialogActivity"
+            android:theme="@style/dialogStyle"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <!-- 仓库模块 -->
@@ -199,6 +203,22 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".warehouse.OtherOutStock2_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_PickGoods_PositionActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_Material_PositionActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_BillConfirmList_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_CommitConfirmUser_DialogActivity"
+            android:theme="@style/dialogStyle"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_Transfer_MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
 

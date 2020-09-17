@@ -18,6 +18,8 @@ import android.os.Process.killProcess
 import android.support.v4.content.FileProvider
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +48,7 @@ import ykk.xc.com.wms.util.IDownloadPresenter
 import ykk.xc.com.wms.util.JsonUtil
 import ykk.xc.com.wms.util.basehelper.BaseRecyclerAdapter
 import ykk.xc.com.wms.util.xrecyclerview.XRecyclerView
+import ykk.xc.com.wms.util.zxing.android.CaptureActivity
 import ykk.xc.com.wms.warehouse.OtherInStock2_MainActivity
 import ykk.xc.com.wms.warehouse.OtherOutStock2_MainActivity
 import java.io.File
@@ -67,7 +70,9 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         private val UPDATE = 202
         private val UNUPDATE = 502
 
-        private val UPDATE_PLAN = 1
+        private val UPDATE_PLAN = 60
+        private val SETFOCUS = 61
+        private val SAOMA = 62
     }
     private val context = this
     private var mContext: Activity? = null
@@ -85,6 +90,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
     private var missionType = 0
     var isInit = false
     var isLoadData = false
+    private var isTextChange: Boolean = false // 是否进入TextChange事件
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -141,10 +147,17 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                         m.toasts("抱歉，没有加载到数据！")
                     }
                     CLOSE -> { // 关闭    成功
-                        m.initLoadDatas()
+                        m.initLoadDatas(true)
                     }
                     UNCLOSE -> { // 关闭    失败！
                         Comm.showWarnDialog(m.mContext,"很抱歉，服务器繁忙！")
+                    }
+                    SETFOCUS -> { // 当弹出其他窗口会抢夺焦点，需要跳转下，才能正常得到值
+                        m.setFocusable(m.et_getFocus)
+                        m.setFocusable(m.et_code)
+                    }
+                    SAOMA -> { // 扫码之后
+                        m.initLoadDatas(false)
                     }
                 }
             }
@@ -237,8 +250,8 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
     }
 
     override fun initData() {
-
         getUserInfo()
+        hideSoftInputMode(mContext!!, et_code)
 
         mPresenter = IDownloadPresenter(context)
         if (!isCheckUpdate) {
@@ -250,19 +263,21 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser && isInit && !isLoadData) {
-            initLoadDatas()
+        if(isVisibleToUser) {
+            mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
+
+            if(isInit && !isLoadData) initLoadDatas(true)
         }
     }
 
     override fun onResume() {
         super.onResume()
         if(userVisibleHint == true) {
-            initLoadDatas()
+            initLoadDatas(true)
         }
     }
 
-    @OnClick(R.id.tv_missionType, R.id.tv_date, R.id.btn_confirm)
+    @OnClick(R.id.tv_missionType, R.id.btn_scan, R.id.tv_date, R.id.btn_confirm)
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.tv_missionType -> { // 单据类型选择
@@ -271,6 +286,9 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
             }
             R.id.tv_date -> {
                 Comm.showDateDialog(mContext, tv_date, 0)
+            }
+            R.id.btn_scan -> { // 调用摄像头扫描（物料）
+                showForResult(CaptureActivity::class.java, BaseFragment.CAMERA_SCAN, null)
             }
             R.id.btn_confirm -> { // 确定
                 // 进入拣货页面
@@ -288,6 +306,44 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                 val bundle = Bundle()
                 bundle.putSerializable("missionBills", list)
                 show(Sal_PickGoods_MainActivity::class.java, bundle)
+            }
+        }
+    }
+
+    override fun setListener() {
+        val click = View.OnClickListener { v ->
+            setFocusable(et_getFocus)
+            when (v.id) {
+                R.id.et_code -> setFocusable(et_code)
+            }
+        }
+        et_code!!.setOnClickListener(click)
+
+        // 物料---数据变化
+        et_code!!.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                if (s.length == 0) return
+                if (!isTextChange) {
+                    isTextChange = true
+                    mHandler.sendEmptyMessageDelayed(SAOMA, 300)
+                }
+            }
+        })
+        // 物料---长按输入条码
+        /*et_code!!.setOnLongClickListener {
+            showInputDialog("输入条码号", getValues(et_code), "none", WRITE_CODE)
+            true
+        }*/
+        // 物料---焦点改变
+        et_code.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            if(hasFocus) {
+                lin_focusMtl.setBackgroundResource(R.drawable.back_style_red_focus)
+            } else {
+                if (lin_focusMtl != null) {
+                    lin_focusMtl!!.setBackgroundResource(R.drawable.back_style_gray4)
+                }
             }
         }
     }
@@ -368,7 +424,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
             } else {
                 btn_confirm.visibility = View.GONE
             }
-            initLoadDatas()
+            (true)
             popWindow!!.dismiss()
         }
         popV.findViewById<View>(R.id.tv1).setOnClickListener(click)
@@ -385,11 +441,31 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         popV.findViewById<View>(R.id.tv12).setOnClickListener(click)
     }
 
-    fun initLoadDatas() {
+    fun initLoadDatas(barcodeClear :Boolean) {
+        isTextChange = false
         isLoadData = true
         limit = 1
         listDatas.clear()
+        if(barcodeClear) et_code.setText("")
         run_okhttpDatas()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            BaseFragment.CAMERA_SCAN -> {// 扫一扫成功  返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.extras
+                    if (bundle != null) {
+                        val code = bundle.getString(BaseFragment.DECODED_CONTENT_KEY, "")
+                        mHandler.postDelayed(Runnable {
+                            setTexts(et_code, code)
+                        },300)
+                    }
+                }
+            }
+        }
+        mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
     }
 
     /**
@@ -397,10 +473,11 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
      */
     private fun run_okhttpDatas() {
         val formBody = FormBody.Builder()
-                .add("billNo", getValues(et_purNo).trim ())
+//                .add("billNo", getValues(et_purNo).trim ())
                 .add("missionType", if(missionType > 0) missionType.toString() else "") // 任务类型 1代表外购收料任务，21代表销售发货任务
                 .add("missionStatus", "B,D") // 任务状态 A：创建、B：审核、C：业务关闭、D：进行中，E：手工关闭
                 .add("receiveUserId", user!!.id.toString())
+                .add("mtlBarcode", getValues(et_code))
                 .add("limit", limit.toString())
                 .add("pageSize", "30")
                 .add("columnName", "checkTime") // 根据审核时间倒序
@@ -481,7 +558,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
     override fun onRefresh() {
         isRefresh = true
         isLoadMore = false
-        initLoadDatas()
+        initLoadDatas(true)
     }
 
     override fun onLoadMore() {

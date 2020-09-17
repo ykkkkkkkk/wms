@@ -105,9 +105,11 @@ class OutInStock_Search_Fragment1_OtherInStock : BaseFragment() {
                         m.run_findList()
                     }
                     UNUPLOAD -> { // 上传单据  失败
-                        Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
+                        errMsg = JsonUtil.strToString(msgObj)
+                        if (m.isNULLS(errMsg).length == 0) errMsg = "服务器繁忙，请稍后再试！"
+                        Comm.showWarnDialog(m.mContext, errMsg)
                     }
-                    VISIBLE -> m.parent!!.btn_batchUpload.visibility = View.VISIBLE
+//                    VISIBLE -> m.parent!!.btn_batchUpload.visibility = View.VISIBLE
                 }
             }
         }
@@ -182,7 +184,7 @@ class OutInStock_Search_Fragment1_OtherInStock : BaseFragment() {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
             // 显示上传按钮
-            mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
+//            mHandler.sendEmptyMessageDelayed(VISIBLE, 200)
             if(isInit && !isLoadData) {
                 findFun()
             }
@@ -378,6 +380,7 @@ class OutInStock_Search_Fragment1_OtherInStock : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/uploadToK3")
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .build()
 
         val request = Request.Builder()

@@ -1,6 +1,7 @@
 package ykk.xc.com.wms.warehouse.adapter
 
 import android.app.Activity
+import android.text.Html
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,6 +23,7 @@ class OutInStockSearchFragment12_CGFH_Adapter(private val context: Activity, dat
         // 初始化id
         val tv_pdaNo = holder.obtainView<TextView>(R.id.tv_pdaNo)
         val tv_fdate = holder.obtainView<TextView>(R.id.tv_fdate)
+        val tv_strSourceNo = holder.obtainView<TextView>(R.id.tv_strSourceNo)
         val tv_baoguanMan = holder.obtainView<TextView>(R.id.tv_baoguanMan)
         val tv_custName = holder.obtainView<TextView>(R.id.tv_custName)
         val tv_deliveryWay = holder.obtainView<TextView>(R.id.tv_deliveryWay)
@@ -39,6 +41,12 @@ class OutInStockSearchFragment12_CGFH_Adapter(private val context: Activity, dat
             tv_deliveryWay.text = "发货运"
         } else {
             tv_deliveryWay.text = "送货"
+        }
+        if(entity.strSourceNo != null) {
+            tv_strSourceNo.text = Html.fromHtml("源单:&nbsp;<font color='#6a5acd'>" +entity.strSourceNo+ "</font>")
+            tv_strSourceNo.visibility = View.VISIBLE
+        } else {
+            tv_strSourceNo.visibility = View.INVISIBLE
         }
 
         if (entity.isShowButton) {

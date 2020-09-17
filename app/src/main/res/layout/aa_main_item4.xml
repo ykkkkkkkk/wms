@@ -174,16 +174,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="invisible"
             android:gravity="center">
-
-            <ImageView
-                android:layout_width="@dimen/_60dp"
-                android:layout_height="@dimen/_60dp"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitXY"
-                android:visibility="gone"
-                android:src="@drawable/aa_ico4a_2" />
 
             <ImageView
                 android:id="@+id/imgView6"
@@ -191,7 +182,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/upload" />
+                android:src="@drawable/aa_ico3a_4" />
 
 
             <TextView
@@ -201,7 +192,7 @@
                 android:layout_below="@+id/imgView6"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="待上传"
+                android:text="拣货位置"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -209,7 +200,6 @@
 
 
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -226,7 +216,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="invisible"
             android:gravity="center">
 
             <ImageView
@@ -235,7 +224,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico2a_2b" />
+                android:src="@drawable/aa_ico3a_4" />
 
 
             <TextView
@@ -245,7 +234,7 @@
                 android:layout_below="@+id/imgView7"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="库内装箱"
+                android:text="物料位置"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -257,8 +246,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="invisible">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/imgView8"
@@ -266,7 +254,7 @@
                 android:layout_height="@dimen/_60dp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico4a_4" />
+                android:src="@drawable/aa_ico4a_2" />
 
             <TextView
                 android:id="@+id/tvMenu8"
@@ -275,7 +263,7 @@
                 android:layout_below="@+id/imgView8"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="其他出库"
+                android:text="自由调拨"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 
@@ -286,16 +274,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="invisible">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/imgView9"
                 android:layout_width="@dimen/_60dp"
                 android:layout_height="@dimen/_60dp"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/aa_ico3a_4" />
+                android:src="@drawable/upload" />
 
             <TextView
                 android:id="@+id/tvMenu9"
@@ -304,7 +292,7 @@
                 android:layout_below="@+id/imgView9"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_3dp"
-                android:text="调拨拣货"
+                android:text="待确认"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_18sp" />
 

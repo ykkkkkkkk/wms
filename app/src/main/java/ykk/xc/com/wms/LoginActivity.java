@@ -81,13 +81,13 @@ public class LoginActivity extends BaseActivity {
                         // user对象保存到xml
                         m.saveUserToXml(user);
                         // 保存系统参数设置信息到Xml
-                        List<SystemSet> systemSets = null;
+                        List<SystemSet> systemSets = user.getSysSetList();
                         if(systemSets != null && systemSets.size() > 0) {
                             SharedPreferences sp = m.context.getSharedPreferences(m.getResStr(R.string.saveSystemSet), MODE_PRIVATE);
                             SharedPreferences.Editor editor = sp.edit();
                             for(int i=0; i<systemSets.size(); i++) {
                                 SystemSet sysSet = systemSets.get(i);
-                                editor.putString(sysSet.getSetItem().name(), String.valueOf(sysSet.getValue()));
+                                editor.putString(sysSet.getSetItem().name(), sysSet.getValue());
                             }
                             editor.commit();
                         }

@@ -50,6 +50,8 @@ class MainTabFragmentActivity : BaseActivity() {
         listFragment.add(MainTabFragment6())
         //ViewPager设置适配器
         viewPager!!.adapter = BaseFragmentAdapter(supportFragmentManager, listFragment)
+        //设置ViewPage缓存界面数，默认为1
+        viewPager.offscreenPageLimit = 6
         //ViewPager显示第一个Fragment
         viewPager!!.currentItem = 0
         //ViewPager页面切换监听
@@ -104,7 +106,7 @@ class MainTabFragmentActivity : BaseActivity() {
                 show(PrintMainActivity::class.java, null)
             }
             R.id.btn_refresh -> { // 刷新页面
-                fragment0.initLoadDatas()
+                fragment0.initLoadDatas(true)
             }
             R.id.relative0 -> tabChange(relative0, tab0, radio0, 0)
             R.id.relative1 -> tabChange(relative1, tab1, radio1, 1)

@@ -233,6 +233,11 @@ class Prod_InStock_Fragment2 : BaseFragment() {
 //                                    m.isTextChange = false
 //                                    return
 //                                }
+                                if(m.getValues(m.et_code)[0] == '9' && m.stock == null ) { // 如果扫描的是箱码，未选择位置，就提示
+                                    Comm.showWarnDialog(m.mContext,"请先扫描或选择位置！")
+                                    m.isTextChange = false
+                                    return
+                                }
                             }
                         }
                         // 执行查询方法

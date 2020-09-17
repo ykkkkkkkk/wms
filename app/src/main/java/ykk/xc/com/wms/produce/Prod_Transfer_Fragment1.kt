@@ -163,7 +163,6 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
         icStockBill.pdaNo = m.pdaNo
         icStockBill.fdate = m.fdate
         icStockBill.fsupplyId = m.fsupplyId
-        icStockBill.suppName = m.suppName
         icStockBill.fdeptId = m.fdeptId
         icStockBill.fempId = m.fempId
         icStockBill.fsmanagerId = m.fsmanagerId

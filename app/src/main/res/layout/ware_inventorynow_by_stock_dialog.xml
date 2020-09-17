@@ -26,7 +26,6 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/btn_search"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -35,7 +34,7 @@
             android:text="刷新"
             android:textColor="#ffffff"
             android:textSize="14sp"
-            android:visibility="visible" />
+            android:visibility="invisible" />
     </LinearLayout>
 
     <LinearLayout
@@ -76,6 +75,43 @@
             android:text="库位："
             android:textColor="@color/c_666666"
             android:textSize="@dimen/_12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_style_blue"
+            android:hint="请输入查询的关键字"
+            android:inputType="none"
+            android:maxLength="30"
+            android:paddingLeft="3dp"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="108dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_blue_selector"
+            android:text="查询"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

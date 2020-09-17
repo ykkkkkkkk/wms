@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单
+ * 描述：出库质检
  * 作者：ykk
  */
 class Sal_QcPass_Fragment1 : BaseFragment() {
@@ -110,6 +110,8 @@ class Sal_QcPass_Fragment1 : BaseFragment() {
                     FIND_SOURCE ->{ // 查询源单 返回
                         val list = JsonUtil.strToList(msgObj, SeoutStock::class.java)
                         m.icStockBill.fcustId = list[0].fcustid
+                        m.icStockBill.fdeptId = list[0].fdeptid
+                        m.icStockBill.deptName = list[0].dept.departmentName
                         m.icStockBill.deliverWay = list[0].fheadselfs0241
                         m.btn_save.visibility = View.VISIBLE
                     }

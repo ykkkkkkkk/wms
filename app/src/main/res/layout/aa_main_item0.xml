@@ -3,6 +3,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/et_getFocus"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:inputType="none" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,9 +43,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_6dp"
         android:layout_marginLeft="@dimen/_6dp"
         android:layout_marginRight="@dimen/_6dp"
+        android:layout_marginBottom="@dimen/_6dp"
         android:gravity="center"
         android:minHeight="@dimen/_38dp"
         android:orientation="horizontal">
@@ -66,24 +72,52 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_3dp"
+            android:layout_height="match_parent"
             android:ems="2"
+            android:layout_marginLeft="@dimen/_3dp"
             android:gravity="center"
-            android:text="单号"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_14sp" />
+            android:text="物料"
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/et_purNo"
+        <LinearLayout
+            android:id="@+id/lin_focusMtl"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/back_style_blue"
-            android:inputType="none"
-            android:padding="@dimen/_2dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sp" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_scan"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/btn_scan_selector" />
+
+            <EditText
+                android:id="@+id/et_code"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="扫描物料条码"
+                android:inputType="none"
+                android:paddingLeft="@dimen/_2dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sp" />
+
+            <Button
+                android:id="@+id/btn_mtlSel"
+                android:layout_width="@dimen/_42dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_1dp"
+                android:background="@drawable/btn_blue_selector"
+                android:text="选择"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sp"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 

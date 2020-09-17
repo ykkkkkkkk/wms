@@ -21,7 +21,7 @@ import java.util.*
 
 /**
  * 日期：2019-10-16 09:14
- * 描述：外购收料
+ * 描述：销售拣货
  * 作者：ykk
  */
 class Sal_PickGoods_MainActivity : BaseActivity() {
@@ -29,7 +29,7 @@ class Sal_PickGoods_MainActivity : BaseActivity() {
     private val REFRESH = 10
 
     private val context = this
-    private val TAG = "Pur_ReceiveMainActivity"
+    private val TAG = "Sal_PickGoods_MainActivity"
     private var curRadio: View? = null
     private var curRadioName: TextView? = null
     var isChange: Boolean = false // 返回的时候是否需要判断数据是否保存了

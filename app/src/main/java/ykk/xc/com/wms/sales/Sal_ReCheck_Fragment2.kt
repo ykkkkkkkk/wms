@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * 日期：2019-10-16 09:50
- * 描述：拣货单---添加明细
+ * 描述：仓管复核---添加明细
  * 作者：ykk
  */
 class Sal_ReCheck_Fragment2 : BaseFragment() {
@@ -682,7 +682,8 @@ class Sal_ReCheck_Fragment2 : BaseFragment() {
             setEnables(tv_num, R.drawable.back_style_blue, true)
         }
 //        tv_num.text = if(icEntry.fqty > 0) df.format(icEntry.fqty) else ""
-        tv_sourceQty.text = if(icEntry.fsourceQty > 0) df.format(icEntry.fsourceQty) else ""
+//        tv_sourceQty.text = if(icEntry.fsourceQty > 0) df.format(icEntry.fsourceQty) else ""
+        tv_sourceQty.text = df.format(icEntry.fsourceQty)
         tv_unitSel.text = icEntry.unitName
 
 //        val mul = BigdecimalUtil.mul(icEntry.fprice, icEntry.fqty)

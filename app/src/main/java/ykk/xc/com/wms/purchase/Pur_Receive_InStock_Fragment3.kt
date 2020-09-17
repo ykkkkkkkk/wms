@@ -17,10 +17,7 @@ import okhttp3.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import ykk.xc.com.wms.R
-import ykk.xc.com.wms.bean.EventBusEntity
-import ykk.xc.com.wms.bean.ICStockBill
-import ykk.xc.com.wms.bean.ICStockBillEntry
-import ykk.xc.com.wms.bean.User
+import ykk.xc.com.wms.bean.*
 import ykk.xc.com.wms.comm.BaseFragment
 import ykk.xc.com.wms.comm.Comm
 import ykk.xc.com.wms.purchase.adapter.Pur_Receive_InStock_Fragment3_Adapter
@@ -111,13 +108,9 @@ class Pur_Receive_InStock_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0) {
-                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
-                        } else {
-                            m.toasts("上传成功")
-                            m.parent!!.finish()
-                        }
+                        m.toasts("上传成功")
+                        m.parent!!.finish()
+
                         // 滑动第一个页面
 //                        m.parent!!.viewPager!!.setCurrentItem(0, false)
 //                        m.parent!!.fragment1.reset() // 重置
@@ -220,6 +213,11 @@ class Pur_Receive_InStock_Fragment3 : BaseFragment() {
                     }
                     if(it.fqty == 0.0) {
                         Comm.showWarnDialog(mContext,"第（"+(index+1)+"）行，请扫码或输入（入库数）！")
+                        return
+                    }
+                    val isCan = spf(getResStr(R.string.saveSystemSet)).getString(EnumDict.POINSTOCK_INQTYGTSOURCEQTY.toString(),"")
+                    if (isNULLS(isCan).equals("N") && it.fqty > it.fsourceQty) {
+                        Comm.showWarnDialog(mContext, "第（"+(index+1)+"）行，入库数不能大于源单数！")
                         return
                     }
                 }
@@ -333,6 +331,7 @@ class Pur_Receive_InStock_Fragment3 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/uploadToK3")
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .build()
 
         val request = Request.Builder()

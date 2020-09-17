@@ -539,11 +539,11 @@ class ToolMove_Fragment3 : BaseFragment() {
                     val value = bundle.getString("resultValue", "")
                     val num = parseDouble(value)
                     if(num <= 0) {
-                        Comm.showWarnDialog(mContext,"数量必须大于0！")
+                        Comm.showWarnDialog(mContext,"移出数量必须大于0！")
                         return
                     }
                     if(num > stockQty) {
-                        Comm.showWarnDialog(mContext,"数量不能大于库存数！")
+                        Comm.showWarnDialog(mContext,"移出数量不能大于库存数！")
                         return
                     }
                     tv_num.text = df.format(num)

@@ -3,6 +3,7 @@ package ykk.xc.com.wms.bean;
 import java.io.Serializable;
 
 import ykk.xc.com.wms.bean.k3Bean.Customer;
+import ykk.xc.com.wms.comm.Comm;
 
 /**
  * Wms 本地的出入库	主表
@@ -71,6 +72,9 @@ public class ICStockBill implements Serializable {
 	private int expressCompanyId; // 快递公司
 	private double realWeight;	// 实际称重数
 	private String realVolume;	// 实际体积
+	private String strSourceNo; // 对应的源单单号
+	private String outStockName; // 调出仓库
+	private int isCommit;	// 是否提交到仓管确认
 
 	public ICStockBill() {
 		super();
@@ -489,6 +493,31 @@ public class ICStockBill implements Serializable {
 
 	public void setPushDownType(String pushDownType) {
 		this.pushDownType = pushDownType;
+	}
+
+	public String getStrSourceNo() {
+		// 存在大写的逗号（，）,且大于1
+		if(Comm.isNULLS(strSourceNo).indexOf("，") > -1 && Comm.isNULLS(strSourceNo).length() > 0) {
+			return strSourceNo.substring(0, strSourceNo.length()-1);
+		}
+		return strSourceNo;
+	}
+
+	public void setStrSourceNo(String strSourceNo) {
+		this.strSourceNo = strSourceNo;
+	}
+
+	public String getOutStockName() {
+		return outStockName;
+	}
+	public void setOutStockName(String outStockName) {
+		this.outStockName = outStockName;
+	}
+	public int getIsCommit() {
+		return isCommit;
+	}
+	public void setIsCommit(int isCommit) {
+		this.isCommit = isCommit;
 	}
 
 }

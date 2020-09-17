@@ -109,15 +109,10 @@ class Prod_InStock_Fragment3 : BaseFragment() {
                         Comm.showWarnDialog(m.mContext,"服务器繁忙，请稍后再试！")
                     }
                     UPLOAD -> { // 上传单据 进入
-                        val retMsg = JsonUtil.strToString(msgObj)
-                        if(retMsg.length > 0) {
-                            Comm.showWarnDialog(m.mContext, retMsg+"单，上传的数量大于源单可入库数，不能上传！")
-                        } else {
-                            // 滑动第一个页面
-                            m.parent!!.viewPager!!.setCurrentItem(0, false)
-                            m.parent!!.fragment1.reset() // 重置
-                            m.toasts("上传成功")
-                        }
+                        // 滑动第一个页面
+                        m.parent!!.viewPager!!.setCurrentItem(0, false)
+                        m.parent!!.fragment1.reset() // 重置
+                        m.toasts("上传成功")
                     }
                     UNUPLOAD -> { // 上传单据  失败
                         errMsg = JsonUtil.strToString(msgObj)
@@ -335,6 +330,7 @@ class Prod_InStock_Fragment3 : BaseFragment() {
         val mUrl = getURL("stockBill_WMS/uploadToK3")
         val formBody = FormBody.Builder()
                 .add("strJson", strJson)
+                .add("timesTamp", timesTamp)
                 .build()
 
         val request = Request.Builder()

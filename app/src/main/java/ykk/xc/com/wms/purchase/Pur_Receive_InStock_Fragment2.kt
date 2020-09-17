@@ -263,7 +263,6 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         stockPos = user!!.receiveStockPos
         getStockGroup(null)
 
-
         icStockBillEntry.weightUnitType = 2
         parent!!.fragment1.icStockBill.fselTranType = 72
         icStockBillEntry.fsourceTranType = 72
@@ -401,6 +400,11 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
         }
         if (icStockBillEntry.fqty == 0.0) {
             Comm.showWarnDialog(mContext, "请输入数量！")
+            return false
+        }
+        val isCan = spf(getResStr(R.string.saveSystemSet)).getString(EnumDict.POINSTOCK_INQTYGTSOURCEQTY.toString(),"")
+        if (isNULLS(isCan).equals("N") && icStockBillEntry.fqty > icStockBillEntry.fsourceQty) {
+            Comm.showWarnDialog(mContext, "入库数不能大于源单数！")
             return false
         }
         if (icStockBillEntry.weight == 0.0 && (icStockBillEntry.icItem.calByWeight.equals("M") || icStockBillEntry.icItem.calByWeight.equals("Y")) && !icStockBillEntry.icItem.snManager.equals("Y")) {
