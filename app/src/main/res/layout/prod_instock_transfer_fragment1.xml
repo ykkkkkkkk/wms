@@ -445,6 +445,7 @@
             android:background="@drawable/btn_gray2_selector"
             android:gravity="center"
             android:text="重置"
+            android:visibility="gone"
             android:textColor="@color/c_515151"
             android:textSize="16sp" />
 
@@ -455,6 +456,7 @@
             android:layout_weight="1"
             android:background="@drawable/btn_blue2_selector"
             android:gravity="center"
+            android:visibility="gone"
             android:text="保存"
             android:textColor="@color/white"
             android:textSize="16sp" />

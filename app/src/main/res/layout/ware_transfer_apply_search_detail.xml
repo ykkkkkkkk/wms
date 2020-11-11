@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/_6dp"
+    android:background="@drawable/back_style_gray"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none" />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38dp"
+        android:background="@drawable/btn_gray2_selector"
+        android:text="关闭"
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_16sp" />
+
+</LinearLayout>
+
+
+

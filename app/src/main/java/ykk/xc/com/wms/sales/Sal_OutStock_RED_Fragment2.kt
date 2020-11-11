@@ -1035,7 +1035,7 @@ class Sal_OutStock_RED_Fragment2 : BaseFragment() {
             entry.remark = ""
             listEntry.add(entry)
         }
-        run_save(listEntry,1,0)
+        run_save(listEntry,0,0)
     }
 
     /**

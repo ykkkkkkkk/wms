@@ -15,8 +15,8 @@ android {
         applicationId "ykk.xc.com.wms"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 46
-        versionName "1.4.6"
+        versionCode 51
+        versionName "1.5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {

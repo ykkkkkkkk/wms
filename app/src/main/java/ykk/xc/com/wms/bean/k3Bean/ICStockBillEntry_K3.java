@@ -2,6 +2,8 @@ package ykk.xc.com.wms.bean.k3Bean;
 
 import java.io.Serializable;
 
+import ykk.xc.com.wms.bean.Stock;
+
 public class ICStockBillEntry_K3 implements Serializable {
     /* 单据内码 */
     private int finterid;
@@ -274,6 +276,8 @@ public class ICStockBillEntry_K3 implements Serializable {
 
     private ICStockBill_K3 stockBill;
     private ICItem icItem;
+    private Stock inStock;
+    private Stock outStock;
 
     // 临时字段，不存表
     private int scanningRecordId; // 扫码记录表id
@@ -1430,5 +1434,20 @@ public class ICStockBillEntry_K3 implements Serializable {
         this.custSalesPrice = custSalesPrice;
     }
 
+    public Stock getInStock() {
+        return inStock;
+    }
+
+    public void setInStock(Stock inStock) {
+        this.inStock = inStock;
+    }
+
+    public Stock getOutStock() {
+        return outStock;
+    }
+
+    public void setOutStock(Stock outStock) {
+        this.outStock = outStock;
+    }
 
 }

@@ -47,6 +47,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
     var fragment14:OutInStock_Search_Fragment14_XSCK_BTOR? = null
     var fragment15:OutInStock_Search_Fragment15_PurInStock_BTOR? = null
     var fragment16:OutInStock_Search_Fragment16_ZYDB? = null
+    var fragment17:OutInStock_Search_Fragment17_BLDBD? = null
+    var fragment18:OutInStock_Search_Fragment18_QTDBD? = null
 
     override fun setLayoutResID(): Int {
         return R.layout.ware_outin_stock_search_main;
@@ -76,6 +78,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         fragment14 = OutInStock_Search_Fragment14_XSCK_BTOR()
         fragment15 = OutInStock_Search_Fragment15_PurInStock_BTOR()
         fragment16 = OutInStock_Search_Fragment16_ZYDB()
+        fragment17 = OutInStock_Search_Fragment17_BLDBD()
+        fragment18 = OutInStock_Search_Fragment18_QTDBD()
 
         listFragment.add(fragment1!!)
         listFragment.add(fragment2!!)
@@ -93,6 +97,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         listFragment.add(fragment14!!)
         listFragment.add(fragment15!!)
         listFragment.add(fragment16!!)
+        listFragment.add(fragment17!!)
+        listFragment.add(fragment18!!)
 
 //        if(billType.equals("CGSHRK")) { // 采购
 //            fragment6 = OutInStock_Search_Fragment6_PurReceiveInStock()
@@ -167,6 +173,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                 13 -> tv_billType.text = "销售退货列表"
                 14 -> tv_billType.text = "采购退货列表"
                 15 -> tv_billType.text = "自由调拨列表"
+                16 -> tv_billType.text = "补料调拨列表"
+                17 -> tv_billType.text = "其他调拨列表"
             }
             billType = bundle.getString("billType")
         }
@@ -200,6 +208,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                     13 ->  fragment14!!.findFun()
                     14 ->  fragment15!!.findFun()
                     15 ->  fragment16!!.findFun()
+                    16 ->  fragment17!!.findFun()
+                    17 ->  fragment18!!.findFun()
                 }
             }
             R.id.btn_batchUpload -> { // 批量上传
@@ -220,6 +230,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                     13 -> fragment14!!.batchUpload()
                     14 -> fragment15!!.batchUpload()
                     15 -> fragment16!!.batchUpload()
+                    16 -> fragment17!!.batchUpload()
+                    17 -> fragment18!!.batchUpload()
                 }
             }
         }
@@ -260,11 +272,15 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         popV.findViewById<View>(R.id.tv14).visibility = View.GONE
         popV.findViewById<View>(R.id.tv15).visibility = View.GONE
         popV.findViewById<View>(R.id.tv16).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv17).visibility = View.GONE
+        popV.findViewById<View>(R.id.tv18).visibility = View.GONE
 
         if (billType.equals("QTRK")) { // 仓库模块
             popV.findViewById<View>(R.id.tv1).visibility = View.VISIBLE
             popV.findViewById<View>(R.id.tv2).visibility = View.VISIBLE
             popV.findViewById<View>(R.id.tv16).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv17).visibility = View.VISIBLE
+            popV.findViewById<View>(R.id.tv18).visibility = View.VISIBLE
 
         } else if(billType.equals("CGSHRK")) { // 采购
             popV.findViewById<View>(R.id.tv6).visibility = View.VISIBLE
@@ -351,6 +367,14 @@ class OutInStock_Search_MainActivity : BaseActivity() {
                     tv_billType.text = "自由调拨列表"
                     pageId = 15
                 }
+                R.id.tv17 -> {
+                    tv_billType.text = "补料调拨列表"
+                    pageId = 16
+                }
+                R.id.tv18 -> {
+                    tv_billType.text = "其他调拨列表"
+                    pageId = 17
+                }
             }
             viewPager!!.setCurrentItem(pageId)
             popWindow!!.dismiss()
@@ -371,6 +395,8 @@ class OutInStock_Search_MainActivity : BaseActivity() {
         popV.findViewById<View>(R.id.tv14).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv15).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv16).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv17).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv18).setOnClickListener(click)
 
     }
 

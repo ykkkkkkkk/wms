@@ -1225,7 +1225,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
             entry.remark = ""
             listEntry.add(entry)
         }
-        run_save(listEntry, 1,0)
+        run_save(listEntry,0,0)
     }
 
     private fun setICStockEntry_POInStock(list : List<POInStockEntry>?) {
@@ -1259,7 +1259,7 @@ class Pur_Receive_InStock_Fragment2 : BaseFragment() {
             entry.pushDownType = it.poInStock.pushDownType
             listEntry.add(entry)
         }
-        run_save(listEntry, 1,0)
+        run_save(listEntry,0,0)
     }
 
     /**

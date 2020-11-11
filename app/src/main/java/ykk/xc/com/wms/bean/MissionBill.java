@@ -51,6 +51,9 @@ public class MissionBill implements Serializable {
 	//关闭时间
 	private String closeTime;
 	private int icstockBillId;	// 出入库主表id( ICStockBill--》id )
+	private int stockId;	// 对应仓库id
+
+	private Stock stock;
 
 	// 临时字段，不存吧
 	// 关联对象( 把来源对象转成Json字符串  )
@@ -196,7 +199,18 @@ public class MissionBill implements Serializable {
 	public void setIcstockBillId(int icstockBillId) {
 		this.icstockBillId = icstockBillId;
 	}
-
+	public int getStockId() {
+		return stockId;
+	}
+	public void setStockId(int stockId) {
+		this.stockId = stockId;
+	}
+	public Stock getStock() {
+		return stock;
+	}
+	public void setStock(Stock stock) {
+		this.stock = stock;
+	}
 
 	@Override
 	public String toString() {

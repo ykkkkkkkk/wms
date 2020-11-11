@@ -120,6 +120,7 @@ class Prod_InStock_Transfer_Fragment1 : BaseFragment() {
                             m.tv_deptSel.text = icstockBill.deptName
 //                            m.setEnables(m.tv_deptSel, R.drawable.back_style_gray3b, false)
                         }
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         errMsg = JsonUtil.strToString(msgObj)
@@ -132,6 +133,7 @@ class Prod_InStock_Transfer_Fragment1 : BaseFragment() {
                     FIND_ICSTOCKBILL -> { // 查询主表信息 成功
                         val icsBill = JsonUtil.strToObject(msgObj, ICStockBill::class.java)
                         m.setICStockBill(icsBill)
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
                         errMsg = JsonUtil.strToString(msgObj)

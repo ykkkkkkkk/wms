@@ -55,6 +55,7 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
     private var stockPos:StockPosition? = null
     private var isTextChange: Boolean = false // 是否进入TextChange事件
     private var smqFlag = '1' // 使用扫码枪扫码（1：仓库扫码，2：库区扫码，3：货架扫码，4：库位扫码）
+    private var stockEnable = true // 仓库是否可选择
 
     // 消息处理
     private val mHandler = MyHandler(this)
@@ -173,6 +174,25 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
                 stockPos = bundle.getSerializable("stockPos") as StockPosition
                 getStockPos(stockPos!!,false)
             }
+            stockEnable = bundle.getBoolean("stockEnable", true)
+            if(!stockEnable && stock != null) { // 仓库不能选择
+                setEnables(lin_focusStock, R.drawable.back_style_gray3, true)
+                btn_stockScan.isEnabled = false
+                btn_stockSel.isEnabled = false
+                et_stockCode.isEnabled = false
+                tv_stockName.isEnabled = false
+                // 是否启用了库区
+                if(stock!!.useStockArea.equals("Y")) {
+                    smqFlag = '2'
+                } else if(stock!!.useStorageRack.equals("Y")) { // 是否启用了货架
+                    smqFlag = '3'
+                } else if(stock!!.fisStockMgr == 1) { // 是否启用了库位
+                    smqFlag = '4'
+                }
+            }
+        }
+        if(stock == null) {
+            showForResult(Stock_DialogActivity::class.java, SEL_STOCK, null)
         }
         mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
     }
@@ -431,11 +451,13 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
             btn_stockAreaScan.isEnabled = true
             btn_stockAreaSel.isEnabled = true
             et_stockAreaCode.isEnabled = true
+            tv_stockAreaName.isEnabled = true
         } else {
             setEnables(lin_focusStockArea, R.drawable.back_style_gray3, false)
             btn_stockAreaScan.isEnabled = false
             btn_stockAreaSel.isEnabled = false
             et_stockAreaCode.isEnabled = false
+            tv_stockAreaName.isEnabled = false
         }
 
         // 是否启用了货架
@@ -444,11 +466,13 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
             btn_storageRackScan.isEnabled = true
             btn_storageRackSel.isEnabled = true
             et_storageRackCode.isEnabled = true
+            tv_storageRackName.isEnabled = true
         } else {
             setEnables(lin_focusStorageRack, R.drawable.back_style_gray3, false)
             btn_storageRackScan.isEnabled = false
             btn_storageRackSel.isEnabled = false
             et_storageRackCode.isEnabled = false
+            tv_storageRackName.isEnabled = false
         }
 
         // 是否启用了库位
@@ -457,11 +481,13 @@ class Stock_GroupDialogActivity : BaseDialogActivity() {
             btn_stockPosScan.isEnabled = true
             btn_stockPosSel.isEnabled = true
             et_stockPosCode.isEnabled = true
+            tv_stockPosName.isEnabled = true
         } else {
             setEnables(lin_focusStockPos, R.drawable.back_style_gray3, false)
             btn_stockPosScan.isEnabled = false
             btn_stockPosSel.isEnabled = false
             et_stockPosCode.isEnabled = false
+            tv_stockPosName.isEnabled = false
         }
     }
 

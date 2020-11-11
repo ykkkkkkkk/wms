@@ -37,10 +37,10 @@ import java.util.concurrent.TimeUnit
 class ToolMove_Fragment2 : BaseFragment() {
 
     companion object {
-        private val SEL_STOCK = 11
-        private val SEL_CONTAINER = 12
-        private val RESULT_PURPOSE = 13
-        private val SEL_EMP = 14
+        private val SEL_STOCK = 61
+        private val SEL_CONTAINER = 62
+        private val RESULT_PURPOSE = 63
+        private val SEL_EMP = 64
         private val SUCC1 = 200
         private val UNSUCC1 = 500
         private val SAVE = 202
@@ -49,6 +49,7 @@ class ToolMove_Fragment2 : BaseFragment() {
         private val SETFOCUS = 1
         private val SAOMA = 2
         private val WRITE_CODE = 3
+        private val RESULT_NUM = 4
     }
     private val context = this
     private var okHttpClient: OkHttpClient? = null
@@ -168,7 +169,7 @@ class ToolMove_Fragment2 : BaseFragment() {
 
     @OnClick( R.id.btn_positionScan, R.id.btn_positionSel, R.id.btn_positionScan2, R.id.btn_positionSel2, R.id.btn_positionScan3,
               R.id.radio_use, R.id.radio_return, R.id.tv_useBegDate, R.id.tv_useEndDate, R.id.tv_useMan, R.id.tv_purpose,
-              R.id.btn_clone, R.id.btn_save )
+              R.id.btn_clone, R.id.btn_save, R.id.tv_useCount )
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.btn_positionSel -> { // 选择容器
@@ -198,9 +199,18 @@ class ToolMove_Fragment2 : BaseFragment() {
             }
             R.id.radio_use -> {// 领用
                 record.useType = 'L'
+                tv_useCountTitle.visibility = View.GONE
+                tv_useCount.visibility = View.GONE
+                tv_useCount.text = ""
             }
             R.id.radio_return -> {// 归还
                 record.useType = 'H'
+                tv_useCountTitle.visibility = View.VISIBLE
+                tv_useCount.visibility = View.VISIBLE
+                tv_useCount.text = "1"
+            }
+            R.id.tv_useCount -> { // 使用次数
+                showInputDialog("使用次数", "", "0", RESULT_NUM)
             }
             R.id.tv_useMan -> { // 使用人
                 showForResult(Emp_DialogActivity::class.java, SEL_EMP, null)
@@ -222,6 +232,10 @@ class ToolMove_Fragment2 : BaseFragment() {
                 if(record.useStockId == 0) {
                     Comm.showWarnDialog(mContext,"请扫描位置条码或选择！")
                     return
+                }
+                if(record.useType == 'H') {
+                    val num = parseInt(getValues(tv_useCount))
+                    record.useCount = if (num > 0) num else 1
                 }
                 record.useBegDate = getValues(tv_useBegDate)
                 record.useEndDate = getValues(tv_useEndDate)
@@ -318,11 +332,12 @@ class ToolMove_Fragment2 : BaseFragment() {
         tv_stockAreaName2.text = "库区："
         tv_storageRackName2.text = "货架："
         tv_stockPosName2.text = "库位："
-        radio_return.isChecked = false
         radio_use.isChecked = true
+        radio_return.isChecked = false
         tv_useBegDate.text = Comm.getSysDate(7)
         tv_useEndDate.text = Comm.getSysDate(7)
         tv_useMan.text = user!!.empName
+        tv_useCount.text = ""
         et_positionCode.setText("")
         et_positionCode2.setText("")
         et_positionCode3.setText("")
@@ -415,6 +430,20 @@ class ToolMove_Fragment2 : BaseFragment() {
                         val value = bundle.getString("resultValue", "")
                         tv_purpose.text = value
                         record.purpose = value
+                    }
+                }
+            }
+            RESULT_NUM -> { // 次数	返回
+                if (resultCode == Activity.RESULT_OK) {
+                    val bundle = data!!.getExtras()
+                    if (bundle != null) {
+                        val value = bundle.getString("resultValue", "")
+                        val num = parseInt(value)
+                        if(num <= 0) {
+                            Comm.showWarnDialog(mContext,"数量必须大于0！")
+                            return
+                        }
+                        tv_useCount.text = value
                     }
                 }
             }

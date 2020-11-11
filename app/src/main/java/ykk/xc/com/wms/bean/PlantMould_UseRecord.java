@@ -16,6 +16,7 @@ public class PlantMould_UseRecord implements Serializable {
 	private String useBegDate;			// 使用开始日期
 	private String useEndDate;			// 使用结束日期
 	private String useMan;				// 使用人
+	private int useCount;				// 使用次数
 	private String purpose;				// 用途
 	private String sourceNo;			// 对应的工单号
 	private int useStockId;				// 领用仓库id
@@ -292,6 +293,14 @@ public class PlantMould_UseRecord implements Serializable {
 
 	public void setReturnContainer(Container returnContainer) {
 		this.returnContainer = returnContainer;
+	}
+
+	public int getUseCount() {
+		return useCount;
+	}
+
+	public void setUseCount(int useCount) {
+		this.useCount = useCount;
 	}
 
 

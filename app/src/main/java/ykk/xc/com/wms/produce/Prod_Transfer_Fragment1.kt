@@ -132,6 +132,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
                                 }
                             }
                         }
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_SOURCE ->{ // 查询源单失败！ 返回
                         errMsg = JsonUtil.strToString(msgObj)
@@ -144,6 +145,7 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
                     FIND_ICSTOCKBILL -> { // 查询主表信息 成功
                         val icsBill = JsonUtil.strToObject(msgObj, ICStockBill::class.java)
                         m.setICStockBill(icsBill)
+                        m.btn_save.visibility = View.VISIBLE
                     }
                     UNFIND_ICSTOCKBILL -> { // 查询主表信息 失败
                         errMsg = JsonUtil.strToString(msgObj)
@@ -372,10 +374,10 @@ class Prod_Transfer_Fragment1 : BaseFragment() {
      * 保存检查数据判断
      */
     fun checkSave() : Boolean {
-//        if (icStockBill.fsupplyId == 0) {
-//            Comm.showWarnDialog(mContext, "请选择供应商！")
-//            return false;
-//        }
+        /*if (icStockBill.fsupplyId == 0 && icStockBill.fdeptId == 0) {
+            Comm.showWarnDialog(mContext, "请选择供应商或部门！")
+            return false;
+        }*/
         if(icStockBill.fsmanagerId == 0) {
             Comm.showWarnDialog(mContext, "请选择保管人！")
             return false

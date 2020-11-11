@@ -21,7 +21,8 @@ class MainTabFragment4 : BaseFragment() {
         return inflater.inflate(R.layout.aa_main_item4, container, false)
     }
 
-    @OnClick(R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5, R.id.relative6, R.id.relative7, R.id.relative8, R.id.relative9)
+    @OnClick(R.id.relative1, R.id.relative2, R.id.relative3, R.id.relative4, R.id.relative5, R.id.relative6, R.id.relative7, R.id.relative8, R.id.relative9,
+             R.id.relative10)
     fun onViewClicked(view: View) {
         val bundle: Bundle? = null
         when (view.id) {
@@ -57,6 +58,9 @@ class MainTabFragment4 : BaseFragment() {
             }
             R.id.relative9 -> { // 待确认
                 show(Ware_BillConfirmList_MainActivity::class.java, null)
+            }
+            R.id.relative10 -> { // 组装拆卸
+                show(Ware_Disassembly_Activity::class.java, null)
             }
         }
     }

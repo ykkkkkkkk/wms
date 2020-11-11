@@ -92,7 +92,7 @@ class Mtl_DialogActivity : BaseDialogActivity(), XRecyclerView.LoadingListener {
         xRecyclerView!!.setLoadingListener(context)
 
         xRecyclerView!!.isPullRefreshEnabled = false // 上啦刷新禁用
-        xRecyclerView.setLoadingMoreEnabled(false); // 不显示下拉刷新的view
+        xRecyclerView.isLoadingMoreEnabled = false // 不显示下拉刷新的view
 
         mAdapter!!.onItemClickListener = BaseRecyclerAdapter.OnItemClickListener { adapter, holder, view, pos ->
             val m = listDatas[pos - 1]

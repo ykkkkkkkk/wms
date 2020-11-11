@@ -140,6 +140,10 @@
             android:name=".basics.User_DialogActivity"
             android:theme="@style/dialogStyle"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".basics.Mtl_BomDialogActivity"
+            android:theme="@style/dialogStyle"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <!-- 仓库模块 -->
@@ -219,6 +223,15 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".warehouse.Ware_Transfer_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_Disassembly_Activity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_ICItemScrap_Transfer_MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".warehouse.Ware_Other_Transfer_MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
 

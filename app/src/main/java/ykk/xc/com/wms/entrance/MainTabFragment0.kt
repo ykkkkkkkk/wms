@@ -51,6 +51,8 @@ import ykk.xc.com.wms.util.xrecyclerview.XRecyclerView
 import ykk.xc.com.wms.util.zxing.android.CaptureActivity
 import ykk.xc.com.wms.warehouse.OtherInStock2_MainActivity
 import ykk.xc.com.wms.warehouse.OtherOutStock2_MainActivity
+import ykk.xc.com.wms.warehouse.Ware_ICItemScrap_Transfer_MainActivity
+import ykk.xc.com.wms.warehouse.Ware_Other_Transfer_MainActivity
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -231,6 +233,8 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     55 -> show(Sal_OutStock_RED_MainActivity::class.java, bundle)
                     61 -> show(OtherInStock2_MainActivity::class.java, bundle)
                     62 -> show(OtherOutStock2_MainActivity::class.java, bundle)
+                    71 -> show(Ware_ICItemScrap_Transfer_MainActivity::class.java, bundle)
+                    72 -> show(Ware_Other_Transfer_MainActivity::class.java, bundle)
                 }
             }
         }
@@ -418,13 +422,17 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                     tv_missionType.text = "其他出库任务"
                     missionType = 62
                 }
+                R.id.tv13 -> {
+                    tv_missionType.text = "补料调拨任务"
+                    missionType = 71
+                }
             }
             if(missionType == 51) { // 拣货任务可以多个任务单一起拣货
                 btn_confirm.visibility = View.VISIBLE
             } else {
                 btn_confirm.visibility = View.GONE
             }
-            (true)
+            
             popWindow!!.dismiss()
         }
         popV.findViewById<View>(R.id.tv1).setOnClickListener(click)
@@ -439,6 +447,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
         popV.findViewById<View>(R.id.tv10).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv11).setOnClickListener(click)
         popV.findViewById<View>(R.id.tv12).setOnClickListener(click)
+        popV.findViewById<View>(R.id.tv13).setOnClickListener(click)
     }
 
     fun initLoadDatas(barcodeClear :Boolean) {
@@ -480,7 +489,7 @@ class MainTabFragment0 : BaseFragment(), IDownloadContract.View, XRecyclerView.L
                 .add("mtlBarcode", getValues(et_code))
                 .add("limit", limit.toString())
                 .add("pageSize", "30")
-                .add("columnName", "checkTime") // 根据审核时间倒序
+                .add("columnName", "A.checkTime") // 根据审核时间倒序
                 .add("sortWay", "DESC")
                 .build()
         showLoadDialog("加载中...", false)

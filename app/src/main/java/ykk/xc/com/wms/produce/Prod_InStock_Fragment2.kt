@@ -699,6 +699,13 @@ class Prod_InStock_Fragment2 : BaseFragment() {
         parent!!.isChange = false
         smqFlag = '2'
         mHandler.sendEmptyMessageDelayed(SETFOCUS, 200)
+
+        // 仓库重置为不可选择
+        lin_focusPosition.setBackgroundResource(R.drawable.back_style_gray3)
+        btn_positionScan.visibility = View.GONE
+        et_positionCode.visibility = View.GONE
+        et_positionCode.isEnabled = false
+        btn_positionSel.visibility = View.GONE
     }
 
     /**
@@ -912,6 +919,15 @@ class Prod_InStock_Fragment2 : BaseFragment() {
             isWeightTextChanged = true
             isReferenceTextChanged = true
         },300)
+
+        // 如果仓库为空，就显示可以选择
+        if(icEntry.fdcStockId == 0) {
+            lin_focusPosition.setBackgroundResource(R.drawable.back_style_blue)
+            btn_positionScan.visibility = View.VISIBLE
+            et_positionCode.visibility = View.VISIBLE
+            et_positionCode.isEnabled = true
+            btn_positionSel.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -1384,7 +1400,7 @@ class Prod_InStock_Fragment2 : BaseFragment() {
 
             listEntry.add(entry)
         }
-        run_save(listEntry,1,0)
+        run_save(listEntry,0,0)
     }
 
     /**

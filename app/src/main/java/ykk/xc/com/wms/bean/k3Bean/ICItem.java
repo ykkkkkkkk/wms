@@ -43,7 +43,7 @@ public class ICItem implements Serializable{
 	private double unitConvertRatio;
 
 	/* 物料数量精度 */
-	private Short fqtydecimal;
+	private int fqtydecimal;
 	/* 物料最低库存量 */
 	private double flowlimit;
 	/* 物料最高库存量 */
@@ -208,11 +208,11 @@ public class ICItem implements Serializable{
 		this.unit = unit;
 	}
 
-	public Short getFqtydecimal() {
+	public int getFqtydecimal() {
 		return fqtydecimal;
 	}
 
-	public void setFqtydecimal(Short fqtydecimal) {
+	public void setFqtydecimal(int fqtydecimal) {
 		this.fqtydecimal = fqtydecimal;
 	}
 
